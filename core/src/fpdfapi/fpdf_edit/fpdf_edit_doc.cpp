@@ -567,7 +567,7 @@ void FX_GetCharWidth(CTFontRef font, UniChar start, UniChar end, int* width)
 {
     CGFloat size = CTFontGetSize(font);
     for (; start <= end; ++start) {
-        CGGlyph pGlyph = NULL;
+        CGGlyph pGlyph = 0;
         CFIndex count = 1;
         CTFontGetGlyphsForCharacters(font, &start, &pGlyph, count);
         CGSize advances;
