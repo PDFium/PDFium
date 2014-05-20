@@ -58,7 +58,7 @@
 	  TT_Table temp = NULL;
 	  if (!entry) return NULL;
 
-	  for (first; first < limit; first++){
+	  for (; first < limit; first++){
 		  if (entry->Offset + entry->Length <= first->Offset){
 			  if (!temp || first->Offset < temp->Offset){
 				  temp = first;

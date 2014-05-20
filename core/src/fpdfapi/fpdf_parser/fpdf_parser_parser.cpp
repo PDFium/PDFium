@@ -2402,8 +2402,8 @@ CPDF_Stream* CPDF_SyntaxParser::ReadStream(CPDF_Dictionary* pDict, PARSE_CONTEXT
     CPDF_Object* pLenObj = pDict->GetElement(FX_BSTRC("Length"));
     FX_DWORD len = 0;
     if (pLenObj && (pLenObj->GetType() != PDFOBJ_REFERENCE ||
-                    (((CPDF_Reference*)pLenObj)->GetObjList() != NULL) &&
-                    ((CPDF_Reference*)pLenObj)->GetRefObjNum() != objnum)) {
+                    ((((CPDF_Reference*)pLenObj)->GetObjList() != NULL) &&
+                     ((CPDF_Reference*)pLenObj)->GetRefObjNum() != objnum))) {
         FX_FILESIZE pos = m_Pos;
         if (pLenObj) {
             len = pLenObj->GetInteger();

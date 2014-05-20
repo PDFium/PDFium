@@ -616,7 +616,6 @@ public:
         int col_start = span_left < clip_left ? clip_left - span_left : 0;
         int col_end = (span_left + span_len) < clip_right ? span_len : (clip_right - span_left);
         dest_scan += col_start;
-        Bpp;
         if (dest_extra_alpha_scan) {
             for (int col = col_start; col < col_end; col ++) {
                 int src_alpha;
@@ -884,7 +883,6 @@ public:
         int col_start = span_left < clip_left ? clip_left - span_left : 0;
         int col_end = (span_left + span_len) < clip_right ? span_len : (clip_right - span_left);
         dest_scan += col_start * 4;
-        Bpp;
         if (dest_extra_alpha_scan) {
             for (int col = col_start; col < col_end; col ++) {
                 int src_alpha;

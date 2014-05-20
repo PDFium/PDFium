@@ -689,7 +689,7 @@ void* _cmsContextGetClientChunk(cmsContext ContextID, _cmsMemoryClient mc)
     struct _cmsContext_struct* ctx;
     void *ptr;
 
-    if (mc < 0 || mc >= MemoryClientMax) {
+    if (mc >= MemoryClientMax) {
         cmsSignalError(ContextID, cmsERROR_RANGE, "Bad context client");
         return NULL;
     }
