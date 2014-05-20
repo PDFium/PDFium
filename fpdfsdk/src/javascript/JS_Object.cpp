@@ -88,7 +88,7 @@ FX_BOOL	CJS_EmbedObj::IsSafeMode(IFXJS_Context* cc)
 }
 
 /* ---------------------------------  CJS_Object --------------------------------- */
-void  FreeObject(const WeakCallbackData<v8::Object, CJS_Object>& data)
+void  FreeObject(const v8::WeakCallbackData<v8::Object, CJS_Object>& data)
 {
 	CJS_Object* pJSObj  = data.GetParameter();
 	if(pJSObj)

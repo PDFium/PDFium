@@ -134,7 +134,7 @@ CJS_Runtime::~CJS_Runtime()
 FX_BOOL CJS_Runtime::InitJSObjects()
 {
 	v8::Isolate::Scope isolate_scope(GetIsolate());
-	HandleScope handle_scope(GetIsolate());
+	v8::HandleScope handle_scope(GetIsolate());
 	v8::Handle<v8::Context> context = v8::Context::New(GetIsolate());
 	v8::Context::Scope context_scope(context);
 	//0 - 8
@@ -207,7 +207,7 @@ void CJS_Runtime::SetReaderDocument(CPDFSDK_Document* pReaderDoc)
 	if (m_pDocument != pReaderDoc)
 	{
 		v8::Isolate::Scope isolate_scope(m_isolate);
-		HandleScope handle_scope(m_isolate);
+		v8::HandleScope handle_scope(m_isolate);
 		v8::Local<v8::Context> context =v8::Local<v8::Context>::New(m_isolate, m_context);
 		v8::Context::Scope context_scope(context);
 

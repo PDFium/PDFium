@@ -23,14 +23,14 @@ struct JSConstSpec
 struct JSPropertySpec
 {
 	const wchar_t* pName;
-	AccessorGetterCallback pPropGet;
-	AccessorSetterCallback pPropPut;
+	v8::AccessorGetterCallback pPropGet;
+	v8::AccessorSetterCallback pPropPut;
 };
 
 struct JSMethodSpec
 {
 	const wchar_t* pName;
-	FunctionCallback pMethodCall;
+	v8::FunctionCallback pMethodCall;
 	unsigned nParamNum;
 };
 
@@ -100,7 +100,7 @@ typedef CFX_WideString	JS_ErrorString;
 	v8::Local<v8::Value> v = context->GetEmbedderData(1);\
 	ASSERT(!v.IsEmpty());\
 	if(v.IsEmpty()) return;\
-	v8::Handle<External> field = v8::Handle<External>::Cast(v);\
+	v8::Handle<v8::External> field = v8::Handle<v8::External>::Cast(v);\
 	IFXJS_Runtime* pRuntime = (IFXJS_Runtime*)field->Value();\
 	IFXJS_Context* cc = pRuntime->GetCurrentContext();\
 	CJS_PropValue value(isolate);\
@@ -146,7 +146,7 @@ typedef CFX_WideString	JS_ErrorString;
 	v8::Local<v8::Value> v = context->GetEmbedderData(1);\
 	ASSERT(!v.IsEmpty());\
 	if(v.IsEmpty()) return;\
-	v8::Handle<External> field = v8::Handle<External>::Cast(v);\
+	v8::Handle<v8::External> field = v8::Handle<v8::External>::Cast(v);\
 	IFXJS_Runtime* pRuntime = (IFXJS_Runtime*)field->Value();\
 	IFXJS_Context* cc = pRuntime->GetCurrentContext();\
 	CJS_PropValue propValue(CJS_Value(isolate,value,VT_unknown));\
@@ -197,7 +197,7 @@ JS_STATIC_PROP_SET(prop_name, class_name)
 	v8::Local<v8::Value> v = context->GetEmbedderData(1);\
 	ASSERT(!v.IsEmpty());\
 	if(v.IsEmpty()) return;\
-	v8::Handle<External> field = v8::Handle<External>::Cast(v);\
+	v8::Handle<v8::External> field = v8::Handle<v8::External>::Cast(v);\
 	IFXJS_Runtime* pRuntime = (IFXJS_Runtime*)field->Value();\
 	IFXJS_Context* cc = pRuntime->GetCurrentContext();\
 	CJS_Parameters parameters;\
@@ -403,7 +403,7 @@ const wchar_t * js_class_name::m_pClassName = JS_WIDESTRING(class_name);\
 	v8::Local<v8::Value> v = context->GetEmbedderData(1);\
 	ASSERT(!v.IsEmpty());\
 	if(v.IsEmpty()) return;\
-	v8::Handle<External> field = v8::Handle<External>::Cast(v);\
+	v8::Handle<v8::External> field = v8::Handle<v8::External>::Cast(v);\
 	IFXJS_Runtime* pRuntime = (IFXJS_Runtime*)field->Value();\
 	IFXJS_Context* cc = pRuntime->GetCurrentContext();\
 	v8::String::Utf8Value utf8_value(property);\
@@ -451,7 +451,7 @@ const wchar_t * js_class_name::m_pClassName = JS_WIDESTRING(class_name);\
 	v8::Local<v8::Value> v = context->GetEmbedderData(1);\
 	ASSERT(!v.IsEmpty());\
 	if(v.IsEmpty()) return;\
-	v8::Handle<External> field = v8::Handle<External>::Cast(v);\
+	v8::Handle<v8::External> field = v8::Handle<v8::External>::Cast(v);\
 	IFXJS_Runtime* pRuntime = (IFXJS_Runtime*)field->Value();\
 	IFXJS_Context* cc = pRuntime->GetCurrentContext();\
 	v8::String::Utf8Value utf8_value(property);\
@@ -498,7 +498,7 @@ const wchar_t * js_class_name::m_pClassName = JS_WIDESTRING(class_name);\
 	v8::Local<v8::Value> v = context->GetEmbedderData(1);\
 	ASSERT(!v.IsEmpty());\
 	if(v.IsEmpty()) return;\
-	v8::Handle<External> field = v8::Handle<External>::Cast(v);\
+	v8::Handle<v8::External> field = v8::Handle<v8::External>::Cast(v);\
 	IFXJS_Runtime* pRuntime = (IFXJS_Runtime*)field->Value();\
 	IFXJS_Context* cc = pRuntime->GetCurrentContext();\
 	v8::String::Utf8Value utf8_value(property);\
@@ -598,7 +598,7 @@ void js_class_name::GetMethods(JSMethodSpec*& pMethods, int& nSize)\
 	v8::Local<v8::Value> v = context->GetEmbedderData(1);\
 	ASSERT(!v.IsEmpty());\
 	if(v.IsEmpty()) return;\
-	v8::Handle<External> field = v8::Handle<External>::Cast(v);\
+	v8::Handle<v8::External> field = v8::Handle<v8::External>::Cast(v);\
 	IFXJS_Runtime* pRuntime = (IFXJS_Runtime*)field->Value();\
 	IFXJS_Context* cc = pRuntime->GetCurrentContext();\
 	CJS_Parameters parameters;\
@@ -651,7 +651,7 @@ static void fun_name##_static(JS_METHOD_ARGS)\
 	v8::Local<v8::Value> v = context->GetEmbedderData(1);\
 	ASSERT(!v.IsEmpty());\
 	if(v.IsEmpty()) return;\
-	v8::Handle<External> field = v8::Handle<External>::Cast(v);\
+	v8::Handle<v8::External> field = v8::Handle<v8::External>::Cast(v);\
 	IFXJS_Runtime* pRuntime = (IFXJS_Runtime*)field->Value();\
 	IFXJS_Context* cc = pRuntime->GetCurrentContext();\
 	CJS_Parameters parameters;\
