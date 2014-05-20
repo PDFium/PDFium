@@ -16,7 +16,6 @@
 #include "agg_curves.h"
 #include "agg_conv_stroke.h"
 #include "agg_conv_dash.h"
-using namespace agg;
 #include "../include/fx_agg_driver.h"
 void _HardClip(FX_FLOAT& x, FX_FLOAT& y)
 {
@@ -61,7 +60,7 @@ void CAgg_PathData::BuildPath(const CFX_PathData* pPathData, const CFX_AffineMat
                 pObject2Device->Transform(x2, y2);
                 pObject2Device->Transform(x3, y3);
             }
-            curve4 curve(x0, y0, x, y, x2, y2, x3, y3);
+            agg::curve4 curve(x0, y0, x, y, x2, y2, x3, y3);
             i += 2;
             m_PathData.add_path_curve(curve);
         }
@@ -117,33 +116,33 @@ private:
     unsigned m_left, m_top;
 };
 }
-static void RasterizeStroke(rasterizer_scanline_aa& rasterizer, path_storage& path_data,
+static void RasterizeStroke(agg::rasterizer_scanline_aa& rasterizer, agg::path_storage& path_data,
                             const CFX_AffineMatrix* pObject2Device,
                             const CFX_GraphStateData* pGraphState, FX_FLOAT scale = 1.0f,
                             FX_BOOL bStrokeAdjust = FALSE, FX_BOOL bTextMode = FALSE)
 {
-    line_cap_e cap;
+    agg::line_cap_e cap;
     switch (pGraphState->m_LineCap) {
         case CFX_GraphStateData::LineCapRound:
-            cap = round_cap;
+            cap = agg::round_cap;
             break;
         case CFX_GraphStateData::LineCapSquare:
-            cap = square_cap;
+            cap = agg::square_cap;
             break;
         default:
-            cap = butt_cap;
+            cap = agg::butt_cap;
             break;
     }
-    line_join_e join;
+    agg::line_join_e join;
     switch (pGraphState->m_LineJoin) {
         case CFX_GraphStateData::LineJoinRound:
-            join = round_join;
+            join = agg::round_join;
             break;
         case CFX_GraphStateData::LineJoinBevel:
-            join = bevel_join;
+            join = agg::bevel_join;
             break;
         default:
-            join = miter_join_revert;
+            join = agg::miter_join_revert;
             break;
     }
     FX_FLOAT width = pGraphState->m_LineWidth * scale;
@@ -155,14 +154,14 @@ static void RasterizeStroke(rasterizer_scanline_aa& rasterizer, path_storage& pa
         width = unit;
     }
     if (pGraphState->m_DashArray == NULL) {
-        conv_stroke<path_storage> stroke(path_data);
+        agg::conv_stroke<agg::path_storage> stroke(path_data);
         stroke.line_join(join);
         stroke.line_cap(cap);
         stroke.miter_limit(pGraphState->m_MiterLimit);
         stroke.width(width);
         rasterizer.add_path_transformed(stroke, pObject2Device);
     } else {
-        typedef conv_dash<path_storage> dash_converter;
+        typedef agg::conv_dash<agg::path_storage> dash_converter;
         dash_converter dash(path_data);
         for (int i = 0; i < (pGraphState->m_DashCount + 1) / 2; i ++) {
             FX_FLOAT on = pGraphState->m_DashArray[i * 2];
@@ -177,7 +176,7 @@ static void RasterizeStroke(rasterizer_scanline_aa& rasterizer, path_storage& pa
             dash.add_dash(on * scale, off * scale);
         }
         dash.dash_start(pGraphState->m_DashPhase * scale);
-        typedef conv_stroke<dash_converter> dash_stroke;
+        typedef agg::conv_stroke<dash_converter> dash_stroke;
         dash_stroke stroke(dash);
         stroke.line_join(join);
         stroke.line_cap(cap);
@@ -298,7 +297,7 @@ void CFX_AggDeviceDriver::RestoreState(FX_BOOL bKeepSaved)
         m_pClipRgn = pSavedClip;
     }
 }
-void CFX_AggDeviceDriver::SetClipMask(rasterizer_scanline_aa& rasterizer)
+void CFX_AggDeviceDriver::SetClipMask(agg::rasterizer_scanline_aa& rasterizer)
 {
     FX_RECT path_rect(rasterizer.min_x(), rasterizer.min_y(),
                       rasterizer.max_x() + 1, rasterizer.max_y() + 1);
@@ -310,13 +309,13 @@ void CFX_AggDeviceDriver::SetClipMask(rasterizer_scanline_aa& rasterizer)
     }
     pThisLayer->Create(path_rect.Width(), path_rect.Height(), FXDIB_8bppMask);
     pThisLayer->Clear(0);
-    rendering_buffer raw_buf(pThisLayer->GetBuffer(), pThisLayer->GetWidth(), pThisLayer->GetHeight(), pThisLayer->GetPitch());
-    pixfmt_gray8 pixel_buf(raw_buf);
-    renderer_base<pixfmt_gray8> base_buf(pixel_buf);
-    renderer_scanline_aa_offset<renderer_base<pixfmt_gray8> > final_render(base_buf, path_rect.left, path_rect.top);
-    final_render.color(gray8(255));
-    scanline_u8 scanline;
-    render_scanlines(rasterizer, scanline, final_render, (m_FillFlags & FXFILL_NOPATHSMOOTH) != 0);
+    agg::rendering_buffer raw_buf(pThisLayer->GetBuffer(), pThisLayer->GetWidth(), pThisLayer->GetHeight(), pThisLayer->GetPitch());
+    agg::pixfmt_gray8 pixel_buf(raw_buf);
+    agg::renderer_base<agg::pixfmt_gray8> base_buf(pixel_buf);
+    agg::renderer_scanline_aa_offset<agg::renderer_base<agg::pixfmt_gray8> > final_render(base_buf, path_rect.left, path_rect.top);
+    final_render.color(agg::gray8(255));
+    agg::scanline_u8 scanline;
+    agg::render_scanlines(rasterizer, scanline, final_render, (m_FillFlags & FXFILL_NOPATHSMOOTH) != 0);
     m_pClipRgn->IntersectMaskF(path_rect.left, path_rect.top, mask);
 }
 FX_BOOL CFX_AggDeviceDriver::SetClip_PathFill(const CFX_PathData* pPathData,
@@ -343,10 +342,10 @@ FX_BOOL CFX_AggDeviceDriver::SetClip_PathFill(const CFX_PathData* pPathData,
     CAgg_PathData path_data;
     path_data.BuildPath(pPathData, pObject2Device);
     path_data.m_PathData.end_poly();
-    rasterizer_scanline_aa rasterizer;
+    agg::rasterizer_scanline_aa rasterizer;
     rasterizer.clip_box(0.0f, 0.0f, (FX_FLOAT)(GetDeviceCaps(FXDC_PIXEL_WIDTH)), (FX_FLOAT)(GetDeviceCaps(FXDC_PIXEL_HEIGHT)));
     rasterizer.add_path(path_data.m_PathData);
-    rasterizer.filling_rule((fill_mode & 3) == FXFILL_WINDING ? fill_non_zero : fill_even_odd);
+    rasterizer.filling_rule((fill_mode & 3) == FXFILL_WINDING ? agg::fill_non_zero : agg::fill_even_odd);
     SetClipMask(rasterizer);
     return TRUE;
 }
@@ -363,10 +362,10 @@ FX_BOOL CFX_AggDeviceDriver::SetClip_PathStroke(const CFX_PathData* pPathData,
     }
     CAgg_PathData path_data;
     path_data.BuildPath(pPathData, NULL);
-    rasterizer_scanline_aa rasterizer;
+    agg::rasterizer_scanline_aa rasterizer;
     rasterizer.clip_box(0.0f, 0.0f, (FX_FLOAT)(GetDeviceCaps(FXDC_PIXEL_WIDTH)), (FX_FLOAT)(GetDeviceCaps(FXDC_PIXEL_HEIGHT)));
     RasterizeStroke(rasterizer, path_data.m_PathData, pObject2Device, pGraphState);
-    rasterizer.filling_rule(fill_non_zero);
+    rasterizer.filling_rule(agg::fill_non_zero);
     SetClipMask(rasterizer);
     return TRUE;
 }
@@ -1120,7 +1119,7 @@ public:
         return TRUE;
     }
 };
-FX_BOOL CFX_AggDeviceDriver::RenderRasterizer(rasterizer_scanline_aa& rasterizer, FX_DWORD color, FX_BOOL bFullCover, FX_BOOL bGroupKnockout,
+FX_BOOL CFX_AggDeviceDriver::RenderRasterizer(agg::rasterizer_scanline_aa& rasterizer, FX_DWORD color, FX_BOOL bFullCover, FX_BOOL bGroupKnockout,
         int alpha_flag, void* pIccTransform)
 {
     CFX_DIBitmap* pt = bGroupKnockout ? m_pOriDevice : NULL;
@@ -1128,8 +1127,8 @@ FX_BOOL CFX_AggDeviceDriver::RenderRasterizer(rasterizer_scanline_aa& rasterizer
     if (!render.Init(m_pBitmap, pt, m_pClipRgn, color, bFullCover, m_bRgbByteOrder, alpha_flag, pIccTransform)) {
         return FALSE;
     }
-    scanline_u8 scanline;
-    render_scanlines(rasterizer, scanline, render, (m_FillFlags & FXFILL_NOPATHSMOOTH) != 0);
+    agg::scanline_u8 scanline;
+    agg::render_scanlines(rasterizer, scanline, render, (m_FillFlags & FXFILL_NOPATHSMOOTH) != 0);
     return TRUE;
 }
 FX_BOOL	CFX_AggDeviceDriver::DrawPath(const CFX_PathData* pPathData,
@@ -1153,10 +1152,10 @@ FX_BOOL	CFX_AggDeviceDriver::DrawPath(const CFX_PathData* pPathData,
     if ((fill_mode & 3) && fill_color) {
         CAgg_PathData path_data;
         path_data.BuildPath(pPathData, pObject2Device);
-        rasterizer_scanline_aa rasterizer;
+        agg::rasterizer_scanline_aa rasterizer;
         rasterizer.clip_box(0.0f, 0.0f, (FX_FLOAT)(GetDeviceCaps(FXDC_PIXEL_WIDTH)), (FX_FLOAT)(GetDeviceCaps(FXDC_PIXEL_HEIGHT)));
         rasterizer.add_path(path_data.m_PathData);
-        rasterizer.filling_rule((fill_mode & 3) == FXFILL_WINDING ? fill_non_zero : fill_even_odd);
+        rasterizer.filling_rule((fill_mode & 3) == FXFILL_WINDING ? agg::fill_non_zero : agg::fill_even_odd);
         if (!RenderRasterizer(rasterizer, fill_color, fill_mode & FXFILL_FULLCOVER, FALSE, alpha_flag, pIccTransform)) {
             return FALSE;
         }
@@ -1166,7 +1165,7 @@ FX_BOOL	CFX_AggDeviceDriver::DrawPath(const CFX_PathData* pPathData,
         if (fill_mode & FX_ZEROAREA_FILL) {
             CAgg_PathData path_data;
             path_data.BuildPath(pPathData, pObject2Device);
-            rasterizer_scanline_aa rasterizer;
+            agg::rasterizer_scanline_aa rasterizer;
             rasterizer.clip_box(0.0f, 0.0f, (FX_FLOAT)(GetDeviceCaps(FXDC_PIXEL_WIDTH)), (FX_FLOAT)(GetDeviceCaps(FXDC_PIXEL_HEIGHT)));
             RasterizeStroke(rasterizer, path_data.m_PathData, NULL, pGraphState, 1, FALSE, fill_mode & FX_STROKE_TEXT_MODE);
             int fill_flag = FXGETFLAG_COLORTYPE(alpha_flag) << 8 | FXGETFLAG_ALPHA_STROKE(alpha_flag);
@@ -1189,7 +1188,7 @@ FX_BOOL	CFX_AggDeviceDriver::DrawPath(const CFX_PathData* pPathData,
         }
         CAgg_PathData path_data;
         path_data.BuildPath(pPathData, &matrix1);
-        rasterizer_scanline_aa rasterizer;
+        agg::rasterizer_scanline_aa rasterizer;
         rasterizer.clip_box(0.0f, 0.0f, (FX_FLOAT)(GetDeviceCaps(FXDC_PIXEL_WIDTH)), (FX_FLOAT)(GetDeviceCaps(FXDC_PIXEL_HEIGHT)));
         RasterizeStroke(rasterizer, path_data.m_PathData, &matrix2, pGraphState, matrix1.a, FALSE, fill_mode & FX_STROKE_TEXT_MODE);
         int fill_flag = FXGETFLAG_COLORTYPE(alpha_flag) << 8 | FXGETFLAG_ALPHA_STROKE(alpha_flag);
