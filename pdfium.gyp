@@ -476,7 +476,6 @@
         'core/include/fxcrt/fx_basic.h',
         'core/include/fxcrt/fx_coordinates.h',
         'core/include/fxcrt/fx_ext.h',
-        'core/include/fxcrt/fx_fix.h',
         'core/include/fxcrt/fx_memory.h',
         'core/include/fxcrt/fx_stream.h',
         'core/include/fxcrt/fx_string.h',
