@@ -830,7 +830,7 @@
       {
         /* move to next mask byte */
         maskPtr++;
-		if (maskEndPtr >= maskEndPtr)
+		if (maskPtr >= maskEndPtr)
 		{
 			break;
 		}
