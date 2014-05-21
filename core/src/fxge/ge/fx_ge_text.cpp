@@ -1420,9 +1420,9 @@ CFX_GlyphBitmap* CFX_FaceCache::RenderGlyph(CFX_Font* pFont, FX_DWORD glyph_inde
         }
         int level = 0;
         if (pSubstFont->m_Charset == FXFONT_SHIFTJIS_CHARSET) {
-            level = g_WeightPow_SHIFTJIS[index] * 2 * (FXSYS_abs(ft_matrix.xx) + FXSYS_abs(ft_matrix.xy)) / 36655;
+            level = g_WeightPow_SHIFTJIS[index] * 2 * (FXSYS_abs((int)(ft_matrix.xx)) + FXSYS_abs((int)(ft_matrix.xy))) / 36655;
         } else {
-            level = g_WeightPow_11[index] * (FXSYS_abs(ft_matrix.xx) + FXSYS_abs(ft_matrix.xy)) / 36655;
+            level = g_WeightPow_11[index] * (FXSYS_abs((int)(ft_matrix.xx)) + FXSYS_abs((int)(ft_matrix.xy))) / 36655;
         }
         FXFT_Outline_Embolden(FXFT_Get_Glyph_Outline(m_Face), level);
     }
