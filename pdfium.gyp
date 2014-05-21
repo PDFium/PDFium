@@ -38,11 +38,6 @@
           'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
         },
       }],
-      ['clang==1', {
-        'cflags!': [
-          '-Wheader-hygiene',
-        ],
-      }],
     ],
     'msvs_disabled_warnings': [
       4005, 4018, 4146, 4333, 4345
