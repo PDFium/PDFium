@@ -1,0 +1,1 @@
+For build instructions visit https://code.google.com/p/pdfium/wiki/Build
