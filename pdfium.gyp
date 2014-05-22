@@ -1,5 +1,6 @@
 {
   'variables': {
+    'win_third_party_warn_as_error': 'false',
     'pdf_use_skia%': 0,
   },
   'target_defaults': {
@@ -36,7 +37,13 @@
       ['OS=="mac"', {
         'xcode_settings': {
           'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
+          'GCC_TREAT_WARNINGS_AS_ERRORS': 'NO',    # -Werror
         },
+      }],
+      ['clang==1', {
+         'cflags!': [
+           '-Werror',
+         ],
       }],
     ],
     'msvs_disabled_warnings': [
