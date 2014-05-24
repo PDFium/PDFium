@@ -911,37 +911,33 @@ void CPDF_DIBSource::LoadPalette()
         }
     }
 }
-
 FX_DWORD CPDF_DIBSource::GetValidBpp() const
 {
     FX_DWORD bpc = m_bpc;
     CPDF_Object * pFilter = m_pDict->GetElementValue(FX_BSTRC("Filter"));
-    if(pFilter)
-    {
-        if(pFilter->GetType() == PDFOBJ_NAME)
-        {
+    if (pFilter) {
+        if (pFilter->GetType() == PDFOBJ_NAME) {
             CFX_ByteString filter = pFilter->GetString();
-            if(filter == FX_BSTRC("CCITTFaxDecode") || filter == FX_BSTRC("JBIG2Decode") )
+            if (filter == FX_BSTRC("CCITTFaxDecode") || filter == FX_BSTRC("JBIG2Decode")) {
                 bpc = 1;
-            if(filter == FX_BSTRC("RunLengthDecode") || filter == FX_BSTRC("DCTDecode") )
+            }
+            if (filter == FX_BSTRC("RunLengthDecode") || filter == FX_BSTRC("DCTDecode")) {
                 bpc = 8;
+            }
+        } else if (pFilter->GetType() == PDFOBJ_ARRAY) {
+            CPDF_Array *pArray = (CPDF_Array *)pFilter;
+            if (pArray->GetString(pArray->GetCount() - 1) == FX_BSTRC("CCITTFacDecode") ||
+                    pArray->GetString(pArray->GetCount() - 1) == FX_BSTRC("JBIG2Decode")) {
+                bpc = 1;
+            }
+            if (pArray->GetString(pArray->GetCount() - 1) == FX_BSTRC("RunLengthDecode") ||
+                    pArray->GetString(pArray->GetCount() - 1) == FX_BSTRC("DCTDecode")) {
+                bpc = 8;
+            }
         }
-        else if (pFilter->GetType() == PDFOBJ_ARRAY)
-        {
-             CPDF_Array *pArray = (CPDF_Array *) pFilter;
-             if( pArray->GetString(pArray->GetCount() -1) == FX_BSTRC("CCITTFacDecode") ||
-                 pArray->GetString(pArray->GetCount() -1) == FX_BSTRC("JBIG2Decode") )
-                 bpc = 1;
-
-              if( pArray->GetString(pArray->GetCount() -1) == FX_BSTRC("RunLengthDecode") ||
-                 pArray->GetString(pArray->GetCount() -1) == FX_BSTRC("DCTDecode") )
-                 bpc = 8;
-         }
-     }
-
+    }
     return bpc;
 }
-
 #define NORMALCOLOR_MAX(color, max) (color) > (max) ? (max) : (color) < 0 ? 0 : (color);
 void CPDF_DIBSource::TranslateScanline24bpp(FX_LPBYTE dest_scan, FX_LPCBYTE src_scan) const
 {
@@ -969,9 +965,7 @@ void CPDF_DIBSource::TranslateScanline24bpp(FX_LPBYTE dest_scan, FX_LPCBYTE src_
             } else {
                 int src_bit_pos = 0;
                 int dest_byte_pos = 0;
-
                 FX_DWORD bpc = GetValidBpp();
-
                 for (int column = 0; column < m_Width; column ++) {
                     int R = _GetBits8(src_scan, src_bit_pos, bpc);
                     src_bit_pos += bpc;
@@ -990,9 +984,9 @@ void CPDF_DIBSource::TranslateScanline24bpp(FX_LPBYTE dest_scan, FX_LPCBYTE src_
             }
             return;
         } else if (m_bpc == 8) {
-			if (m_nComponents == m_pColorSpace->CountComponents())
-				m_pColorSpace->TranslateImageLine(dest_scan, src_scan, m_Width, m_Width, m_Height,
-                                              m_bLoadMask && m_GroupFamily == PDFCS_DEVICECMYK && m_Family == PDFCS_DEVICECMYK);
+            if (m_nComponents == m_pColorSpace->CountComponents())
+                m_pColorSpace->TranslateImageLine(dest_scan, src_scan, m_Width, m_Width, m_Height,
+                                                  m_bLoadMask && m_GroupFamily == PDFCS_DEVICECMYK && m_Family == PDFCS_DEVICECMYK);
             return;
         }
     }
@@ -1027,9 +1021,7 @@ void CPDF_DIBSource::TranslateScanline24bpp(FX_LPBYTE dest_scan, FX_LPCBYTE src_
     } else {
         int src_bit_pos = 0;
         int dest_byte_pos = 0;
-        
         FX_DWORD bpc = GetValidBpp();
-
         for (int column = 0; column < m_Width; column ++) {
             for (FX_DWORD color = 0; color < m_nComponents; color ++) {
                 int data = _GetBits8(src_scan, src_bit_pos, bpc);

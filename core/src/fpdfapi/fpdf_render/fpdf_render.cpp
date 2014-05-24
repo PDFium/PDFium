@@ -508,7 +508,7 @@ FX_BOOL CPDF_RenderStatus::ProcessForm(CPDF_FormObject* pFormObj, const CFX_Affi
     }
     CPDF_RenderStatus status;
     status.Initialize(m_Level + 1, m_pContext, m_pDevice, NULL, m_pStopObj,
-                      this, pFormObj, &m_Options, m_Transparency, m_bDropObjects, pResources, TRUE);
+                      this, pFormObj, &m_Options, m_Transparency, m_bDropObjects, pResources, FALSE);
     status.m_curBlend = m_curBlend;
     m_pDevice->SaveState();
     status.RenderObjectList(pFormObj->m_pForm, &matrix);

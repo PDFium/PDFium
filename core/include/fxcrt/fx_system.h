@@ -39,7 +39,7 @@
 #define _FX_W32_		1
 #define _FX_W64_		2
 #ifndef _FX_WORDSIZE_
-#if defined(_WIN64) || defined(__arm64) || defined(__arm64__) || defined(_M_AMD64) || defined(_M_X64) || defined(_M_IA64) || defined(__powerpc64__) || defined(__x86_64__) || __WORDSIZE == 64
+#if defined(_WIN64) || defined(__arm64) || defined(__arm64__) || defined(_M_AMD64) || defined(_M_X64) || defined(_M_IA64) || defined(__powerpc64__) || defined(__x86_64__) || __WORDSIZE == 64 || defined(__LP64__)
 #define _FX_WORDSIZE_	_FX_W64_
 #else
 #define _FX_WORDSIZE_	_FX_W32_

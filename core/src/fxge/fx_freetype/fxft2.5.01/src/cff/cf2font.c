@@ -328,7 +328,6 @@
     FT_Error  lastError = FT_Err_Ok;
 
     FT_Vector  translation;
-	int refCount = 0;
 
 #if 0
     FT_Vector  advancePoint;
@@ -355,7 +354,7 @@
     /* winding order only affects darkening */
     needWinding = font->darkened;
 
-    while ( refCount++ < 1024)
+    while ( 1 )
     {
       /* reset output buffer */
       cf2_outline_reset( &font->outline );

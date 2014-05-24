@@ -452,7 +452,7 @@ FX_BOOL _ConvertBuffer_RgbOrCmyk2Gray(FX_LPBYTE dest_buf, int dest_pitch, int wi
                     src_scan += 4;
                 }
             }
-        } else
+        } else {
             for (int row = 0; row < height; row ++) {
                 FX_LPBYTE dest_scan = dest_buf + row * dest_pitch;
                 FX_LPCBYTE src_scan = pSrcBitmap->GetScanline(src_top + row) + src_left * Bpp;
@@ -461,6 +461,7 @@ FX_BOOL _ConvertBuffer_RgbOrCmyk2Gray(FX_LPBYTE dest_buf, int dest_pitch, int wi
                     src_scan += Bpp;
                 }
             }
+        }
     }
     return TRUE;
 }

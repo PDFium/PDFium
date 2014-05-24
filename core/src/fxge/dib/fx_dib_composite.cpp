@@ -3805,7 +3805,6 @@ void CFX_ScanlineCompositor::CompositeRgbBitmapLine(FX_LPBYTE dest_scan, FX_LPCB
 {
     int src_Bpp = (m_SrcFormat & 0xff) >> 3;
     int dest_Bpp = (m_DestFormat & 0xff) >> 3;
-    int dest_Size = width * dest_Bpp + 4;
     if (m_bRgbByteOrder) {
         switch (m_Transparency) {
             case 0:
@@ -3886,6 +3885,7 @@ void CFX_ScanlineCompositor::CompositeRgbBitmapLine(FX_LPBYTE dest_scan, FX_LPCB
             }
         }
     } else {
+        int dest_Size = width * dest_Bpp + 4;
         if (dest_Size > m_CacheSize) {
             m_pCacheScanline = FX_Realloc(FX_BYTE, m_pCacheScanline, dest_Size);
             if (!m_pCacheScanline) {

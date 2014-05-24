@@ -420,13 +420,13 @@ FX_BOOL CFX_ImageTransformer::Continue(IFX_Pause* pPause)
             }
         } else if (m_Flags & FXDIB_BICUBIC_INTERPOL) {
             CFX_BilinearMatrix result2stretch_fix(result2stretch, 8);
-            int pos_pixel[8];
             for (int row = 0; row < m_ResultHeight; row ++) {
                 FX_BYTE* dest_pos_mask = (FX_BYTE*)pTransformed->m_pAlphaMask->GetScanline(row);
                 for (int col = 0; col < m_ResultWidth; col ++) {
                     int src_col_l, src_row_l, res_x, res_y;
                     result2stretch_fix.Transform(col, row, src_col_l, src_row_l, res_x, res_y);
                     if (src_col_l >= 0 && src_col_l <= stretch_width && src_row_l >= 0 && src_row_l <= stretch_height) {
+                        int pos_pixel[8];
                         int u_w[4], v_w[4];
                         if (src_col_l == stretch_width) {
                             src_col_l--;
@@ -493,13 +493,13 @@ FX_BOOL CFX_ImageTransformer::Continue(IFX_Pause* pPause)
             }
         } else if (m_Flags & FXDIB_BICUBIC_INTERPOL) {
             CFX_BilinearMatrix result2stretch_fix(result2stretch, 8);
-            int pos_pixel[8];
             for (int row = 0; row < m_ResultHeight; row ++) {
                 FX_LPBYTE dest_scan = (FX_LPBYTE)pTransformed->GetScanline(row);
                 for (int col = 0; col < m_ResultWidth; col ++) {
                     int src_col_l, src_row_l, res_x, res_y;
                     result2stretch_fix.Transform(col, row, src_col_l, src_row_l, res_x, res_y);
                     if (src_col_l >= 0 && src_col_l <= stretch_width && src_row_l >= 0 && src_row_l <= stretch_height) {
+                        int pos_pixel[8];
                         int u_w[4], v_w[4];
                         if (src_col_l == stretch_width) {
                             src_col_l--;
@@ -593,13 +593,13 @@ FX_BOOL CFX_ImageTransformer::Continue(IFX_Pause* pPause)
                 }
             } else if (m_Flags & FXDIB_BICUBIC_INTERPOL) {
                 CFX_BilinearMatrix result2stretch_fix(result2stretch, 8);
-                int pos_pixel[8];
                 for (int row = 0; row < m_ResultHeight; row ++) {
                     FX_BYTE* dest_pos = (FX_BYTE*)pTransformed->GetScanline(row);
                     for (int col = 0; col < m_ResultWidth; col ++) {
                         int src_col_l, src_row_l, res_x, res_y;
                         result2stretch_fix.Transform(col, row, src_col_l, src_row_l, res_x, res_y);
                         if (src_col_l >= 0 && src_col_l <= stretch_width && src_row_l >= 0 && src_row_l <= stretch_height) {
+                            int pos_pixel[8];
                             int u_w[4], v_w[4];
                             if (src_col_l == stretch_width) {
                                 src_col_l--;
@@ -706,13 +706,13 @@ FX_BOOL CFX_ImageTransformer::Continue(IFX_Pause* pPause)
                 }
             } else if (m_Flags & FXDIB_BICUBIC_INTERPOL) {
                 CFX_BilinearMatrix result2stretch_fix(result2stretch, 8);
-                int pos_pixel[8];
                 for (int row = 0; row < m_ResultHeight; row ++) {
                     FX_BYTE* dest_pos = (FX_BYTE*)pTransformed->GetScanline(row);
                     for (int col = 0; col < m_ResultWidth; col ++) {
                         int src_col_l, src_row_l, res_x, res_y, r_pos_k_r = 0;
                         result2stretch_fix.Transform(col, row, src_col_l, src_row_l, res_x, res_y);
                         if (src_col_l >= 0 && src_col_l <= stretch_width && src_row_l >= 0 && src_row_l <= stretch_height) {
+                            int pos_pixel[8];
                             int u_w[4], v_w[4];
                             if (src_col_l == stretch_width) {
                                 src_col_l--;

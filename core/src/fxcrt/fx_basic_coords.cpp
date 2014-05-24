@@ -260,7 +260,12 @@ void CFX_Matrix::Set(FX_FLOAT a, FX_FLOAT b, FX_FLOAT c, FX_FLOAT d, FX_FLOAT e,
 }
 void CFX_Matrix::Set(const FX_FLOAT n[6])
 {
-    FXSYS_memcpy32((void*)this, &n, sizeof(CFX_Matrix));
+    this->a = n[0];
+    this->b = n[1];
+    this->c = n[2];
+    this->d = n[3];
+    this->e = n[4];
+    this->f = n[5];
 }
 void CFX_Matrix::SetReverse(const CFX_Matrix &m)
 {

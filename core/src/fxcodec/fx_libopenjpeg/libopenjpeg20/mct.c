@@ -190,7 +190,7 @@ void opj_mct_decode_real(
 		}
 		n &= 7;
 	} else {
-		for(i = 0; i < n; ++i) {
+		for (i = 0; i < n; ++i) {
 			OPJ_FLOAT32 y = c0[i];
 			OPJ_FLOAT32 u = c1[i];
 			OPJ_FLOAT32 v = c2[i];
@@ -202,7 +202,6 @@ void opj_mct_decode_real(
 			c2[i] = b;
 		}
 	}
-	
 #endif
 	for(i = 0; i < n; ++i) {
 		OPJ_FLOAT32 y = c0[i];

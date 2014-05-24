@@ -1156,6 +1156,11 @@ IFX_RenderDeviceDriver* CFX_WindowsDevice::CreateDriver(HDC hDC, FX_BOOL bCmykOu
     } else {
         device_class = FXDC_DISPLAY;
     }
+#ifndef _FPDFAPI_MINI_
+    if (device_class == FXDC_PRINTER) {
+        return FX_NEW CGdiPrinterDriver(hDC);
+    }
+#endif
     return FX_NEW CGdiDisplayDriver(hDC);
 }
 CFX_WinBitmapDevice::CFX_WinBitmapDevice(int width, int height, FXDIB_Format format)

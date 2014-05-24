@@ -1036,8 +1036,8 @@ void CPDF_ContentParser::Continue(IFX_Pause* pPause)
                     for (i = 0; i < m_nStreams; i ++) {
                         FX_DWORD size = m_pStreamArray[i]->GetSize();
                         if (m_Size + size + 1 <= m_Size) {
-							m_Status = Done;
-							return;
+                            m_Status = Done;
+                            return;
                         }
                         m_Size += size + 1;
                     }

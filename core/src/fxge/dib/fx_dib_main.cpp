@@ -1326,7 +1326,7 @@ FX_BOOL CFX_DIBitmap::ConvertColorScale(FX_DWORD forecolor, FX_DWORD backcolor)
                 *scanline ++ = bk + (fk - bk) * gray / 255;
             }
         }
-    } else
+    } else {
         for (int row = 0; row < m_Height; row ++) {
             FX_LPBYTE scanline = m_pBuffer + row * m_Pitch;
             int gap = m_bpp / 8 - 2;
@@ -1338,6 +1338,7 @@ FX_BOOL CFX_DIBitmap::ConvertColorScale(FX_DWORD forecolor, FX_DWORD backcolor)
                 scanline += gap;
             }
         }
+    }
     return TRUE;
 }
 FX_BOOL CFX_DIBitmap::DitherFS(const FX_DWORD* pPalette, int pal_size, const FX_RECT* pRect)

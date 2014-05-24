@@ -1585,6 +1585,7 @@
     {
       /* emit offset 1st point as MoveTo */
       cf2_glyphpath_pushMove( glyphpath, P0 );
+	  if (glyphpath->callbacks && glyphpath->callbacks->error && *glyphpath->callbacks->error) return;
 
       glyphpath->moveIsPending = FALSE;  /* adjust state machine */
       glyphpath->pathIsOpen    = TRUE;
@@ -1601,6 +1602,7 @@
                                   &P0,
                                   P1,
                                   FALSE );
+	  if (glyphpath->callbacks && glyphpath->callbacks->error && *glyphpath->callbacks->error) return;
     }
 
     /* queue the current element with offset points */
@@ -1671,6 +1673,7 @@
     {
       /* emit offset 1st point as MoveTo */
       cf2_glyphpath_pushMove( glyphpath, P0 );
+	  if (glyphpath->callbacks && glyphpath->callbacks->error && *glyphpath->callbacks->error) return;
 
       glyphpath->moveIsPending = FALSE;
       glyphpath->pathIsOpen    = TRUE;
@@ -1687,6 +1690,7 @@
                                   &P0,
                                   P1,
                                   FALSE );
+	  if (glyphpath->callbacks && glyphpath->callbacks->error && *glyphpath->callbacks->error) return;
     }
 
     /* queue the current element with offset points */
@@ -1723,6 +1727,7 @@
       cf2_glyphpath_lineTo( glyphpath,
                             glyphpath->start.x,
                             glyphpath->start.y );
+	  if (glyphpath->callbacks && glyphpath->callbacks->error && *glyphpath->callbacks->error) return;
 
       /* Draw previous element (the explicit LineTo we just created,      */
       /* above) and connect it to the start point, but with the offset we */

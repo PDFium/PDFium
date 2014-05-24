@@ -729,7 +729,9 @@ FX_BOOL CJPX_Decoder::Decode(FX_LPBYTE dest_buf, int pitch, FX_BOOL bTranslateCo
                     pScanline = pChannel + row * pitch;
                     for (col = 0; col < wid; col++) {
                         pPixel = pScanline + col * image->numcomps;
-						if (!image->comps[channel].data) continue;
+                        if (!image->comps[channel].data) {
+                            continue;
+                        }
                         src = image->comps[channel].data[row * wid + col];
                         src += image->comps[channel].sgnd ? 1 << (image->comps[channel].prec - 1) : 0;
                         if (adjust_comps[channel] - 1 < 0) {

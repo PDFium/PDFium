@@ -283,7 +283,7 @@ IFPF_Font* CFPF_SkiaFontMgr::CreateFont(FX_BSTR bsFamilyname, FX_BYTE uCharset, 
 {
     FX_DWORD dwHash = FPF_SKIAGetFamilyHash(bsFamilyname, dwStyle, uCharset);
     IFPF_Font *pFont = NULL;
-    if (m_FamilyFonts.Lookup((void*)dwHash, (void*&)pFont)) {
+    if (m_FamilyFonts.Lookup((void*)(FX_UINTPTR)dwHash, (void*&)pFont)) {
         if (pFont) {
             return pFont->Retain();
         }
@@ -355,7 +355,7 @@ IFPF_Font* CFPF_SkiaFontMgr::CreateFont(FX_BSTR bsFamilyname, FX_BYTE uCharset, 
         CFPF_SkiaFont *pFont = FX_NEW CFPF_SkiaFont;
         if (pFont) {
             if (pFont->InitFont(this, pFontDes, bsFamilyname, dwStyle, uCharset)) {
-                m_FamilyFonts.SetAt((void*)dwHash, (void*)pFont);
+                m_FamilyFonts.SetAt((void*)(FX_UINTPTR)dwHash, (void*)pFont);
                 return pFont->Retain();
             }
             pFont->Release();

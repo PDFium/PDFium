@@ -464,9 +464,6 @@
     CF2_HintMaskRec   hintMask;
     CF2_GlyphPathRec  glyphPath;
 
-	int refCount = 0;
-
-
     /* initialize the remaining objects */
     cf2_arrstack_init( &subrStack,
                        memory,
@@ -551,7 +548,7 @@
       goto exit;
 
     /* main interpreter loop */
-    while ( refCount++ < 10240 )
+    while ( 1 )
     {
       if ( cf2_buf_isEnd( charstring ) )
       {
@@ -646,6 +643,7 @@
         curY += cf2_stack_popFixed( opStack );
 
         cf2_glyphpath_moveTo( &glyphPath, curX, curY );
+		if (glyphPath.callbacks && glyphPath.callbacks->error && *glyphPath.callbacks->error) goto exit;
 
         break;
 
@@ -663,6 +661,7 @@
             curY += cf2_stack_getReal( opStack, index + 1 );
 
             cf2_glyphpath_lineTo( &glyphPath, curX, curY );
+			if (glyphPath.callbacks && glyphPath.callbacks->error && *glyphPath.callbacks->error) goto exit;
           }
 
           cf2_stack_clear( opStack );
@@ -693,6 +692,7 @@
             isX = !isX;
 
             cf2_glyphpath_lineTo( &glyphPath, curX, curY );
+			if (glyphPath.callbacks && glyphPath.callbacks->error && *glyphPath.callbacks->error) goto exit;
           }
 
           cf2_stack_clear( opStack );
@@ -720,6 +720,7 @@
 
 
             cf2_glyphpath_curveTo( &glyphPath, x1, y1, x2, y2, x3, y3 );
+			if (glyphPath.callbacks && glyphPath.callbacks->error && *glyphPath.callbacks->error) goto exit;
 
             curX   = x3;
             curY   = y3;
@@ -732,6 +733,7 @@
             curY += cf2_stack_getReal( opStack, index + 1 );
 
             cf2_glyphpath_lineTo( &glyphPath, curX, curY );
+			if (glyphPath.callbacks && glyphPath.callbacks->error && *glyphPath.callbacks->error) goto exit;
           }
 
           cf2_stack_clear( opStack );
@@ -1225,6 +1227,7 @@
         curX += cf2_stack_popFixed( opStack );
 
         cf2_glyphpath_moveTo( &glyphPath, curX, curY );
+		if (glyphPath.callbacks && glyphPath.callbacks->error && *glyphPath.callbacks->error) goto exit;
 
         break;
 
@@ -1243,6 +1246,7 @@
         curX += cf2_stack_popFixed( opStack );
 
         cf2_glyphpath_moveTo( &glyphPath, curX, curY );
+		if (glyphPath.callbacks && glyphPath.callbacks->error && *glyphPath.callbacks->error) goto exit;
 
         break;
 
@@ -1260,6 +1264,7 @@
             curY += cf2_stack_getReal( opStack, index + 1 );
 
             cf2_glyphpath_lineTo( &glyphPath, curX, curY );
+			if (glyphPath.callbacks && glyphPath.callbacks->error && *glyphPath.callbacks->error) goto exit;
             index += 2;
           }
 
@@ -1274,6 +1279,7 @@
 
 
             cf2_glyphpath_curveTo( &glyphPath, x1, y1, x2, y2, x3, y3 );
+			if (glyphPath.callbacks && glyphPath.callbacks->error && *glyphPath.callbacks->error) goto exit;
 
             curX   = x3;
             curY   = y3;
@@ -1313,6 +1319,7 @@
             y3 = cf2_stack_getReal( opStack, index + 3 ) + y2;
 
             cf2_glyphpath_curveTo( &glyphPath, x1, y1, x2, y2, x3, y3 );
+			if (glyphPath.callbacks && glyphPath.callbacks->error && *glyphPath.callbacks->error) goto exit;
 
             curX   = x3;
             curY   = y3;
@@ -1352,6 +1359,7 @@
             y3 = y2;
 
             cf2_glyphpath_curveTo( &glyphPath, x1, y1, x2, y2, x3, y3 );
+			if (glyphPath.callbacks && glyphPath.callbacks->error && *glyphPath.callbacks->error) goto exit;
 
             curX   = x3;
             curY   = y3;
@@ -1418,6 +1426,7 @@
             }
 
             cf2_glyphpath_curveTo( &glyphPath, x1, y1, x2, y2, x3, y3 );
+			if (glyphPath.callbacks && glyphPath.callbacks->error && *glyphPath.callbacks->error) goto exit;
 
             curX   = x3;
             curY   = y3;

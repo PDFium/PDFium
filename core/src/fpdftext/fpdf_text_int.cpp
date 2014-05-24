@@ -939,12 +939,12 @@ FX_INT32 CPDF_TextPage::FindTextlineFlowDirection()
     if (!nHorizontalMask.SetSize(nPageWidth)) {
         return -1;
     }
-	FX_BYTE* pDataH = nHorizontalMask.GetData();
+    FX_BYTE* pDataH = nHorizontalMask.GetData();
     CFX_ByteArray nVerticalMask;
     if (!nVerticalMask.SetSize(nPageHeight)) {
         return -1;
     }
-	FX_BYTE* pDataV = nVerticalMask.GetData();
+    FX_BYTE* pDataV = nVerticalMask.GetData();
     FX_INT32 index = 0;
     FX_FLOAT fLineHeight = 0.0f;
     CPDF_PageObject* pPageObj = NULL;
@@ -961,22 +961,19 @@ FX_INT32 CPDF_TextPage::FindTextlineFlowDirection()
         if(PDFPAGE_TEXT != pPageObj->m_Type) {
             continue;
         }
-		FX_INT32 minH = (FX_INT32)pPageObj->m_Left < 0 ? 0 : (FX_INT32)pPageObj->m_Left;
-		FX_INT32 maxH = (FX_INT32)pPageObj->m_Right > nPageWidth ? nPageWidth : (FX_INT32)pPageObj->m_Right;
-		FX_INT32 minV = (FX_INT32)pPageObj->m_Bottom < 0 ? 0 : (FX_INT32)pPageObj->m_Bottom;
-		FX_INT32 maxV = (FX_INT32)pPageObj->m_Top > nPageHeight ? nPageHeight : (FX_INT32)pPageObj->m_Top;
-		if (minH >= maxH || minV >= maxV){
-			continue;
-		}
-
-		FXSYS_memset8(pDataH + minH, 1, maxH - minH);
-		FXSYS_memset8(pDataV + minV, 1, maxV - minV);
-
-		if (fLineHeight <= 0.0f) {
-			fLineHeight = pPageObj->m_Top - pPageObj->m_Bottom;
-		}
-
-		pPageObj = NULL;
+        FX_INT32 minH = (FX_INT32)pPageObj->m_Left < 0 ? 0 : (FX_INT32)pPageObj->m_Left;
+        FX_INT32 maxH = (FX_INT32)pPageObj->m_Right > nPageWidth ? nPageWidth : (FX_INT32)pPageObj->m_Right;
+        FX_INT32 minV = (FX_INT32)pPageObj->m_Bottom < 0 ? 0 : (FX_INT32)pPageObj->m_Bottom;
+        FX_INT32 maxV = (FX_INT32)pPageObj->m_Top > nPageHeight ? nPageHeight : (FX_INT32)pPageObj->m_Top;
+        if (minH >= maxH || minV >= maxV) {
+            continue;
+        }
+        FXSYS_memset8(pDataH + minH, 1, maxH - minH);
+        FXSYS_memset8(pDataV + minV, 1, maxV - minV);
+        if (fLineHeight <= 0.0f) {
+            fLineHeight = pPageObj->m_Top - pPageObj->m_Bottom;
+        }
+        pPageObj = NULL;
     }
     FX_INT32 nStartH = 0;
     FX_INT32 nEndH = 0;
