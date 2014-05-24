@@ -820,30 +820,4 @@
       ],
     },
   ],
-  'conditions': [
-    ['OS=="mac" or OS=="linux"', {
-      'targets': [
-        {
-          'target_name': 'gcctest',
-          'type': 'executable',
-          'dependencies': [
-            'fpdfsdk',
-          ],
-          'conditions': [
-            ['OS=="mac"', {
-              'link_settings': {
-                'libraries': [
-                  '$(SDKROOT)/System/Library/Frameworks/Carbon.framework',
-                ],
-              },
-            }],
-          ],
-          'sources': [
-            'test/gcctest.cpp',
-          ],
-        }
-      ],
-    }],
-  ],
 }
-
