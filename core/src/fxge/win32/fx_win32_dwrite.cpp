@@ -8,7 +8,7 @@
 #if _FX_OS_ == _FX_WIN32_DESKTOP_ || _FX_OS_ == _FX_WIN64_
 #include "../../../include/fxge/fx_ge_win32.h"
 #include "dwrite_int.h"
-#include "../Microsoft SDK/include/DWrite.h"
+#include <dwrite.h>
 typedef HRESULT  (__stdcall *FuncType_DWriteCreateFactory)(__in DWRITE_FACTORY_TYPE, __in REFIID, __out IUnknown **);
 template <typename InterfaceType>
 inline void SafeRelease(InterfaceType** currentObject)

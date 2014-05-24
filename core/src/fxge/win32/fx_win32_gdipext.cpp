@@ -7,9 +7,9 @@
 #include "../../../include/fxge/fx_ge.h"
 #if _FX_OS_ == _FX_WIN32_DESKTOP_ || _FX_OS_ == _FX_WIN64_
 #include <windows.h>
+#include <gdiplus.h>
 #include "../../../include/fxge/fx_ge_win32.h"
 #include "win32_int.h"
-#include "../Microsoft SDK/include/GdiPlus.h"
 using namespace Gdiplus;
 using namespace Gdiplus::DllExports;
 #define GdiFillType2Gdip(fill_type) (fill_type == ALTERNATE ? FillModeAlternate : FillModeWinding)
