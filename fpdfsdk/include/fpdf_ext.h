@@ -71,7 +71,7 @@ DLLEXPORT FPDF_BOOL STDCALL FSDK_SetUnSpObjProcessHandler(UNSUPPORT_INFO* unsp_i
 //flags for page mode. 
 
 //Unknown value
-#define PAGEMODE_UNKONOWN		-1
+#define PAGEMODE_UNKNOWN		-1
 
 //Neither document outline nor thumbnail images visible
 #define PAGEMODE_USENONE		0

@@ -219,10 +219,10 @@ void CheckUnSupportError(CPDF_Document * pDoc, FX_DWORD err_code)
 
 DLLEXPORT int FPDFDoc_GetPageMode(FPDF_DOCUMENT document)
 {
-	if (!document) return PAGEMODE_UNKONOWN;
+	if (!document) return PAGEMODE_UNKNOWN;
 	CPDF_Dictionary *pRoot = ((CPDF_Document*)document)->GetRoot();
 	if (!pRoot)
-		return PAGEMODE_UNKONOWN;
+		return PAGEMODE_UNKNOWN;
 	CPDF_Object* pName = pRoot->GetElement("PageMode");
 	if (!pName)
 		return PAGEMODE_USENONE;
@@ -241,5 +241,5 @@ DLLEXPORT int FPDFDoc_GetPageMode(FPDF_DOCUMENT document)
 	else if (strPageMode.EqualNoCase(FX_BSTR("UseAttachments")))
 		return PAGEMODE_USEATTACHMENTS;
 
-	return PAGEMODE_UNKONOWN;
+	return PAGEMODE_UNKNOWN;
 }
