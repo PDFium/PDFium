@@ -180,7 +180,7 @@ void RenderPdf(const char* name, const char* pBuf, size_t len,
 
   FPDF_FILEACCESS file_access;
   memset(&file_access, '\0', sizeof(file_access));
-  file_access.m_FileLen = len;
+  file_access.m_FileLen = static_cast<unsigned long>(len);
   file_access.m_GetBlock = Get_Block;
   file_access.m_Param = &loader;
 
