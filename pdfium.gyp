@@ -119,7 +119,24 @@
             'fpdfsdk/src/fpdfsdkdll.rc',
           ],
         }],
+        ['OS=="mac"', {
+          'link_settings': {
+            'libraries': [
+              '$(SDKROOT)/System/Library/Frameworks/AppKit.framework',
+              '$(SDKROOT)/System/Library/Frameworks/CoreFoundation.framework',
+            ],
+          },
+        }],
       ],
+      'msvs_settings': {
+        'VCLinkerTool': {
+          'AdditionalDependencies': [
+            'advapi32.lib',
+            'gdi32.lib',
+            'user32.lib',
+          ],
+        },
+      },
     },
     {
       'target_name': 'fdrm',

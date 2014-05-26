@@ -186,11 +186,6 @@
         #   1 == /SUBSYSTEM:CONSOLE
         #   2 == /SUBSYSTEM:WINDOWS
         'SubSystem': '1',
-        'AdditionalDependencies': [
-          'advapi32.lib',
-          'gdi32.lib',
-          'user32.lib',
-        ],
       },
     },
     'xcode_settings': {
@@ -242,12 +237,6 @@
     }],  # OS=="win"
     ['OS=="mac"', {
       'target_defaults': {
-        'link_settings': {
-          'libraries': [
-            '$(SDKROOT)/System/Library/Frameworks/AppKit.framework',
-            '$(SDKROOT)/System/Library/Frameworks/CoreFoundation.framework',
-          ],
-        },
         'target_conditions': [
           ['_type!="static_library"', {
             'xcode_settings': {'OTHER_LDFLAGS': ['-Wl,-search_paths_first']},
