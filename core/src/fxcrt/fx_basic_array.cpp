@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #include "../../include/fxcrt/fx_basic.h"
@@ -25,7 +25,10 @@ CFX_BasicArray::~CFX_BasicArray()
 FX_BOOL CFX_BasicArray::SetSize(int nNewSize, int nGrowBy)
 {
     if (nNewSize < 0 || nNewSize > (1 << 28) / m_nUnitSize) {
-        m_pData = NULL;
+        if (m_pData != NULL) {
+            FX_Allocator_Free(m_pAllocator, m_pData);
+            m_pData = NULL;
+		}
         m_nSize = m_nMaxSize = 0;
         return FALSE;
     }
