@@ -150,7 +150,7 @@
     ],
     'msvs_cygwin_dirs': ['<(DEPTH)/v8/third_party/cygwin'],
     'msvs_configuration_attributes': {
-      'OutputDirectory': '<(DEPTH)\\out\\$(ConfigurationName)',
+      'OutputDirectory': '<(DEPTH)\\build\\$(ConfigurationName)',
       'IntermediateDirectory': '$(OutDir)\\obj\\$(ProjectName)',
       'CharacterSet': '1',
     },
