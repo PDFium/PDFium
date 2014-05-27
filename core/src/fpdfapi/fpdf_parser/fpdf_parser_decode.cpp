@@ -44,7 +44,8 @@ FX_DWORD _A85Decode(const FX_BYTE* src_buf, FX_DWORD src_size, FX_LPBYTE& dest_b
     if (dest_buf == NULL) {
         return (FX_DWORD) - 1;
     }
-    int state = 0, res = 0;
+    int state = 0;
+	FX_UINT32 res = 0;
     pos = dest_size = 0;
     while (pos < src_size) {
         FX_BYTE ch = src_buf[pos++];
