@@ -249,7 +249,7 @@ DLLEXPORT unsigned long STDCALL FPDF_GetMetaText(FPDF_DOCUMENT doc, FPDF_BYTESTR
 	// Use UTF-16LE encoding
 	CFX_ByteString bstr = text.UTF16LE_Encode();
 	unsigned long len = bstr.GetLength();
-	if (buffer != NULL || buflen >= len+2) {
+	if (buffer != NULL && buflen >= len+2) {
 		FXSYS_memcpy(buffer, (FX_LPCSTR)bstr, len);
 		// use double zero as trailer
 		((FX_BYTE*)buffer)[len] = ((FX_BYTE*)buffer)[len+1] = 0;
