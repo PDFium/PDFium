@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #include "../../../include/fpdfapi/fpdf_parser.h"
@@ -198,8 +198,8 @@ ICodec_ScanlineDecoder* FPDFAPI_CreateFaxDecoder(FX_LPCBYTE src_buf, FX_DWORD sr
     FX_BOOL EndOfLine = FALSE;
     FX_BOOL ByteAlign = FALSE;
     FX_BOOL BlackIs1 = FALSE;
-    FX_BOOL Columns = 1728;
-    FX_BOOL Rows = 0;
+    int Columns = 1728;
+    int Rows = 0;
     if (pParams) {
         K = pParams->GetInteger(FX_BSTRC("K"));
         EndOfLine = pParams->GetInteger(FX_BSTRC("EndOfLine"));
