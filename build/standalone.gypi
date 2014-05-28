@@ -37,6 +37,7 @@
       'host_arch%': '<(host_arch)',
       'target_arch%': '<(target_arch)',
     },
+    # These two are needed by V8.
     'host_arch%': '<(host_arch)',
     'target_arch%': '<(target_arch)',
     'werror%': '-Werror',
@@ -134,7 +135,7 @@
     'defines!': [
       'DEBUG',
     ],
-    'cflags!': [
+    'cflags': [
       '-Wall',
       '-W',
       '-Wno-unused-parameter',
