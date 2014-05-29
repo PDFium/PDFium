@@ -508,7 +508,11 @@ const CPWL_FontMap::CharsetFontMap CPWL_FontMap::defaultTTFMap[] = {
 	{ SHIFTJIS_CHARSET, "MS Gothic" },
 	{ HANGUL_CHARSET, "Batang" },
 	{ RUSSIAN_CHARSET, "Arial" },
+#if _FXM_PLATFORM_ == _FXM_PLATFORM_LINUX_ || _FXM_PLATFORM_ == _FXM_PLATFORM_APPLE_
+	{ EASTEUROPE_CHARSET, "Arial" },
+#else
 	{ EASTEUROPE_CHARSET, "Tahoma" },
+#endif
 	{ ARABIC_CHARSET, "Arial" },
 	{ -1, NULL }
 };
