@@ -246,4 +246,8 @@
       },  # target_defaults
     }],  # OS=="mac"
   ],
+  'xcode_settings': {
+    # See comment in Chromium's common.gypi for why this is needed.
+    'SYMROOT': '<(DEPTH)/xcodebuild',
+  }
 }
