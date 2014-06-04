@@ -411,7 +411,7 @@ FX_BOOL CCodec_JpegDecoder::InitDecode()
     m_OrigWidth = cinfo.image_width;
     m_OrigHeight = cinfo.image_height;
     m_OutputWidth = m_OrigWidth;
-    m_OutputHeight = m_OutputHeight;
+    m_OutputHeight = m_OrigHeight;
     m_nDefaultScaleDenom = cinfo.scale_denom;
     return TRUE;
 }
