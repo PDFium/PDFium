@@ -402,7 +402,7 @@ CFX_WideString PDF_DecodeText(FX_LPCBYTE src_data, FX_DWORD src_len, CFX_CharMap
     CFX_WideString result;
     if (src_len >= 2 && ((src_data[0] == 0xfe && src_data[1] == 0xff) || (src_data[0] == 0xff && src_data[1] == 0xfe))) {
         FX_BOOL bBE = src_data[0] == 0xfe;
-        int max_chars = (src_len - 2) / 2;
+        FX_DWORD max_chars = (src_len - 2) / 2;
         if (!max_chars) {
             return result;
         }
@@ -412,7 +412,7 @@ CFX_WideString PDF_DecodeText(FX_LPCBYTE src_data, FX_DWORD src_len, CFX_CharMap
         FX_LPWSTR dest_buf = result.GetBuffer(max_chars);
         FX_LPCBYTE uni_str = src_data + 2;
         int dest_pos = 0;
-        for (int i = 0; i < max_chars * 2; i += 2) {
+        for (FX_DWORD i = 0; i < max_chars * 2; i += 2) {
             FX_WORD unicode = bBE ? (uni_str[i] << 8 | uni_str[i + 1]) : (uni_str[i + 1] << 8 | uni_str[i]);
             if (unicode == 0x1b) {
                 i += 2;
