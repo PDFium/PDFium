@@ -202,7 +202,7 @@
     FT_INT64  integral = 0;
     FT_INT64  decimal = 0;
 #else
-	FT_Long integral;
+	FT_Long integral = 0;
 	FT_Long decimal = 0;
 	FT_Int temp0 = 65536;
 	FT_Int temp1 = power_ten;

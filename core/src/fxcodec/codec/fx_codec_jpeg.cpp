@@ -282,6 +282,7 @@ static FX_BOOL _JpegLoadInfo(FX_LPCBYTE src_buf, FX_DWORD src_size, int& width, 
     jerr.output_message = _error_do_nothing;
     jerr.format_message = _error_do_nothing2;
     jerr.reset_error_mgr = _error_do_nothing;
+    jerr.trace_level = 0;
     cinfo.err = &jerr;
     jmp_buf mark;
     cinfo.client_data = &mark;
