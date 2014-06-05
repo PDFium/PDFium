@@ -6,7 +6,7 @@
   'target_defaults': {
     'type': 'executable',
     'dependencies': [
-      '../pdfium.gyp:fpdfsdk',
+      '../pdfium.gyp:pdfium',
     ],
     'include_dirs': ['<(DEPTH)'],
   },

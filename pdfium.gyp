@@ -52,7 +52,7 @@
   },
   'targets': [
     {
-      'target_name': 'fpdfsdk',
+      'target_name': 'pdfium',
       'type': 'static_library',
       'dependencies': [
         'fdrm',
