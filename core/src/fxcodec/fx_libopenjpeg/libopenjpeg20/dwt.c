@@ -140,7 +140,9 @@ static void opj_v4dwt_interleave_h(opj_v4dwt_t* restrict w, OPJ_FLOAT32* restric
 
 static void opj_v4dwt_interleave_v(opj_v4dwt_t* restrict v , OPJ_FLOAT32* restrict a , OPJ_INT32 x, OPJ_INT32 nb_elts_read);
 
-#ifdef __SSE__
+//#ifdef __SSE__
+// Disable __SSE__ due to bug http://crbug.com/373619. Should enable this after adding aligned malloc in memory manager
+#if 0
 static void opj_v4dwt_decode_step1_sse(opj_v4_t* w, OPJ_INT32 count, const __m128 c);
 
 static void opj_v4dwt_decode_step2_sse(opj_v4_t* l, opj_v4_t* w, OPJ_INT32 k, OPJ_INT32 m, __m128 c);
@@ -671,8 +673,9 @@ void opj_v4dwt_interleave_v(opj_v4dwt_t* restrict v , OPJ_FLOAT32* restrict a , 
 	}
 }
 
-#ifdef __SSE__
-
+//#ifdef __SSE__
+// Disable __SSE__ due to bug http://crbug.com/373619. Should enable this after adding aligned malloc in memory manager
+#if 0
 void opj_v4dwt_decode_step1_sse(opj_v4_t* w, OPJ_INT32 count, const __m128 c){
 	__m128* restrict vw = (__m128*) w;
 	OPJ_INT32 i;
@@ -808,7 +811,10 @@ void opj_v4dwt_decode(opj_v4dwt_t* restrict dwt)
 		a = 1;
 		b = 0;
 	}
-#ifdef __SSE__
+
+//#ifdef __SSE__
+// Disable __SSE__ due to bug http://crbug.com/373619. Should enable this after adding aligned malloc in memory manager
+#if 0
 	opj_v4dwt_decode_step1_sse(dwt->wavelet+a, dwt->sn, _mm_set1_ps(opj_K));
 	opj_v4dwt_decode_step1_sse(dwt->wavelet+b, dwt->dn, _mm_set1_ps(opj_c13318));
 	opj_v4dwt_decode_step2_sse(dwt->wavelet+b, dwt->wavelet+a+1, dwt->sn, opj_int_min(dwt->sn, dwt->dn-a), _mm_set1_ps(opj_dwt_delta));
