@@ -1428,6 +1428,9 @@ void CFX_FolderFontInfo::ReportFace(CFX_ByteString& path, FXSYS_FILE* pFile, FX_
     }
     FX_DWORD nTables = GET_TT_SHORT(buffer + 4);
     CFX_ByteString tables = _FPDF_ReadStringFromFile(pFile, nTables * 16);
+    if (tables.IsEmpty()) {
+        return;
+    }
     CFX_ByteString names = _FPDF_LoadTableFromTT(pFile, tables, nTables, 0x6e616d65);
     CFX_ByteString facename = _FPDF_GetNameFromTT(names, 1);
     CFX_ByteString style = _FPDF_GetNameFromTT(names, 2);
