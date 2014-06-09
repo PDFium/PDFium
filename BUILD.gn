@@ -474,6 +474,12 @@ static_library("fxcodec") {
   if (is_posix) {
     configs -= [ "//build/config/gcc:no_exceptions" ]
   }
+
+  if (is_posix) {
+    # core/src/fxcodec/fx_libopenjpeg/src/fx_mct.c does an pointer-to-int
+    # conversion to check that an address is 16-bit aligned (benign).
+    cflags_c = [ "-Wno-pointer-to-int-cast" ]
+  }
   configs += [ ":pdfium_config", "//build/config/compiler:no_chromium_code" ]
 }
 

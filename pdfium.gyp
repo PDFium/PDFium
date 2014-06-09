@@ -487,6 +487,13 @@
         'core/src/fxcodec/libjpeg/makefile',
         'core/src/fxcodec/libjpeg/transupp.h',
       ],
+      'conditions': [
+        ['os_posix==1', {
+          # core/src/fxcodec/fx_libopenjpeg/src/fx_mct.c does an pointer-to-int
+          # conversion to check that an address is 16-bit aligned (benign).
+          'cflags_c': [ '-Wno-pointer-to-int-cast' ],
+        }],
+      ],
     },
     {
       'target_name': 'fxcrt',
