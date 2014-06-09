@@ -59,7 +59,7 @@ CJBig2_Context::~CJBig2_Context()
     }
     m_pGRD = NULL;
     if(m_gbContext) {
-        delete m_gbContext;
+        m_pModule->JBig2_Free(m_gbContext);
     }
     m_gbContext = NULL;
     if(m_pGlobalContext) {
