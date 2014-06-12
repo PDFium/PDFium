@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #ifndef _FPDF_SERIAL_
@@ -120,6 +120,8 @@ public:
     CPDF_Creator(CPDF_Document* pDoc);
 
     ~CPDF_Creator();
+
+    void				RemoveSecurity();
 
     FX_BOOL				Create(FX_LPCWSTR filename, FX_DWORD flags = 0);
 

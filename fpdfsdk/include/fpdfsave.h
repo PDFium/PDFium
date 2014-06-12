@@ -47,7 +47,8 @@ struct FPDF_FILEWRITE{
 #define FPDF_INCREMENTAL		1
 /** @brief No Incremental. */
 #define FPDF_NO_INCREMENTAL		2
-
+/** @brief Remove security. */
+#define FPDF_REMOVE_SECURITY	3
 
 // Function: FPDF_SaveAsCopy
 //			Saves the copy of specified document in custom way.

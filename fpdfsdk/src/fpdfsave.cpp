@@ -60,7 +60,7 @@ FPDF_BOOL _FPDF_Doc_Save(FPDF_DOCUMENT document,FPDF_FILEWRITE * pFileWrite,FPDF
 	if (!pDoc) 
 		return 0;
 	
-	if ( flags < 1 || flags > 2 )
+	if ( flags < FPDF_INCREMENTAL || flags > FPDF_REMOVE_SECURITY )
 	{
 		flags = 0;
 	}
@@ -68,6 +68,11 @@ FPDF_BOOL _FPDF_Doc_Save(FPDF_DOCUMENT document,FPDF_FILEWRITE * pFileWrite,FPDF
 	CPDF_Creator FileMaker(pDoc);
 	if(bSetVersion)
 		FileMaker.SetFileVersion(fileVerion);
+	if(flags == FPDF_REMOVE_SECURITY)
+	{
+		flags =  0;
+		FileMaker.RemoveSecurity();
+	}
 	CFX_IFileWrite* pStreamWrite = NULL;
 	FX_BOOL bRet;
 	pStreamWrite = new CFX_IFileWrite;

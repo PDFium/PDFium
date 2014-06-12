@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #include "../../../include/fpdfapi/fpdf_serial.h"
@@ -2112,6 +2112,13 @@ FX_BOOL CPDF_Creator::SetFileVersion(FX_INT32 fileVersion )
     }
     m_FileVersion = fileVersion;
     return TRUE;
+}
+void CPDF_Creator::RemoveSecurity()
+{
+    ResetStandardSecurity();
+    m_bSecurityChanged = TRUE;
+    m_pEncryptDict = NULL;
+    m_pCryptoHandler = NULL;
 }
 void CPDF_Creator::ResetStandardSecurity()
 {
