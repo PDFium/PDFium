@@ -314,3 +314,17 @@ DLLEXPORT void STDCALL FPDFPage_TransformAnnots(FPDF_PAGE page,
 	}
 
 }
+
+DLLEXPORT void STDCALL FPDFPage_SetRotation(FPDF_PAGE page, int rotate)
+{
+	CPDF_Page* pPage = (CPDF_Page*)page;
+	if (!pPage || !pPage->m_pFormDict || !pPage->m_pFormDict->KeyExist("Type")
+		|| pPage->m_pFormDict->GetElement("Type")->GetDirect()->GetString().Compare("Page"))
+	{
+		return;
+	}
+	CPDF_Dictionary* pDict = pPage->m_pFormDict;
+	rotate %=4;
+
+	pDict->SetAt("Rotate", FX_NEW CPDF_Number(rotate * 90));
+}

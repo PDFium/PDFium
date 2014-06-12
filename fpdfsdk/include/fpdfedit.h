@@ -67,17 +67,29 @@ DLLEXPORT void STDCALL FPDFPage_Delete(FPDF_DOCUMENT document, int page_index);
 // Function: FPDFPage_GetRotation
 //			Get the page rotation. One of following values will be returned: 0(0), 1(90), 2(180), 3(270).
 // Parameters:	
-//			page		-	Handle to a page. Returned by FPDFPage_New.
+//			page		-	Handle to a page. Returned by FPDFPage_New or FPDF_LoadPage.
 // Return value:
 //			The PDF page rotation.
 // Comment:
 //			The PDF page rotation is rotated clockwise.
 DLLEXPORT int STDCALL FPDFPage_GetRotation(FPDF_PAGE page);
 
+// Function: FPDFPage_SetRotation
+//			Set page rotation. One of following values will be set: 0(0), 1(90), 2(180), 3(270).
+// Parameters:	
+//			page		-	Handle to a page. Returned by FPDFPage_New or FPDF_LoadPage.
+//			rotate		-	The value of the PDF page rotation.
+// Return value:
+//			None.
+// Comment:
+//			The PDF page rotation is rotated clockwise.
+// 
+DLLEXPORT void STDCALL FPDFPage_SetRotation(FPDF_PAGE page, int rotate);
+
 // Function: FPDFPage_InsertObject
 //			Insert an object to the page. The page object is automatically freed.
 // Parameters:	
-//			page		-	Handle to a page. Returned by FPDFPage_New.
+//			page		-	Handle to a page. Returned by FPDFPage_New or FPDF_LoadPage.
 //			page_obj	-	Handle to a page object. Returned by FPDFPageObj_NewTextObj,FPDFPageObj_NewTextObjEx and
 //							FPDFPageObj_NewPathObj.
 // Return value:
@@ -87,7 +99,7 @@ DLLEXPORT void STDCALL FPDFPage_InsertObject(FPDF_PAGE page, FPDF_PAGEOBJECT pag
 // Function: FPDFPage_CountObject
 //			Get number of page objects inside the page.
 // Parameters:	
-//			page		-	Handle to a page. Returned by FPDFPage_New.
+//			page		-	Handle to a page. Returned by FPDFPage_New or FPDF_LoadPage.
 // Return value:
 //			The number of the page object.
 DLLEXPORT int STDCALL FPDFPage_CountObject(FPDF_PAGE page);
@@ -95,7 +107,7 @@ DLLEXPORT int STDCALL FPDFPage_CountObject(FPDF_PAGE page);
 // Function: FPDFPage_GetObject
 //			Get page object by index.
 // Parameters:	
-//			page		-	Handle to a page. Returned by FPDFPage_New.
+//			page		-	Handle to a page. Returned by FPDFPage_New or FPDF_LoadPage.
 //			index		-	The index of a page object.
 // Return value:
 //			The handle of the page object. Null for failed.
@@ -113,7 +125,7 @@ DLLEXPORT FPDF_BOOL STDCALL FPDFPage_HasTransparency(FPDF_PAGE page);
 // Function: FPDFPage_GenerateContent
 //			Generate PDF Page content.
 // Parameters:	
-//			page		-	Handle to a page. Returned by FPDFPage_New.
+//			page		-	Handle to a page. Returned by FPDFPage_New or FPDF_LoadPage.
 // Return value:
 //			True if successful, false otherwise.
 // Comment:
