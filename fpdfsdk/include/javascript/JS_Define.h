@@ -44,11 +44,7 @@ typedef CFX_WideString	JS_ErrorString;
 #define CJS_IntArray		CFX_ArrayTemplate<int>
 
 /* ====================================== PUBLIC DEFINE SPEC ============================================== */
-#ifndef __GNUC__
-#define JS_WIDESTRING(widestring) L#widestring
-#else
-#define JS_WIDESTRING(widestring) L""#widestring
-#endif
+#define JS_WIDESTRING(widestring) L###widestring
 
 #define OBJ_PROP_PARAMS			IFXJS_Context* cc, CJS_PropValue& vp, JS_ErrorString& sError
 #define OBJ_METHOD_PARAMS		IFXJS_Context* cc, const CJS_Parameters& params, CJS_Value& vRet, JS_ErrorString& sError
