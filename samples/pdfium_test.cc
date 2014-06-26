@@ -20,10 +20,6 @@
 
 #ifdef _WIN32
   #define snprintf _snprintf
-  /* in Windows, rb for open and read binary file */
-  #define FOPEN_READ "rb"
-#else
-  #define FOPEN_READ "r"
 #endif
 
 static void WritePpm(const char* pdf_name, int num,
@@ -39,7 +35,7 @@ static void WritePpm(const char* pdf_name, int num,
 
   char filename[256];
   snprintf(filename, sizeof(filename), "%s.%d.ppm", pdf_name, num);
-  FILE* fp = fopen(filename, "w");
+  FILE* fp = fopen(filename, "wb");
   if (!fp)
     return;
   fprintf(fp, "P6\n# PDF test render\n%d %d\n255\n", width, height);
@@ -283,7 +279,7 @@ int main(int argc, const char* argv[]) {
   while (!files.empty()) {
     const char* filename = files.front();
     files.pop_front();
-    FILE* file = fopen(filename, FOPEN_READ);
+    FILE* file = fopen(filename, "rb");
     if (!file) {
       fprintf(stderr, "Failed to open: %s\n", filename);
       continue;
