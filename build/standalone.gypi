@@ -224,6 +224,7 @@
     ['OS=="win"', {
       'target_defaults': {
         'defines': [
+          'NOMINMAX',
           '_CRT_SECURE_NO_DEPRECATE',
           '_CRT_NONSTDC_NO_DEPRECATE',
         ],
