@@ -292,11 +292,11 @@ void Revision6_Hash(FX_LPCBYTE password, FX_DWORD size, FX_LPCBYTE salt, FX_LPCB
 FX_BOOL CPDF_StandardSecurityHandler::AES256_CheckPassword(FX_LPCBYTE password, FX_DWORD size,
         FX_BOOL bOwner, FX_LPBYTE key)
 {
-    CFX_ByteString okey = m_pEncryptDict->GetString(FX_BSTRC("O"));
+    CFX_ByteString okey = m_pEncryptDict ? m_pEncryptDict->GetString(FX_BSTRC("O")) : CFX_ByteString();
     if (okey.GetLength() < 48) {
         return FALSE;
     }
-    CFX_ByteString ukey = m_pEncryptDict->GetString(FX_BSTRC("U"));
+    CFX_ByteString ukey = m_pEncryptDict ? m_pEncryptDict->GetString(FX_BSTRC("U")) : CFX_ByteString();
     if (ukey.GetLength() < 48) {
         return FALSE;
     }
@@ -331,7 +331,7 @@ FX_BOOL CPDF_StandardSecurityHandler::AES256_CheckPassword(FX_LPCBYTE password, 
         }
         CRYPT_SHA256Finish(sha, digest);
     }
-    CFX_ByteString ekey = m_pEncryptDict->GetString(bOwner ? FX_BSTRC("OE") : FX_BSTRC("UE"));
+    CFX_ByteString ekey = m_pEncryptDict ? m_pEncryptDict->GetString(bOwner ? FX_BSTRC("OE") : FX_BSTRC("UE")) : CFX_ByteString();
     if (ekey.GetLength() < 32) {
         return FALSE;
     }
@@ -391,7 +391,7 @@ FX_BOOL CPDF_StandardSecurityHandler::CheckUserPassword(FX_LPCBYTE password, FX_
 {
     CalcEncryptKey(m_pEncryptDict, password, pass_size, key, key_len, bIgnoreEncryptMeta,
                    m_pParser->GetIDArray());
-    CFX_ByteString ukey = m_pEncryptDict->GetString(FX_BSTRC("U"));
+    CFX_ByteString ukey = m_pEncryptDict ? m_pEncryptDict->GetString(FX_BSTRC("U")) : CFX_ByteString();
     if (ukey.GetLength() < 16) {
         return FALSE;
     }

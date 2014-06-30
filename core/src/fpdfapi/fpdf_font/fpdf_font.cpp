@@ -78,7 +78,9 @@ void CPDF_FontGlobals::Clear(void* key)
         CFX_StockFontArray* pStockFonts = (CFX_StockFontArray*)value;
         for (int i = 0; i < 14; i ++) {
             if (pStockFonts->m_pStockFonts[i]) {
-                pStockFonts->m_pStockFonts[i]->GetFontDict()->Release();
+                CPDF_Dictionary* pFontDict = pStockFonts->m_pStockFonts[i]->GetFontDict();
+                if (pFontDict)
+                    pFontDict->Release();
                 delete pStockFonts->m_pStockFonts[i];
             }
         }
@@ -97,7 +99,9 @@ void CPDF_FontGlobals::ClearAll()
             CFX_StockFontArray* pStockFonts = (CFX_StockFontArray*)value;
             for (int i = 0; i < 14; i ++) {
                 if (pStockFonts->m_pStockFonts[i]) {
-                    pStockFonts->m_pStockFonts[i]->GetFontDict()->Release();
+                    CPDF_Dictionary* pFontDict = pStockFonts->m_pStockFonts[i]->GetFontDict();
+                    if (pFontDict)
+                        pFontDict->Release();
                     delete pStockFonts->m_pStockFonts[i];
                 }
             }
@@ -1698,7 +1702,7 @@ CPDF_Type3Char* CPDF_Type3Font::LoadChar(FX_DWORD charcode, int level)
     if (name == NULL) {
         return NULL;
     }
-    CPDF_Stream* pStream = (CPDF_Stream*)m_pCharProcs->GetElementValue(name);
+    CPDF_Stream* pStream = (CPDF_Stream*)(m_pCharProcs ? m_pCharProcs->GetElementValue(name) : NULL);
     if (pStream == NULL || pStream->GetType() != PDFOBJ_STREAM) {
         return NULL;
     }

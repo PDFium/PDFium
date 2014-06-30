@@ -97,7 +97,7 @@ FX_BOOL CPDF_ShadingPattern::Load()
     if (m_ShadingType != 0) {
         return TRUE;
     }
-    CPDF_Dictionary* pShadingDict = m_pShadingObj->GetDict();
+    CPDF_Dictionary* pShadingDict = m_pShadingObj ? m_pShadingObj->GetDict() : NULL;
     if (pShadingDict == NULL) {
         return FALSE;
     }

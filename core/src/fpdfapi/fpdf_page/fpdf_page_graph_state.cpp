@@ -194,7 +194,8 @@ void CPDF_ClipPath::AppendTexts(CPDF_TextObject** pTexts, int count)
     CPDF_ClipPathData* pData = GetModify();
     if (pData->m_TextCount + count > FPDF_CLIPPATH_MAX_TEXTS) {
         for (int i = 0; i < count; i ++) {
-            pTexts[i]->Release();
+            if (pTexts[i])
+                pTexts[i]->Release();
         }
         return;
     }
@@ -481,7 +482,8 @@ void CPDF_AllStates::ProcessExtGS(CPDF_Dictionary* pGS, CPDF_StreamContentParser
     FX_POSITION pos = pGS->GetStartPos();
     while (pos) {
         CFX_ByteString key_str;
-        CPDF_Object* pObject = pGS->GetNextElement(pos, key_str)->GetDirect();
+        CPDF_Object* pElement = pGS->GetNextElement(pos, key_str);
+        CPDF_Object* pObject = pElement ? pElement->GetDirect() : NULL;
         if (pObject == NULL) {
             continue;
         }
@@ -625,7 +627,7 @@ CPDF_ContentMarkItem::CPDF_ContentMarkItem(const CPDF_ContentMarkItem& src)
 }
 CPDF_ContentMarkItem::~CPDF_ContentMarkItem()
 {
-    if (m_ParamType == DirectDict) {
+    if (m_ParamType == DirectDict && m_pParam) {
         ((CPDF_Dictionary*)m_pParam)->Release();
     }
 }

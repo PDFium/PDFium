@@ -239,14 +239,16 @@ CPDF_Font* CBA_FontMap::GetAnnotDefaultFont(CFX_ByteString &sAlias)
 	}
 	
 	CFX_ByteString sDA;
-	
-	sDA = FPDF_GetFieldAttr(m_pAnnotDict, "DA")->GetString();
+	CPDF_Object* pObj;
+	if ((pObj = FPDF_GetFieldAttr(m_pAnnotDict, "DA")))
+		sDA = pObj->GetString();
 
 	if (bWidget)
 	{
 		if (sDA.IsEmpty())
 		{
-			sDA = FPDF_GetFieldAttr(pAcroFormDict, "DA")->GetString();	
+			pObj = FPDF_GetFieldAttr(pAcroFormDict, "DA");
+			sDA = pObj ? pObj->GetString() : CFX_ByteString();
 		}
 	}
 	

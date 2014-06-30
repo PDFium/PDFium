@@ -882,7 +882,7 @@ public:
 
     CPDF_Dictionary*		GetDict() const
     {
-        return m_pStream->GetDict();
+        return m_pStream? m_pStream->GetDict(): NULL;
     }
 
     CPDF_Dictionary*		GetOC() const

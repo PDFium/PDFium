@@ -281,7 +281,7 @@ FX_BOOL CPDF_CalGray::v_Load(CPDF_Document* pDoc, CPDF_Array* pArray)
     CPDF_Array* pParam = pDict->GetArray(FX_BSTRC("WhitePoint"));
     int i;
     for (i = 0; i < 3; i ++) {
-        m_WhitePoint[i] = pParam->GetNumber(i);
+        m_WhitePoint[i] = pParam ? pParam->GetNumber(i) : 0;
     }
     pParam = pDict->GetArray(FX_BSTRC("BlackPoint"));
     for (i = 0; i < 3; i ++) {
@@ -340,7 +340,7 @@ FX_BOOL CPDF_CalRGB::v_Load(CPDF_Document* pDoc, CPDF_Array* pArray)
     CPDF_Array* pParam = pDict->GetArray(FX_BSTRC("WhitePoint"));
     int i;
     for (i = 0; i < 3; i ++) {
-        m_WhitePoint[i] = pParam->GetNumber(i);
+        m_WhitePoint[i] = pParam ? pParam->GetNumber(i) : 0;
     }
     pParam = pDict->GetArray(FX_BSTRC("BlackPoint"));
     for (i = 0; i < 3; i ++) {
@@ -438,7 +438,7 @@ FX_BOOL CPDF_LabCS::v_Load(CPDF_Document* pDoc, CPDF_Array* pArray)
     CPDF_Array* pParam = pDict->GetArray(FX_BSTRC("WhitePoint"));
     int i;
     for (i = 0; i < 3; i ++) {
-        m_WhitePoint[i] = pParam->GetNumber(i);
+        m_WhitePoint[i] = pParam ? pParam->GetNumber(i) : 0;
     }
     pParam = pDict->GetArray(FX_BSTRC("BlackPoint"));
     for (i = 0; i < 3; i ++) {
@@ -580,11 +580,12 @@ FX_BOOL CPDF_ICCBasedCS::v_Load(CPDF_Document* pDoc, CPDF_Array* pArray)
     if (pStream == NULL) {
         return FALSE;
     }
-    m_nComponents = pStream->GetDict()->GetInteger(FX_BSTRC("N"));
+    CPDF_Dictionary* pDict = pStream->GetDict();
+    m_nComponents = pDict ? pDict->GetInteger(FX_BSTRC("N")) : 0;
     if (m_nComponents < 0 || m_nComponents > (1 << 16)) {
         return FALSE;
     }
-    CPDF_Array* pRanges = pStream->GetDict()->GetArray(FX_BSTRC("Range"));
+    CPDF_Array* pRanges = pDict->GetArray(FX_BSTRC("Range"));
     m_pRanges = FX_Alloc(FX_FLOAT, m_nComponents * 2);
     for (int i = 0; i < m_nComponents * 2; i ++) {
         if (pRanges) {
@@ -600,7 +601,7 @@ FX_BOOL CPDF_ICCBasedCS::v_Load(CPDF_Document* pDoc, CPDF_Array* pArray)
         return FALSE;
     }
     if (m_pProfile->m_pTransform == NULL) {
-        CPDF_Object* pAlterCSObj = pStream->GetDict()->GetElementValue(FX_BSTRC("Alternate"));
+        CPDF_Object* pAlterCSObj = pDict ? pDict->GetElementValue(FX_BSTRC("Alternate")) : NULL;
         if (pAlterCSObj) {
             CPDF_ColorSpace* alter_cs = CPDF_ColorSpace::Load(pDoc, pAlterCSObj);
             if (alter_cs) {
@@ -1079,7 +1080,7 @@ CPDF_ColorSpace* CPDF_ColorSpace::Load(CPDF_Document* pDoc, CPDF_Object* pObj)
         while (pos) {
             CFX_ByteString bsKey;
             CPDF_Object *pValue = pDict->GetNextElement(pos, bsKey);
-            if (pValue->GetType() == PDFOBJ_NAME) {
+            if (pValue && pValue->GetType() == PDFOBJ_NAME) {
                 pRet = _CSFromName(pValue->GetString());
             }
             if (pRet) {

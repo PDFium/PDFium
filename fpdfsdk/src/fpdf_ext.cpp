@@ -172,15 +172,15 @@ void CheckUnSupportError(CPDF_Document * pDoc, FX_DWORD err_code)
 		if(pRootDict->KeyExist("Names"))
 		{
 			CPDF_Dictionary* pNameDict = pRootDict->GetDict("Names");
-			if(pNameDict->KeyExist("EmbeddedFiles"))
+			if (pNameDict && pNameDict->KeyExist("EmbeddedFiles"))
 			{
 				FPDF_UnSupportError(FPDF_UNSP_DOC_ATTACHMENT);
 				return;
 			}
-			else if(pNameDict->KeyExist("JavaScript"))
+			else if (pNameDict && pNameDict->KeyExist("JavaScript"))
 			{
 				CPDF_Dictionary* pJSDict = pNameDict->GetDict("JavaScript");
-				CPDF_Array * pArray = pJSDict->GetArray("Names");
+				CPDF_Array * pArray = pJSDict ? pJSDict->GetArray("Names") : NULL;
 				if (pArray) {
 					int nCount = pArray->GetCount();
 					for(int i=0; i<nCount; i++)

@@ -48,7 +48,7 @@ void CPDF_PageContentGenerate::GenerateContent()
         }
         ProcessImage(buf, (CPDF_ImageObject*)pPageObj);
     }
-    CPDF_Object* pContent = pPageDict->GetElementValue("Contents");
+    CPDF_Object* pContent = pPageDict ? pPageDict->GetElementValue("Contents") : NULL;
     if (pContent != NULL) {
         pPageDict->RemoveAt("Contents");
     }
@@ -94,7 +94,8 @@ void CPDF_PageContentGenerate::ProcessImage(CFX_ByteTextBuf& buf, CPDF_ImageObje
         FX_DWORD dwSavedObjNum = pStream->GetObjNum();
         CFX_ByteString name = RealizeResource(pStream, "XObject");
         if (dwSavedObjNum == 0) {
-            pImageObj->m_pImage->Release();
+            if (pImageObj->m_pImage)
+                pImageObj->m_pImage->Release();
             pImageObj->m_pImage = m_pDocument->GetPageData()->GetImage(pStream);
         }
         buf << "/" << PDF_NameEncode(name) << " Do Q\n";
@@ -119,7 +120,8 @@ void CPDF_PageContentGenerate::ProcessForm(CFX_ByteTextBuf& buf, FX_LPCBYTE data
 }
 void CPDF_PageContentGenerate::TransformContent(CFX_Matrix& matrix)
 {
-    CPDF_Object* pContent = m_pPage->m_pFormDict->GetElementValue("Contents");
+    CPDF_Dictionary* pDict = m_pPage->m_pFormDict;
+    CPDF_Object* pContent = pDict ? pDict->GetElementValue("Contents") : NULL;
     if (!pContent) {
         return;
     }

@@ -841,7 +841,8 @@ void CPDF_Page::Load(CPDF_Document* pDocument, CPDF_Dictionary* pPageDict, FX_BO
         m_pPageResources = m_pResources = NULL;
         return;
     }
-    m_pResources = GetPageAttr(FX_BSTRC("Resources"))->GetDict();
+    CPDF_Object* pageAttr = GetPageAttr(FX_BSTRC("Resources"));
+    m_pResources = pageAttr ? pageAttr->GetDict() : NULL;
     m_pPageResources = m_pResources;
     CPDF_Object* pRotate = GetPageAttr(FX_BSTRC("Rotate"));
     int rotate = 0;
@@ -946,7 +947,7 @@ CPDF_Form::CPDF_Form(CPDF_Document* pDoc, CPDF_Dictionary* pPageResources, CPDF_
 {
     m_pDocument = pDoc;
     m_pFormStream = pFormStream;
-    m_pFormDict = pFormStream->GetDict();
+    m_pFormDict = pFormStream ? pFormStream->GetDict() : NULL;
     m_pResources = m_pFormDict->GetDict(FX_BSTRC("Resources"));
     m_pPageResources = pPageResources;
     if (m_pResources == NULL) {

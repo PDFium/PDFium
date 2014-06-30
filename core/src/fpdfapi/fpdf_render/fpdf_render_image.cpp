@@ -1082,7 +1082,11 @@ CFX_DIBitmap* CPDF_RenderStatus::LoadSMask(CPDF_Dictionary* pSMaskDict,
         CPDF_Array* pBC = pSMaskDict->GetArray(FX_BSTRC("BC"));
         FX_ARGB back_color = 0xff000000;
         if (pBC) {
-            pCSObj = pGroup->GetDict()->GetDict(FX_BSTRC("Group"))->GetElementValue(FX_BSTRC("CS"));
+            CPDF_Dictionary* pDict = pGroup->GetDict();
+            if (pDict && pDict->GetDict(FX_BSTRC("Group")))
+                pCSObj = pDict->GetDict(FX_BSTRC("Group"))->GetElementValue(FX_BSTRC("CS"));
+            else
+                pCSObj = NULL;
             pCS = m_pContext->m_pDocument->LoadColorSpace(pCSObj);
             if (pCS) {
                 FX_FLOAT R, G, B;

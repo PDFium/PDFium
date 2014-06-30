@@ -72,7 +72,10 @@ CFX_ByteString CPDF_Dest::GetRemoteName()
 }
 CPDF_NameTree::CPDF_NameTree(CPDF_Document* pDoc, FX_BSTR category)
 {
-    m_pRoot = pDoc->GetRoot()->GetDict(FX_BSTRC("Names"))->GetDict(category);
+    if (pDoc->GetRoot() && pDoc->GetRoot()->GetDict(FX_BSTRC("Names")))
+        m_pRoot = pDoc->GetRoot()->GetDict(FX_BSTRC("Names"))->GetDict(category);
+    else
+        m_pRoot = NULL;
 }
 static CPDF_Object* SearchNameNode(CPDF_Dictionary* pNode, const CFX_ByteString& csName,
                                    int& nIndex, CPDF_Array** ppFind, int nLevel = 0)

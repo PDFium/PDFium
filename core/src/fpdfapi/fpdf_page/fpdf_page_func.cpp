@@ -486,7 +486,7 @@ FX_BOOL CPDF_SampledFunc::v_Init(CPDF_Object* pObj)
     int i;
     FX_DWORD nTotalSamples = 1;
     for (i = 0; i < m_nInputs; i ++) {
-        m_pEncodeInfo[i].sizes = pSize->GetInteger(i);
+        m_pEncodeInfo[i].sizes = pSize ? pSize->GetInteger(i) : 0;
         if (!pSize && i == 0) {
             m_pEncodeInfo[i].sizes = pDict->GetInteger(FX_BSTRC("Size"));
         }

@@ -914,7 +914,7 @@ void CPDF_DIBSource::LoadPalette()
 FX_DWORD CPDF_DIBSource::GetValidBpp() const
 {
     FX_DWORD bpc = m_bpc;
-    CPDF_Object * pFilter = m_pDict->GetElementValue(FX_BSTRC("Filter"));
+	CPDF_Object * pFilter = m_pDict ? m_pDict->GetElementValue(FX_BSTRC("Filter")) : NULL;
     if (pFilter) {
         if (pFilter->GetType() == PDFOBJ_NAME) {
             CFX_ByteString filter = pFilter->GetString();

@@ -498,9 +498,9 @@ void CPDF_StreamContentParser::EndImageDict()
         m_bSameLastDict = TRUE;
     }
     m_ImageSrcBuf.Clear();
-    if (m_pLastCloneImageDict) {
+    if (m_pLastCloneImageDict)
         m_pLastCloneImageDict->Release();
-    }
+
     m_pLastCloneImageDict = (CPDF_Dictionary*)m_pLastImageDict->Clone();
     if (m_pLastCloneImageDict->KeyExist(FX_BSTRC("Filter"))) {
         m_WordState = 10;

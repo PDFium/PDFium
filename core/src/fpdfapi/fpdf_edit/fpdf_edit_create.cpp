@@ -334,7 +334,7 @@ void CPDF_FlateEncoder::CloneDict()
 FX_BOOL CPDF_FlateEncoder::Initialize(CPDF_Stream* pStream, FX_BOOL bFlateEncode)
 {
     m_Acc.LoadAllData(pStream, TRUE);
-    if (pStream->GetDict()->KeyExist("Filter") || !bFlateEncode) {
+    if ((pStream && pStream->GetDict() && pStream->GetDict()->KeyExist("Filter")) || !bFlateEncode) {
         if (pStream->GetDict()->KeyExist("Filter") && !bFlateEncode) {
             CPDF_StreamAcc destAcc;
             destAcc.LoadAllData(pStream);
@@ -1482,7 +1482,8 @@ FX_INT32 CPDF_Creator::WriteDoc_Stage1(IFX_Pause *pPause)
         if (m_bSecurityChanged && (m_dwFlags & FPDFCREATE_NO_ORIGINAL) == 0) {
             m_dwFlags &= ~FPDFCREATE_INCREMENTAL;
         }
-        m_pMetadata = m_pDocument->GetRoot()->GetElementValue(FX_BSTRC("Metadata"));
+        CPDF_Dictionary* pDict = m_pDocument->GetRoot();
+        m_pMetadata = pDict ? pDict->GetElementValue(FX_BSTRC("Metadata")) : NULL;
         if (m_dwFlags & FPDFCREATE_OBJECTSTREAM) {
             m_pXRefStream = FX_NEW CPDF_XRefStream;
             m_pXRefStream->Start();
@@ -2032,7 +2033,7 @@ void CPDF_Creator::InitID(FX_BOOL bDefault )
     if (!m_pIDArray) {
         FX_LPDWORD pBuffer = NULL;
         m_pIDArray = CPDF_Array::Create();
-        CPDF_Object* pID1 = pOldIDArray->GetElement(0);
+        CPDF_Object* pID1 = pOldIDArray ? pOldIDArray->GetElement(0) : NULL;
         if (pID1) {
             m_pIDArray->Add(pID1->Clone());
         } else {

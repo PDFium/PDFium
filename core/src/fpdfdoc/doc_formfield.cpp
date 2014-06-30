@@ -32,8 +32,8 @@ CPDF_FormField::~CPDF_FormField()
 }
 void CPDF_FormField::SyncFieldFlags()
 {
-    CFX_ByteString type_name = FPDF_GetFieldAttr(m_pDict, "FT")->GetString();
-    FX_DWORD flags = FPDF_GetFieldAttr(m_pDict, "Ff")->GetInteger();
+    CFX_ByteString type_name = FPDF_GetFieldAttr(m_pDict, "FT") ? FPDF_GetFieldAttr(m_pDict, "FT")->GetString() : CFX_ByteString();
+    FX_DWORD flags = FPDF_GetFieldAttr(m_pDict, "Ff")? FPDF_GetFieldAttr(m_pDict, "Ff")->GetInteger() : 0;
     m_Flags = 0;
     if (flags & 1) {
         m_Flags |= FORMFIELD_READONLY;
@@ -485,7 +485,8 @@ int CPDF_FormField::GetSelectedIndex(int index)
         if (index < 0) {
             return -1;
         }
-        sel_value = ((CPDF_Array*)pValue)->GetElementValue(index)->GetUnicodeText();
+        CPDF_Object* elementValue = ((CPDF_Array*)pValue)->GetElementValue(index);
+        sel_value = elementValue ? elementValue->GetUnicodeText() : CFX_WideString();
     }
     if (index < CountSelectedOptions()) {
         int iOptIndex = GetSelectedOptionIndex(index);
@@ -1076,9 +1077,9 @@ FX_BOOL CPDF_FormField::ClearSelectedOptions(FX_BOOL bNotify)
 }
 void CPDF_FormField::LoadDA()
 {
-    CFX_ByteString DA = FPDF_GetFieldAttr(m_pDict, "DA")->GetString();
+    CFX_ByteString DA = FPDF_GetFieldAttr(m_pDict, "DA") ? FPDF_GetFieldAttr(m_pDict, "DA")->GetString() : CFX_ByteString();
     if (DA.IsEmpty()) {
-        DA = m_pForm->m_pFormDict->GetString("DA");
+        DA = m_pForm->m_pFormDict ? m_pForm->m_pFormDict->GetString("DA") : CFX_ByteString();
     }
     if (DA.IsEmpty()) {
         return;
@@ -1086,7 +1087,11 @@ void CPDF_FormField::LoadDA()
     CPDF_SimpleParser syntax(DA);
     syntax.FindTagParam("Tf", 2);
     CFX_ByteString font_name = syntax.GetWord();
-    CPDF_Dictionary* pFontDict = m_pForm->m_pFormDict->GetDict("DR")->GetDict("Font")->GetDict(font_name);
+    CPDF_Dictionary* pFontDict = NULL;
+    if (m_pForm->m_pFormDict && m_pForm->m_pFormDict->GetDict("DR") &&
+        m_pForm->m_pFormDict->GetDict("DR")->GetDict("Font") )
+    pFontDict = m_pForm->m_pFormDict->GetDict("DR")->GetDict("Font")->GetDict(font_name);
+
     if (pFontDict == NULL) {
         return;
     }

@@ -485,7 +485,7 @@ CPDF_Pattern* CPDF_DocPageData::GetPattern(CPDF_Object* pPatternObj, FX_BOOL bSh
     if (bShading) {
         pPattern = FX_NEW CPDF_ShadingPattern(m_pPDFDoc, pPatternObj, bShading, matrix);
     } else {
-        CPDF_Dictionary* pDict = pPatternObj->GetDict();
+        CPDF_Dictionary* pDict = pPatternObj ? pPatternObj->GetDict() : NULL;
         if (pDict) {
             int type = pDict->GetInteger(FX_BSTRC("PatternType"));
             if (type == 1) {

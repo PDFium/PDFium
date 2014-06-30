@@ -8,7 +8,7 @@
 #include "xml_int.h"
 CXML_Parser::~CXML_Parser()
 {
-    if (m_bOwnedStream) {
+    if (m_bOwnedStream && m_pDataAcc) {
         m_pDataAcc->Release();
     }
 }

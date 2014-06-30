@@ -76,11 +76,11 @@ CFX_DataFilter* FPDF_CreateFilter(FX_BSTR name, const CPDF_Dictionary* pParam, i
         case FXBSTR_ID('L', 'Z', 'W', 0): {
                 CFX_DataFilter* pFilter;
                 if (id == FXBSTR_ID('L', 'Z', 'W', 'D') || id == FXBSTR_ID('L', 'Z', 'W', 0)) {
-                    pFilter = FX_NEW CPDF_LzwFilter(pParam->GetInteger("EarlyChange", 1));
+                    pFilter = FX_NEW CPDF_LzwFilter(pParam ? pParam->GetInteger("EarlyChange", 1) : 1);
                 } else {
                     pFilter = FX_NEW CPDF_FlateFilter;
                 }
-                if (pParam->GetInteger("Predictor", 1) > 1) {
+                if ((pParam ? pParam->GetInteger("Predictor", 1) : 1) > 1) {
                     CFX_DataFilter* pPredictor = FX_NEW CPDF_PredictorFilter(pParam->GetInteger(FX_BSTRC("Predictor"), 1),
                                                  pParam->GetInteger(FX_BSTRC("Colors"), 1), pParam->GetInteger(FX_BSTRC("BitsPerComponent"), 8),
                                                  pParam->GetInteger(FX_BSTRC("Columns"), 1));

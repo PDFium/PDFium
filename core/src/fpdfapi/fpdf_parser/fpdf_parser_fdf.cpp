@@ -111,7 +111,8 @@ FX_BOOL CFDF_Document::WriteBuf(CFX_ByteTextBuf& buf) const
 }
 CFX_WideString CFDF_Document::GetWin32Path() const
 {
-    CPDF_Object* pFileSpec = m_pRootDict->GetDict(FX_BSTRC("FDF"))->GetElementValue(FX_BSTRC("F"));
+    CPDF_Dictionary* pDict = m_pRootDict ? m_pRootDict->GetDict(FX_BSTRC("FDF")) : NULL;
+    CPDF_Object* pFileSpec = pDict ? pDict->GetElementValue(FX_BSTRC("F")) : NULL;
     if (pFileSpec == NULL) {
         return CFX_WideString();
     }
@@ -203,7 +204,10 @@ CFX_WideString	FPDF_FileSpec_GetWin32Path(const CPDF_Object* pFileSpec)
         if (wsFileName.IsEmpty() && pDict->KeyExist(FX_BSTRC("DOS"))) {
             wsFileName = CFX_WideString::FromLocal(pDict->GetString(FX_BSTRC("DOS")));
         }
-    } else {
+    }
+    else if (!pFileSpec)
+        wsFileName = CFX_WideString();
+    else {
         wsFileName = CFX_WideString::FromLocal(pFileSpec->GetString());
     }
     if (wsFileName[0] != '/') {

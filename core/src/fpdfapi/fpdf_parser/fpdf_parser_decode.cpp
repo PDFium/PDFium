@@ -45,7 +45,7 @@ FX_DWORD _A85Decode(const FX_BYTE* src_buf, FX_DWORD src_size, FX_LPBYTE& dest_b
         return (FX_DWORD) - 1;
     }
     int state = 0;
-	FX_UINT32 res = 0;
+    FX_UINT32 res = 0;
     pos = dest_size = 0;
     while (pos < src_size) {
         FX_BYTE ch = src_buf[pos++];
@@ -281,11 +281,11 @@ FX_BOOL PDF_DataDecode(FX_LPCBYTE src_buf, FX_DWORD src_size, const CPDF_Diction
                        CPDF_Dictionary*& pImageParms, FX_DWORD last_estimated_size, FX_BOOL bImageAcc)
 
 {
-    CPDF_Object* pDecoder = pDict->GetElementValue(FX_BSTRC("Filter"));
+    CPDF_Object* pDecoder = pDict ? pDict->GetElementValue(FX_BSTRC("Filter")) : NULL;
     if (pDecoder == NULL || (pDecoder->GetType() != PDFOBJ_ARRAY && pDecoder->GetType() != PDFOBJ_NAME)) {
         return FALSE;
     }
-    CPDF_Object* pParams = pDict->GetElementValue(FX_BSTRC("DecodeParms"));
+    CPDF_Object* pParams = pDict ? pDict->GetElementValue(FX_BSTRC("DecodeParms")) : NULL;
     CFX_ByteStringArray DecoderList;
     CFX_PtrArray ParamList;
     if (pDecoder->GetType() == PDFOBJ_ARRAY) {
@@ -304,7 +304,7 @@ FX_BOOL PDF_DataDecode(FX_LPCBYTE src_buf, FX_DWORD src_size, const CPDF_Diction
         }
     } else {
         DecoderList.Add(pDecoder->GetConstString());
-        ParamList.Add(pParams->GetDict());
+        ParamList.Add(pParams ? pParams->GetDict() : NULL);
     }
     FX_LPBYTE last_buf = (FX_LPBYTE)src_buf;
     FX_DWORD last_size = src_size;

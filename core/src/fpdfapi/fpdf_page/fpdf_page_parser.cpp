@@ -140,7 +140,8 @@ int CPDF_StreamContentParser::GetNextParamPos()
             m_ParamStartPos = 0;
         }
         if (m_ParamBuf1[m_ParamStartPos].m_Type == 0) {
-            m_ParamBuf1[m_ParamStartPos].m_pObject->Release();
+            if (CPDF_Object* pObject = m_ParamBuf1[m_ParamStartPos].m_pObject)
+                pObject->Release();
         }
         return m_ParamStartPos;
     }
@@ -187,7 +188,8 @@ void CPDF_StreamContentParser::ClearAllParams()
     FX_DWORD index = m_ParamStartPos;
     for (FX_DWORD i = 0; i < m_ParamCount; i ++) {
         if (m_ParamBuf1[index].m_Type == 0) {
-            m_ParamBuf1[index].m_pObject->Release();
+            if (CPDF_Object* pObject = m_ParamBuf1[index].m_pObject)
+                pObject->Release();
         }
         index ++;
         if (index == PARAM_BUF_SIZE) {
@@ -238,7 +240,7 @@ CFX_ByteString CPDF_StreamContentParser::GetString(FX_DWORD index)
     if (param.m_Type == PDFOBJ_NAME) {
         return CFX_ByteString(param.m_Name.m_Buffer, param.m_Name.m_Len);
     }
-    if (param.m_Type == 0) {
+    if (param.m_Type == 0 && param.m_pObject) {
         return param.m_pObject->GetString();
     }
     return CFX_ByteString();
@@ -256,7 +258,7 @@ FX_FLOAT CPDF_StreamContentParser::GetNumber(FX_DWORD index)
     if (param.m_Type == PDFOBJ_NUMBER) {
         return param.m_Number.m_bInteger ? (FX_FLOAT)param.m_Number.m_Integer : param.m_Number.m_Float;
     }
-    if (param.m_Type == 0) {
+    if (param.m_Type == 0 && param.m_pObject) {
         return param.m_pObject->GetNumber();
     }
     return 0;
@@ -653,7 +655,7 @@ void CPDF_StreamContentParser::Handle_SetDash()
     if (m_Options.m_bTextOnly) {
         return;
     }
-    CPDF_Array* pArray = GetObject(1)->GetArray();
+    CPDF_Array* pArray = GetObject(1) ? GetObject(1)->GetArray() : NULL;
     if (pArray == NULL) {
         return;
     }
@@ -728,7 +730,7 @@ void CPDF_StreamContentParser::Handle_ExecuteXObject()
         m_bResourceMissing = TRUE;
         return;
     }
-    CFX_ByteStringC type = pXObject->GetDict()->GetConstString(FX_BSTRC("Subtype"));
+    CFX_ByteStringC type = pXObject->GetDict() ? pXObject->GetDict()->GetConstString(FX_BSTRC("Subtype")) : CFX_ByteStringC();
     if (type == FX_BSTRC("Image")) {
         if (m_Options.m_bTextOnly) {
             return;
@@ -1425,7 +1427,7 @@ void CPDF_StreamContentParser::Handle_ShowText()
 }
 void CPDF_StreamContentParser::Handle_ShowText_Positioning()
 {
-    CPDF_Array* pArray = GetObject(0)->GetArray();
+    CPDF_Array* pArray = GetObject(0) ? GetObject(0)->GetArray() : NULL;
     if (pArray == NULL) {
         return;
     }
@@ -1457,10 +1459,11 @@ void CPDF_StreamContentParser::Handle_ShowText_Positioning()
             pStrs[iSegment] = str;
             pKerning[iSegment ++] = 0;
         } else {
+            FX_FLOAT num = pObj ? pObj->GetNumber() : 0;
             if (iSegment == 0) {
-                fInitKerning += pObj->GetNumber();
+                fInitKerning += num;
             } else {
-                pKerning[iSegment - 1] += pObj->GetNumber();
+                pKerning[iSegment - 1] += num;
             }
         }
     }
