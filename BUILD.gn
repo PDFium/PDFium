@@ -127,7 +127,7 @@ component("safemath") {
     "third_party/numerics/safe_conversions_impl.h",
     "third_party/numerics/safe_math.h",
     "third_party/numerics/safe_math_impl.h",
-  ],
+  ]
 }
 
 static_library("fdrm") {
