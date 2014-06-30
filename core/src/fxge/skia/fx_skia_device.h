@@ -1,3 +1,7 @@
+// Copyright 2014 PDFium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 #ifndef _FX_SKIA_DEVICE_DRIVER_
 #define _FX_SKIA_DEVICE_DRIVER_
 //#define _SKIA_SUPPORT_
