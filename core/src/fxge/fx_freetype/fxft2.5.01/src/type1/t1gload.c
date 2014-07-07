@@ -282,6 +282,8 @@
 
     FT_Matrix               font_matrix;
     FT_Vector               font_offset;
+    font_offset.x           = 0;
+    font_offset.y           = 0;
     FT_Data                 glyph_data;
     FT_Bool                 must_finish_decoder = FALSE;
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
