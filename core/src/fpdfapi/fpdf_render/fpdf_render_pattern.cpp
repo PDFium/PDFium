@@ -710,7 +710,7 @@ static void _DrawCoonPatchMeshes(FX_BOOL bTensor, CFX_DIBitmap* pBitmap, CFX_Aff
             pObject2Bitmap->Transform(coords[i].x, coords[i].y);
         }
         for (i = iStartColor; i < 4; i ++) {
-            FX_FLOAT r, g, b;
+            FX_FLOAT r=0.0f, g=0.0f, b=0.0f;
             stream.GetColor(r, g, b);
             patch.patch_colors[i].comp[0] = (FX_INT32)(r * 255);
             patch.patch_colors[i].comp[1] = (FX_INT32)(g * 255);

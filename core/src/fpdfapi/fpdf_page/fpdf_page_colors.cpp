@@ -1027,7 +1027,7 @@ FX_BOOL CPDF_DeviceNCS::GetRGB(FX_FLOAT* pBuf, FX_FLOAT& R, FX_FLOAT& G, FX_FLOA
         return FALSE;
     }
     CFX_FixedBufGrow<FX_FLOAT, 16> results(m_pFunc->CountOutputs());
-    int nresults;
+    int nresults = 0;
     m_pFunc->Call(pBuf, m_nComponents, results, nresults);
     if (nresults == 0) {
         return FALSE;
