@@ -992,7 +992,7 @@ void CPDF_DIBSource::TranslateScanline24bpp(FX_LPBYTE dest_scan, FX_LPCBYTE src_
     }
     CFX_FixedBufGrow<FX_FLOAT, 16> color_values1(m_nComponents);
     FX_FLOAT* color_values = color_values1;
-    FX_FLOAT R, G, B;
+    FX_FLOAT R = 0.0f, G = 0.0f, B = 0.0f;
     if (m_bpc == 8) {
         int src_byte_pos = 0;
         int dest_byte_pos = 0;
