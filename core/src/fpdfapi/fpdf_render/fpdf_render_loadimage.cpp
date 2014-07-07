@@ -869,7 +869,7 @@ void CPDF_DIBSource::LoadPalette()
         FX_FLOAT color_values[3];
         color_values[0] = m_pCompData[0].m_DecodeMin;
         color_values[1] = color_values[2] = color_values[0];
-        FX_FLOAT R, G, B;
+        FX_FLOAT R=0.0f, G=0.0f, B=0.0f;
         m_pColorSpace->GetRGB(color_values, R, G, B);
         FX_ARGB argb0 = ArgbEncode(255, FXSYS_round(R * 255), FXSYS_round(G * 255), FXSYS_round(B * 255));
         color_values[0] += m_pCompData[0].m_DecodeStep;
