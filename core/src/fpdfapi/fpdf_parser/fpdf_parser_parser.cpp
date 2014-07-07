@@ -3078,7 +3078,7 @@ CPDF_Object* CPDF_DataAvail::GetObject(FX_DWORD objnum, IFX_DownloadHints* pHint
         }
         return pRet;
     }
-    FX_FILESIZE offset;
+    FX_FILESIZE offset = 0;
     FX_DWORD size = GetObjectSize(objnum, offset);
     size = (FX_DWORD)((FX_FILESIZE)(offset + size + 512) > m_dwFileLen ? m_dwFileLen - offset : size + 512);
     if (!m_pFileAvail->IsDataAvail(offset, size)) {
