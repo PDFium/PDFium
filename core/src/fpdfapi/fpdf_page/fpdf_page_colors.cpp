@@ -1362,7 +1362,7 @@ FX_BOOL CPDF_Color::GetRGB(int& R, int& G, int& B) const
     if (m_pCS == NULL || m_pBuffer == NULL) {
         return FALSE;
     }
-    FX_FLOAT r, g, b;
+    FX_FLOAT r=0.0f, g=0.0f, b=0.0f;
     if (!m_pCS->GetRGB(m_pBuffer, r, g, b)) {
         return FALSE;
     }
