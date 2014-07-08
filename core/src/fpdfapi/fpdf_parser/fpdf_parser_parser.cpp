@@ -7,6 +7,7 @@
 #include "../../../include/fpdfapi/fpdf_parser.h"
 #include "../../../include/fpdfapi/fpdf_module.h"
 #include "../../../include/fpdfapi/fpdf_page.h"
+#include "../../../../third_party/numerics/safe_math.h"
 #include "../fpdf_page/pageint.h"
 #include <limits.h>
 #define _PARSER_OBJECT_LEVLE_		64
@@ -2408,25 +2409,27 @@ CPDF_Stream* CPDF_SyntaxParser::ReadStream(CPDF_Dictionary* pDict, PARSE_CONTEXT
         FX_DWORD objnum, FX_DWORD gennum)
 {
     CPDF_Object* pLenObj = pDict->GetElement(FX_BSTRC("Length"));
-    FX_DWORD len = 0;
+    FX_FILESIZE len = 0;
     if (pLenObj && ((pLenObj->GetType() != PDFOBJ_REFERENCE) ||
                     ((((CPDF_Reference*)pLenObj)->GetObjList() != NULL) &&
                      ((CPDF_Reference*)pLenObj)->GetRefObjNum() != objnum))) {
-        FX_FILESIZE pos = m_Pos;
-        if (pLenObj) {
-            len = pLenObj->GetInteger();
-        }
-        m_Pos = pos;
-        if (len > 0x40000000) {
-            return NULL;
-        }
+        len = pLenObj->GetInteger();
     }
+
     ToNextLine();
     FX_FILESIZE StreamStartPos = m_Pos;
     if (pContext) {
         pContext->m_DataStart = m_Pos;
     }
-    m_Pos += len;
+
+    base::CheckedNumeric<FX_FILESIZE> pos = m_Pos;
+    pos += len;
+    if (pos.IsValid() && pos.ValueOrDie() < m_FileLen) {
+        m_Pos = pos.ValueOrDie();
+    } else {
+        return NULL;
+    }
+
     CPDF_CryptoHandler* pCryptoHandler = objnum == (FX_DWORD)m_MetadataObjnum ? NULL : m_pCryptoHandler;
     if (pCryptoHandler == NULL) {
         FX_FILESIZE SavedPos = m_Pos;
