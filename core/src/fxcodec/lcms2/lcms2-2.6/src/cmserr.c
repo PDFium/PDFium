@@ -262,13 +262,13 @@ cmsBool  _cmsRegisterMemHandlerPlugin(cmsContext ContextID, cmsPluginBase* Plugi
 // Generic allocate
 void* CMSEXPORT _cmsMalloc(cmsContext ContextID, cmsUInt32Number size)
 {
-    return FXMEM_DefaultAlloc(size, FXMEM_NONLEAVE);
+    return FXMEM_DefaultAlloc(size, 1);
 }
 
 // Generic allocate & zero
 void* CMSEXPORT _cmsMallocZero(cmsContext ContextID, cmsUInt32Number size)
 {
-	void* p = FXMEM_DefaultAlloc(size, FXMEM_NONLEAVE);
+	void* p = FXMEM_DefaultAlloc(size, 1);
 	if (p) FXSYS_memset32(p, 0, size);
 	return p;
 }
@@ -286,7 +286,7 @@ void* CMSEXPORT _cmsCalloc(cmsContext ContextID, cmsUInt32Number num, cmsUInt32N
 // Generic reallocate
 void* CMSEXPORT _cmsRealloc(cmsContext ContextID, void* Ptr, cmsUInt32Number size)
 {
-	return FXMEM_DefaultRealloc(Ptr, size, FXMEM_NONLEAVE);
+	return FXMEM_DefaultRealloc(Ptr, size, 1);
 }
 
 // Generic free memory
@@ -298,7 +298,7 @@ void CMSEXPORT _cmsFree(cmsContext ContextID, void* Ptr)
 // Generic block duplication
 void* CMSEXPORT _cmsDupMem(cmsContext ContextID, const void* Org, cmsUInt32Number size)
 {
-	void* p = FXMEM_DefaultAlloc(size, FXMEM_NONLEAVE);
+	void* p = FXMEM_DefaultAlloc(size, 1);
 	FXSYS_memmove32(p, Org, size);
 	return p;
 }

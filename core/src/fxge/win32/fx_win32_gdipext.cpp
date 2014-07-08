@@ -1200,7 +1200,6 @@ static PREVIEW3_DIBITMAP* LoadDIBitmap(WINDIB_Open_Args_ args)
         return NULL;
     }
     BITMAPINFOHEADER* pbmih = (BITMAPINFOHEADER*)buf;
-    FXSYS_memset32(buf, 0, info_size);
     pbmih->biBitCount = bpp;
     pbmih->biCompression = BI_RGB;
     pbmih->biHeight = -(int)height;

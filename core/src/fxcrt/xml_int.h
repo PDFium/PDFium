@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #ifndef _FXCRT_XML_INT_
@@ -9,9 +9,8 @@
 class CXML_DataBufAcc : public IFX_BufferRead, public CFX_Object
 {
 public:
-    CXML_DataBufAcc(FX_LPCBYTE pBuffer, size_t size, IFX_Allocator* pAllocator = NULL)
-        : m_pAllocator(pAllocator)
-        , m_pBuffer(pBuffer)
+    CXML_DataBufAcc(FX_LPCBYTE pBuffer, size_t size)
+        : m_pBuffer(pBuffer)
         , m_dwSize(size)
         , m_dwCurPos(0)
     {
@@ -19,11 +18,7 @@ public:
     virtual ~CXML_DataBufAcc() {}
     virtual void			Release()
     {
-        if (m_pAllocator) {
-            FX_DeleteAtAllocator(this, m_pAllocator, CXML_DataBufAcc);
-        } else {
-            delete this;
-        }
+        delete this;
     }
     virtual FX_BOOL			IsEOF()
     {
@@ -61,7 +56,6 @@ public:
         return 0;
     }
 protected:
-    IFX_Allocator*	m_pAllocator;
     FX_LPCBYTE		m_pBuffer;
     size_t			m_dwSize;
     size_t			m_dwCurPos;
@@ -70,9 +64,8 @@ protected:
 class CXML_DataStmAcc : public IFX_BufferRead, public CFX_Object
 {
 public:
-    CXML_DataStmAcc(IFX_FileRead *pFileRead, IFX_Allocator* pAllocator = NULL)
-        : m_pAllocator(pAllocator)
-        , m_pFileRead(pFileRead)
+    CXML_DataStmAcc(IFX_FileRead *pFileRead)
+        : m_pFileRead(pFileRead)
         , m_pBuffer(NULL)
         , m_nStart(0)
         , m_dwSize(0)
@@ -82,16 +75,12 @@ public:
     virtual ~CXML_DataStmAcc()
     {
         if (m_pBuffer) {
-            FX_Allocator_Free(m_pAllocator, m_pBuffer);
+            FX_Free(m_pBuffer);
         }
     }
     virtual void			Release()
     {
-        if (m_pAllocator) {
-            FX_DeleteAtAllocator(this, m_pAllocator, CXML_DataStmAcc);
-        } else {
-            delete this;
-        }
+        delete this;
     }
     virtual FX_BOOL			IsEOF()
     {
@@ -117,7 +106,7 @@ public:
         }
         m_dwSize = (size_t)FX_MIN(FX_XMLDATASTREAM_BufferSize, nLength - m_nStart);
         if (!m_pBuffer) {
-            m_pBuffer = FX_Allocator_Alloc(m_pAllocator, FX_BYTE, m_dwSize);
+            m_pBuffer = FX_Alloc(FX_BYTE, m_dwSize);
             if (!m_pBuffer) {
                 return FALSE;
             }
@@ -137,7 +126,6 @@ public:
         return m_nStart;
     }
 protected:
-    IFX_Allocator*	m_pAllocator;
     IFX_FileRead	*m_pFileRead;
     FX_LPBYTE		m_pBuffer;
     FX_FILESIZE		m_nStart;
@@ -146,9 +134,7 @@ protected:
 class CXML_Parser
 {
 public:
-    CXML_Parser(IFX_Allocator* pAllocator = NULL) : m_pAllocator(pAllocator) {}
     ~CXML_Parser();
-    IFX_Allocator*	m_pAllocator;
     IFX_BufferRead*	m_pDataAcc;
     FX_BOOL			m_bOwnedStream;
     FX_FILESIZE		m_nOffset;
@@ -165,10 +151,10 @@ public:
     FX_BOOL			IsEOF();
     FX_BOOL			HaveAvailData();
     void			SkipWhiteSpaces();
-    void			GetName(CFX_ByteStringL &space, CFX_ByteStringL &name);
-    void			GetAttrValue(CFX_WideStringL &value);
+    void			GetName(CFX_ByteString& space, CFX_ByteString& name);
+    void			GetAttrValue(CFX_WideString &value);
     FX_DWORD		GetCharRef();
-    void			GetTagName(CFX_ByteStringL &space, CFX_ByteStringL &name, FX_BOOL &bEndTag, FX_BOOL bStartTag = FALSE);
+    void			GetTagName(CFX_ByteString &space, CFX_ByteString &name, FX_BOOL &bEndTag, FX_BOOL bStartTag = FALSE);
     void			SkipLiterals(FX_BSTR str);
     CXML_Element*	ParseElement(CXML_Element* pParent, FX_BOOL bStartTag = FALSE);
     void			InsertContentSegment(FX_BOOL bCDATA, FX_WSTR content, CXML_Element* pElement);

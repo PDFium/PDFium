@@ -7,13 +7,9 @@
 #include "../../include/fxcrt/fx_ext.h"
 #include "fxcrt_platforms.h"
 #if (_FXM_PLATFORM_ != _FXM_PLATFORM_WINDOWS_ && _FXM_PLATFORM_ != _FXM_PLATFORM_LINUX_ && _FXM_PLATFORM_ != _FXM_PLATFORM_APPLE_ && _FXM_PLATFORM_ != _FXM_PLATFORM_ANDROID_)
-IFXCRT_FileAccess* FXCRT_FileAccess_Create(IFX_Allocator* pAllocator)
+IFXCRT_FileAccess* FXCRT_FileAccess_Create()
 {
-    if (pAllocator) {
-        return FX_NewAtAllocator(pAllocator) CFXCRT_FileAccess_CRT;
-    } else {
-        return FX_NEW CFXCRT_FileAccess_CRT;
-    }
+    return FX_NEW CFXCRT_FileAccess_CRT;
 }
 void FXCRT_GetFileModeString(FX_DWORD dwModes, CFX_ByteString &bsMode)
 {
@@ -71,13 +67,9 @@ void CFXCRT_FileAccess_CRT::Close()
     FXSYS_fclose(m_hFile);
     m_hFile = NULL;
 }
-void CFXCRT_FileAccess_CRT::Release(IFX_Allocator* pAllocator)
+void CFXCRT_FileAccess_CRT::Release()
 {
-    if (pAllocator) {
-        FX_DeleteAtAllocator(this, pAllocator, CFXCRT_FileAccess_CRT);
-    } else {
-        delete this;
-    }
+    delete this;
 }
 FX_FILESIZE CFXCRT_FileAccess_CRT::GetSize() const
 {

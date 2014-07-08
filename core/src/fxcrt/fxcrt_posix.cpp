@@ -7,13 +7,9 @@
 #include "../../include/fxcrt/fx_ext.h"
 #include "fxcrt_posix.h"
 #if _FXM_PLATFORM_ == _FXM_PLATFORM_LINUX_ || _FXM_PLATFORM_ == _FXM_PLATFORM_APPLE_ || _FXM_PLATFORM_ == _FXM_PLATFORM_ANDROID_
-IFXCRT_FileAccess* FXCRT_FileAccess_Create(IFX_Allocator* pAllocator)
+IFXCRT_FileAccess* FXCRT_FileAccess_Create()
 {
-    if (pAllocator) {
-        return FX_NewAtAllocator(pAllocator) CFXCRT_FileAccess_Posix();
-    } else {
-        return FX_NEW CFXCRT_FileAccess_Posix;
-    }
+    return FX_NEW CFXCRT_FileAccess_Posix;
 }
 void FXCRT_Posix_GetFileMode(FX_DWORD dwModes, FX_INT32 &nFlags, FX_INT32 &nMasks)
 {
@@ -59,13 +55,9 @@ void CFXCRT_FileAccess_Posix::Close()
     close(m_nFD);
     m_nFD = -1;
 }
-void CFXCRT_FileAccess_Posix::Release(IFX_Allocator* pAllocator)
+void CFXCRT_FileAccess_Posix::Release()
 {
-    if (pAllocator) {
-        FX_DeleteAtAllocator(this, pAllocator, CFXCRT_FileAccess_Posix);
-    } else {
-        delete this;
-    }
+    delete this;
 }
 FX_FILESIZE CFXCRT_FileAccess_Posix::GetSize() const
 {

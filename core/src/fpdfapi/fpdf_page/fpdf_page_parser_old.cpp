@@ -962,7 +962,6 @@ void CPDF_ContentParser::Start(CPDF_Page* pPage, CPDF_ParseOptions* pOptions)
             return;
         }
         m_pStreamArray = FX_Alloc(CPDF_StreamAcc*, m_nStreams);
-        FXSYS_memset32(m_pStreamArray, 0, sizeof(CPDF_StreamAcc*) * m_nStreams);
     } else {
         m_Status = Done;
         return;

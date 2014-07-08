@@ -32,7 +32,6 @@ void CWeightTable::Calc(int dest_len, int dest_min, int dest_max, int src_len, i
     if (m_pWeightTables == NULL) {
         return;
     }
-    FXSYS_memset32(m_pWeightTables, 0, sizeof(FX_BYTE) * ((dest_max - dest_min)*m_ItemSize + 4));
     if ((flags & FXDIB_NOSMOOTH) != 0 || FXSYS_fabs((FX_FLOAT)scale) < 1.0f) {
         for (int dest_pixel = dest_min; dest_pixel < dest_max; dest_pixel ++) {
             PixelWeight& pixel_weights = *GetPixelWeight(dest_pixel);
@@ -207,7 +206,6 @@ CStretchEngine::CStretchEngine(IFX_ScanlineComposer* pDestBitmap, FXDIB_Format d
     if (m_pDestScanline == NULL) {
         return;
     }
-    FXSYS_memset32(m_pDestScanline, 0, sizeof(FX_BYTE) * size);
     if (dest_format == FXDIB_Rgb32) {
         FXSYS_memset8(m_pDestScanline, 255, size);
     }

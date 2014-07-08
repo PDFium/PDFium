@@ -239,7 +239,6 @@ FX_BOOL CFX_Palette::BuildPalette(const CFX_DIBSource* pBitmap, int pal_type)
     if (!m_pPalette) {
         return FALSE;
     }
-    FXSYS_memset32(m_pPalette, 0, sizeof(FX_DWORD) * 256);
     int bpp    = pBitmap->GetBPP() / 8;
     int width  = pBitmap->GetWidth();
     int height = pBitmap->GetHeight();
@@ -259,8 +258,6 @@ FX_BOOL CFX_Palette::BuildPalette(const CFX_DIBSource* pBitmap, int pal_type)
     if (!m_aLut) {
         return FALSE;
     }
-    FXSYS_memset32(m_aLut, 0, sizeof(FX_DWORD) * 4096);
-    FXSYS_memset32(m_cLut, 0, sizeof(FX_DWORD) * 4096);
     int row, col;
     m_lut = 0;
     for (row = 0; row < height; row++) {
@@ -878,7 +875,6 @@ FX_BOOL ConvertBuffer(FXDIB_Format dest_format, FX_LPBYTE dest_buf, int dest_pit
                 if (!d_pal) {
                     return FALSE;
                 }
-                FXSYS_memset32(d_pal, 0, sizeof(FX_DWORD) * 256);
                 if (((src_format & 0xff) == 1 || (src_format & 0xff) == 8) && pSrcBitmap->GetPalette()) {
                     return _ConvertBuffer_Plt2PltRgb8(dest_buf, dest_pitch, width, height, pSrcBitmap, src_left, src_top, d_pal, pIccTransform);
                 } else if ((src_format & 0xff) >= 24) {

@@ -543,8 +543,7 @@ static void _CFString2CFXByteString(CFStringRef src, CFX_ByteString &dest)
     SInt32 len =  CFStringGetLength(src);
     CFRange range = CFRangeMake(0, len);
     CFIndex used = 0;
-    UInt8* pBuffer = (UInt8*)malloc(sizeof(UInt8) * (len + 1));
-    FXSYS_memset32(pBuffer, 0, sizeof(UInt8) * (len + 1));
+    UInt8* pBuffer = (UInt8*)calloc(len+1, sizeof(UInt8));
     CFStringGetBytes(src, range, kCFStringEncodingASCII, 0, false, pBuffer, len, &used);
     dest = (FX_LPSTR)pBuffer;
     free(pBuffer);

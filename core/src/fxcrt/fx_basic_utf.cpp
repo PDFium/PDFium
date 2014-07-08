@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #include "../../include/fxcrt/fx_basic.h"
@@ -87,16 +87,4 @@ CFX_ByteString FX_UTF8Encode(FX_LPCWSTR pwsStr, FX_STRSIZE len)
         encoder.Input(*pwsStr ++);
     }
     return encoder.GetResult();
-}
-void FX_UTF8Encode(FX_LPCWSTR pwsStr, FX_STRSIZE len, CFX_ByteStringL &utf8Str, IFX_Allocator* pAllocator)
-{
-    FXSYS_assert(pwsStr != NULL);
-    if (len < 0) {
-        len = (FX_STRSIZE)FXSYS_wcslen(pwsStr);
-    }
-    CFX_UTF8Encoder encoder(pAllocator);
-    while (len -- > 0) {
-        encoder.Input(*pwsStr ++);
-    }
-    encoder.GetResult(utf8Str);
 }

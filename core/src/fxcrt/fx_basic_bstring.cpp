@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #include "../../include/fxcrt/fx_basic.h"
@@ -1175,36 +1175,4 @@ void CFX_StringBufBase::Append(int i, FX_DWORD flags)
     char buf[32];
     int len = _Buffer_itoa(buf, i, flags);
     Append(CFX_ByteStringC(buf, len));
-}
-void CFX_ByteStringL::Empty(IFX_Allocator* pAllocator)
-{
-    if (m_Ptr) {
-        FX_Allocator_Free(pAllocator, (FX_LPVOID)m_Ptr);
-    }
-    m_Ptr = NULL, m_Length = 0;
-}
-FX_LPSTR CFX_ByteStringL::AllocBuffer(FX_STRSIZE length, IFX_Allocator* pAllocator)
-{
-    Empty(pAllocator);
-    FX_LPSTR str = FX_Allocator_Alloc(pAllocator, FX_CHAR, length + 1);
-    if (!str) {
-        return NULL;
-    }
-    *(FX_LPSTR*)(&m_Ptr) = str;
-    m_Length = length;
-    return str;
-}
-void CFX_ByteStringL::Set(FX_BSTR src, IFX_Allocator* pAllocator)
-{
-    Empty(pAllocator);
-    if (src.GetCStr() != NULL && src.GetLength() > 0) {
-        FX_LPSTR str = FX_Allocator_Alloc(pAllocator, FX_CHAR, src.GetLength() + 1);
-        if (!str) {
-            return;
-        }
-        FXSYS_memcpy32(str, src, src.GetLength());
-        str[src.GetLength()] = '\0';
-        *(FX_LPSTR*)(&m_Ptr) = str;
-        m_Length = src.GetLength();
-    }
 }

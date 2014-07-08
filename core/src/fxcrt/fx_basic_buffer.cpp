@@ -1,31 +1,29 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #include "../../include/fxcrt/fx_basic.h"
 FX_STRSIZE FX_ftoa(FX_FLOAT f, FX_LPSTR buf);
-CFX_BinaryBuf::CFX_BinaryBuf(IFX_Allocator* pAllocator)
-    : m_pAllocator(pAllocator)
-    , m_AllocStep(0)
+CFX_BinaryBuf::CFX_BinaryBuf()
+    : m_AllocStep(0)
     , m_pBuffer(NULL)
     , m_DataSize(0)
     , m_AllocSize(0)
 {
 }
-CFX_BinaryBuf::CFX_BinaryBuf(FX_STRSIZE size, IFX_Allocator* pAllocator)
-    : m_pAllocator(pAllocator)
-    , m_AllocStep(0)
+CFX_BinaryBuf::CFX_BinaryBuf(FX_STRSIZE size)
+    : m_AllocStep(0)
     , m_DataSize(size)
     , m_AllocSize(size)
 {
-    m_pBuffer = FX_Allocator_Alloc(m_pAllocator, FX_BYTE, size);
+    m_pBuffer = FX_Alloc(FX_BYTE, size);
 }
 CFX_BinaryBuf::~CFX_BinaryBuf()
 {
     if (m_pBuffer) {
-        FX_Allocator_Free(m_pAllocator, m_pBuffer);
+        FX_Free(m_pBuffer);
     }
 }
 void CFX_BinaryBuf::Delete(int start_index, int count)
@@ -49,7 +47,7 @@ void CFX_BinaryBuf::DetachBuffer()
 void CFX_BinaryBuf::AttachData(void* buffer, FX_STRSIZE size)
 {
     if (m_pBuffer) {
-        FX_Allocator_Free(m_pAllocator, m_pBuffer);
+        FX_Free(m_pBuffer);
     }
     m_DataSize = size;
     m_pBuffer = (FX_LPBYTE)buffer;
@@ -86,9 +84,9 @@ void CFX_BinaryBuf::ExpandBuf(FX_STRSIZE add_size)
     new_size = (new_size + alloc_step - 1) / alloc_step * alloc_step;
     FX_LPBYTE pNewBuffer = m_pBuffer;
     if (pNewBuffer) {
-        pNewBuffer = FX_Allocator_Realloc(m_pAllocator, FX_BYTE, m_pBuffer, new_size);
+        pNewBuffer = FX_Realloc(FX_BYTE, m_pBuffer, new_size);
     } else {
-        pNewBuffer = FX_Allocator_Alloc(m_pAllocator, FX_BYTE, new_size);
+        pNewBuffer = FX_Alloc(FX_BYTE, new_size);
     }
     if (pNewBuffer) {
         m_pBuffer = pNewBuffer;
@@ -142,10 +140,6 @@ void CFX_BinaryBuf::AppendFill(FX_BYTE byte, FX_STRSIZE count)
 CFX_ByteStringC CFX_BinaryBuf::GetByteString() const
 {
     return CFX_ByteStringC(m_pBuffer, m_DataSize);
-}
-void CFX_BinaryBuf::GetByteStringL(CFX_ByteStringL &str) const
-{
-    str.Set(CFX_ByteStringC(m_pBuffer, m_DataSize), m_pAllocator);
 }
 CFX_ByteTextBuf& CFX_ByteTextBuf::operator << (FX_BSTR lpsz)
 {
@@ -249,10 +243,6 @@ void CFX_WideTextBuf::operator =(FX_WSTR str)
 CFX_WideStringC CFX_WideTextBuf::GetWideString() const
 {
     return CFX_WideStringC((FX_LPCWSTR)m_pBuffer, m_DataSize / sizeof(FX_WCHAR));
-}
-void CFX_WideTextBuf::GetWideStringL(CFX_WideStringL& wideText) const
-{
-    wideText.Set(CFX_WideStringC((FX_LPCWSTR)m_pBuffer, m_DataSize / sizeof(FX_WCHAR)), m_pAllocator);
 }
 CFX_ArchiveSaver& CFX_ArchiveSaver::operator << (FX_BYTE i)
 {
@@ -439,9 +429,8 @@ FX_DWORD CFX_BitStream::GetBits(FX_DWORD nBits)
     m_BitPos += nBits;
     return result;
 }
-IFX_BufferArchive::IFX_BufferArchive(FX_STRSIZE size, IFX_Allocator* pAllocator)
-    : m_pAllocator(pAllocator)
-    , m_BufSize(size)
+IFX_BufferArchive::IFX_BufferArchive(FX_STRSIZE size)
+    : m_BufSize(size)
     , m_pBuffer(NULL)
     , m_Length(0)
 {
@@ -450,7 +439,7 @@ void IFX_BufferArchive::Clear()
 {
     m_Length = 0;
     if (m_pBuffer) {
-        FX_Allocator_Free(m_pAllocator, m_pBuffer);
+        FX_Free(m_pBuffer);
         m_pBuffer = NULL;
     }
 }
@@ -466,7 +455,7 @@ FX_INT32 IFX_BufferArchive::AppendBlock(const void* pBuf, size_t size)
         return 0;
     }
     if (!m_pBuffer) {
-        m_pBuffer = FX_Allocator_Alloc(m_pAllocator, FX_BYTE, m_BufSize);
+        m_pBuffer = FX_Alloc(FX_BYTE, m_BufSize);
         if (!m_pBuffer) {
             return -1;
         }
@@ -501,8 +490,8 @@ FX_INT32 IFX_BufferArchive::AppendString(FX_BSTR lpsz)
 {
     return AppendBlock((FX_LPCBYTE)lpsz, lpsz.GetLength());
 }
-CFX_FileBufferArchive::CFX_FileBufferArchive(FX_STRSIZE size, IFX_Allocator* pAllocator)
-    : IFX_BufferArchive(size, pAllocator)
+CFX_FileBufferArchive::CFX_FileBufferArchive(FX_STRSIZE size)
+    : IFX_BufferArchive(size)
     , m_pFile(NULL)
     , m_bTakeover(FALSE)
 {

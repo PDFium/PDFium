@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #ifndef _FX_STRING_H_
@@ -841,30 +841,4 @@ inline CFX_ByteString	FX_UTF8Encode(const CFX_WideString &wsStr)
 {
     return FX_UTF8Encode((FX_LPCWSTR)wsStr, wsStr.GetLength());
 }
-class CFX_ByteStringL : public CFX_ByteStringC
-{
-public:
-    CFX_ByteStringL() : CFX_ByteStringC() {}
-    ~CFX_ByteStringL() {}
-
-    void		Empty(IFX_Allocator* pAllocator);
-    FX_LPSTR	AllocBuffer(FX_STRSIZE length, IFX_Allocator* pAllocator);
-
-    void		Set(FX_BSTR src, IFX_Allocator* pAllocator);
-};
-class CFX_WideStringL : public CFX_WideStringC
-{
-public:
-    CFX_WideStringL() : CFX_WideStringC() {}
-    ~CFX_WideStringL() {}
-
-    void		Empty(IFX_Allocator* pAllocator);
-    void		Set(FX_WSTR src, IFX_Allocator* pAllocator);
-
-    int			GetInteger() const;
-    FX_FLOAT	GetFloat() const;
-
-    void		TrimRight(FX_LPCWSTR lpszTargets);
-};
-void	FX_UTF8Encode(FX_LPCWSTR pwsStr, FX_STRSIZE len, CFX_ByteStringL &utf8Str, IFX_Allocator* pAllocator = NULL);
 #endif

@@ -91,7 +91,6 @@ FX_BOOL CFX_DIBitmap::Create(int width, int height, FXDIB_Format format, FX_LPBY
         if (m_pBuffer == NULL) {
             return FALSE;
         }
-        FXSYS_memset32(m_pBuffer, 0, sizeof (FX_BYTE) * size);
     }
     m_Width = width;
     m_Height = height;

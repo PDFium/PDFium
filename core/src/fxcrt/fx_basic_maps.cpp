@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #include "../../include/fxcrt/fx_ext.h"
@@ -14,9 +14,8 @@ static void DestructElement(CFX_ByteString* pOldData)
 {
     pOldData->~CFX_ByteString();
 }
-CFX_MapPtrToPtr::CFX_MapPtrToPtr(int nBlockSize, IFX_Allocator* pAllocator)
-    : m_pAllocator(pAllocator)
-    , m_pHashTable(NULL)
+CFX_MapPtrToPtr::CFX_MapPtrToPtr(int nBlockSize)
+    : m_pHashTable(NULL)
     , m_nHashTableSize(17)
     , m_nCount(0)
     , m_pFreeList(NULL)
@@ -28,12 +27,12 @@ CFX_MapPtrToPtr::CFX_MapPtrToPtr(int nBlockSize, IFX_Allocator* pAllocator)
 void CFX_MapPtrToPtr::RemoveAll()
 {
     if (m_pHashTable) {
-        FX_Allocator_Free(m_pAllocator, m_pHashTable);
+        FX_Free(m_pHashTable);
         m_pHashTable = NULL;
     }
     m_nCount = 0;
     m_pFreeList = NULL;
-    m_pBlocks->FreeDataChain(m_pAllocator);
+    m_pBlocks->FreeDataChain();
     m_pBlocks = NULL;
 }
 CFX_MapPtrToPtr::~CFX_MapPtrToPtr()
@@ -122,7 +121,7 @@ CFX_MapPtrToPtr::CAssoc*
 CFX_MapPtrToPtr::NewAssoc()
 {
     if (m_pFreeList == NULL) {
-        CFX_Plex* newBlock = CFX_Plex::Create(m_pAllocator, m_pBlocks, m_nBlockSize, sizeof(CFX_MapPtrToPtr::CAssoc));
+        CFX_Plex* newBlock = CFX_Plex::Create(m_pBlocks, m_nBlockSize, sizeof(CFX_MapPtrToPtr::CAssoc));
         CFX_MapPtrToPtr::CAssoc* pAssoc = (CFX_MapPtrToPtr::CAssoc*)newBlock->data();
         pAssoc += m_nBlockSize - 1;
         for (int i = m_nBlockSize - 1; i >= 0; i--, pAssoc--) {
@@ -145,14 +144,11 @@ void CFX_MapPtrToPtr::InitHashTable(
     ASSERT(m_nCount == 0);
     ASSERT(nHashSize > 0);
     if (m_pHashTable != NULL) {
-        FX_Allocator_Free(m_pAllocator, m_pHashTable);
+        FX_Free(m_pHashTable);
         m_pHashTable = NULL;
     }
     if (bAllocNow) {
-        m_pHashTable = FX_Allocator_Alloc(m_pAllocator, CAssoc*, nHashSize);
-        if (m_pHashTable) {
-            FXSYS_memset32(m_pHashTable, 0, sizeof(CAssoc*) * nHashSize);
-        }
+        m_pHashTable = FX_Alloc(CAssoc*, nHashSize);
     }
     m_nHashTableSize = nHashSize;
 }
@@ -184,9 +180,8 @@ void CFX_MapPtrToPtr::FreeAssoc(CFX_MapPtrToPtr::CAssoc* pAssoc)
         RemoveAll();
     }
 }
-CFX_MapByteStringToPtr::CFX_MapByteStringToPtr(int nBlockSize, IFX_Allocator* pAllocator)
-    : m_pAllocator(pAllocator)
-    , m_pHashTable(NULL)
+CFX_MapByteStringToPtr::CFX_MapByteStringToPtr(int nBlockSize)
+    : m_pHashTable(NULL)
     , m_nHashTableSize(17)
     , m_nCount(0)
     , m_pFreeList(NULL)
@@ -205,12 +200,12 @@ void CFX_MapByteStringToPtr::RemoveAll()
                 DestructElement(&pAssoc->key);
             }
         }
-        FX_Allocator_Free(m_pAllocator, m_pHashTable);
+        FX_Free(m_pHashTable);
         m_pHashTable = NULL;
     }
     m_nCount = 0;
     m_pFreeList = NULL;
-    m_pBlocks->FreeDataChain(m_pAllocator);
+    m_pBlocks->FreeDataChain();
     m_pBlocks = NULL;
 }
 CFX_MapByteStringToPtr::~CFX_MapByteStringToPtr()
@@ -286,7 +281,7 @@ CFX_MapByteStringToPtr::CAssoc*
 CFX_MapByteStringToPtr::NewAssoc()
 {
     if (m_pFreeList == NULL) {
-        CFX_Plex* newBlock = CFX_Plex::Create(m_pAllocator, m_pBlocks, m_nBlockSize, sizeof(CFX_MapByteStringToPtr::CAssoc));
+        CFX_Plex* newBlock = CFX_Plex::Create(m_pBlocks, m_nBlockSize, sizeof(CFX_MapByteStringToPtr::CAssoc));
         CFX_MapByteStringToPtr::CAssoc* pAssoc = (CFX_MapByteStringToPtr::CAssoc*)newBlock->data();
         pAssoc += m_nBlockSize - 1;
         for (int i = m_nBlockSize - 1; i >= 0; i--, pAssoc--) {
@@ -345,14 +340,11 @@ void CFX_MapByteStringToPtr::InitHashTable(
     ASSERT(m_nCount == 0);
     ASSERT(nHashSize > 0);
     if (m_pHashTable != NULL) {
-        FX_Allocator_Free(m_pAllocator, m_pHashTable);
+        FX_Free(m_pHashTable);
         m_pHashTable = NULL;
     }
     if (bAllocNow) {
-        m_pHashTable = FX_Allocator_Alloc(m_pAllocator, CAssoc*, nHashSize);
-        if (m_pHashTable) {
-            FXSYS_memset32(m_pHashTable, 0, sizeof(CAssoc*) * nHashSize);
-        }
+        m_pHashTable = FX_Alloc(CAssoc*, nHashSize);
     }
     m_nHashTableSize = nHashSize;
 }
@@ -391,10 +383,10 @@ struct _CompactString {
     FX_BYTE		m_Unused;
     FX_LPBYTE	m_pBuffer;
 };
-static void _CompactStringRelease(IFX_Allocator* pAllocator, _CompactString* pCompact)
+static void _CompactStringRelease(_CompactString* pCompact)
 {
     if (pCompact->m_CompactLen == 0xff) {
-        FX_Allocator_Free(pAllocator, pCompact->m_pBuffer);
+        FX_Free(pCompact->m_pBuffer);
     }
 }
 static FX_BOOL _CompactStringSame(_CompactString* pCompact, FX_LPCBYTE pStr, int len)
@@ -410,7 +402,7 @@ static FX_BOOL _CompactStringSame(_CompactString* pCompact, FX_LPCBYTE pStr, int
     }
     return FXSYS_memcmp32(pCompact->m_pBuffer, pStr, len) == 0;
 }
-static void _CompactStringStore(IFX_Allocator* pAllocator, _CompactString* pCompact, FX_LPCBYTE pStr, int len)
+static void _CompactStringStore(_CompactString* pCompact, FX_LPCBYTE pStr, int len)
 {
     if (len < (int)sizeof(_CompactString)) {
         pCompact->m_CompactLen = (FX_BYTE)len;
@@ -420,7 +412,7 @@ static void _CompactStringStore(IFX_Allocator* pAllocator, _CompactString* pComp
     pCompact->m_CompactLen = 0xff;
     pCompact->m_LenHigh = len / 256;
     pCompact->m_LenLow = len % 256;
-    pCompact->m_pBuffer = FX_Allocator_Alloc(pAllocator, FX_BYTE, len);
+    pCompact->m_pBuffer = FX_Alloc(FX_BYTE, len);
     if (pCompact->m_pBuffer) {
         FXSYS_memcpy32(pCompact->m_pBuffer, pStr, len);
     }
@@ -437,8 +429,8 @@ static CFX_ByteStringC _CompactStringGet(_CompactString* pCompact)
 }
 #define CMAP_ALLOC_STEP		8
 #define CMAP_INDEX_SIZE		8
-CFX_CMapByteStringToPtr::CFX_CMapByteStringToPtr(IFX_Allocator* pAllocator)
-    : m_Buffer(sizeof(_CompactString) + sizeof(void*), CMAP_ALLOC_STEP, CMAP_INDEX_SIZE, pAllocator)
+CFX_CMapByteStringToPtr::CFX_CMapByteStringToPtr()
+    : m_Buffer(sizeof(_CompactString) + sizeof(void*), CMAP_ALLOC_STEP, CMAP_INDEX_SIZE)
 {
 }
 CFX_CMapByteStringToPtr::~CFX_CMapByteStringToPtr()
@@ -447,10 +439,9 @@ CFX_CMapByteStringToPtr::~CFX_CMapByteStringToPtr()
 }
 void CFX_CMapByteStringToPtr::RemoveAll()
 {
-    IFX_Allocator* pAllocator = m_Buffer.m_pAllocator;
     int size = m_Buffer.GetSize();
-    for (int i = 0; i < size; i ++) {
-        _CompactStringRelease(pAllocator, (_CompactString*)m_Buffer.GetAt(i));
+    for (int i = 0; i < size; i++) {
+        _CompactStringRelease((_CompactString*)m_Buffer.GetAt(i));
     }
     m_Buffer.RemoveAll();
 }
@@ -533,38 +524,36 @@ void CFX_CMapByteStringToPtr::SetAt(FX_BSTR key, void* value)
         *(void**)(pKey + 1) = value;
         return;
     }
-    IFX_Allocator* pAllocator = m_Buffer.m_pAllocator;
     for (index = 0; index < size; index ++) {
         _CompactString* pKey = (_CompactString*)m_Buffer.GetAt(index);
         if (pKey->m_CompactLen) {
             continue;
         }
-        _CompactStringStore(pAllocator, pKey, (FX_LPCBYTE)key, key_len);
+        _CompactStringStore(pKey, (FX_LPCBYTE)key, key_len);
         *(void**)(pKey + 1) = value;
         return;
     }
     _CompactString* pKey = (_CompactString*)m_Buffer.Add();
-    _CompactStringStore(pAllocator, pKey, (FX_LPCBYTE)key, key_len);
+    _CompactStringStore(pKey, (FX_LPCBYTE)key, key_len);
     *(void**)(pKey + 1) = value;
 }
 void CFX_CMapByteStringToPtr::AddValue(FX_BSTR key, void* value)
 {
     ASSERT(value != NULL);
     _CompactString* pKey = (_CompactString*)m_Buffer.Add();
-    _CompactStringStore(m_Buffer.m_pAllocator, pKey, (FX_LPCBYTE)key, key.GetLength());
+    _CompactStringStore(pKey, (FX_LPCBYTE)key, key.GetLength());
     *(void**)(pKey + 1) = value;
 }
 void CFX_CMapByteStringToPtr::RemoveKey(FX_BSTR key)
 {
     int key_len = key.GetLength();
-    IFX_Allocator* pAllocator = m_Buffer.m_pAllocator;
     int size = m_Buffer.GetSize();
-    for (int index = 0; index < size; index ++) {
+    for (int index = 0; index < size; index++) {
         _CompactString* pKey = (_CompactString*)m_Buffer.GetAt(index);
         if (!_CompactStringSame(pKey, (FX_LPCBYTE)key, key_len)) {
             continue;
         }
-        _CompactStringRelease(pAllocator, pKey);
+        _CompactStringRelease(pKey);
         pKey->m_CompactLen = 0xfe;
         return;
     }

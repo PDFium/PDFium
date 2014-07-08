@@ -390,7 +390,6 @@ FX_BOOL CPDF_RenderStatus::ProcessType3Text(const CPDF_TextObject* textobj, cons
     FXTEXT_GLYPHPOS* pGlyphAndPos = NULL;
     if (device_class == FXDC_DISPLAY) {
         pGlyphAndPos = FX_Alloc(FXTEXT_GLYPHPOS, textobj->m_nChars);
-        FXSYS_memset32(pGlyphAndPos, 0, sizeof(FXTEXT_GLYPHPOS) * textobj->m_nChars);
     } else if (fill_alpha < 255) {
         return FALSE;
     }
@@ -540,7 +539,6 @@ void CPDF_CharPosList::Load(int nChars, FX_DWORD* pCharCodes, FX_FLOAT* pCharPos
                             FX_FLOAT FontSize)
 {
     m_pCharPos = FX_Alloc(FXTEXT_CHARPOS, nChars);
-    FXSYS_memset32(m_pCharPos, 0, sizeof(FXTEXT_CHARPOS) * nChars);
     m_nChars = 0;
     CPDF_CIDFont* pCIDFont = pFont->GetCIDFont();
     FX_BOOL bVertWriting = pCIDFont && pCIDFont->IsVertWriting();

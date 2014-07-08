@@ -411,7 +411,6 @@ FX_BOOL CPDF_CMap::LoadPredefined(CPDF_CMapManager* pMgr, FX_LPCSTR pName, FX_BO
     m_CodingScheme = map.m_CodingScheme;
     if (m_CodingScheme == MixedTwoBytes) {
         m_pLeadingBytes = FX_Alloc(FX_BYTE, 256);
-        FXSYS_memset32(m_pLeadingBytes, 0, 256);
         for (FX_DWORD i = 0; i < map.m_LeadingSegCount; i ++) {
             for (int b = map.m_LeadingSegs[i * 2]; b <= map.m_LeadingSegs[i * 2 + 1]; b ++) {
                 m_pLeadingBytes[b] = 1;
@@ -431,7 +430,6 @@ FX_BOOL CPDF_CMap::LoadPredefined(CPDF_CMapManager* pMgr, FX_LPCSTR pName, FX_BO
         return FALSE;
     }
     m_pMapping = FX_Alloc(FX_WORD, 65536);
-    FXSYS_memset32(m_pMapping, 0, 65536 * sizeof(FX_WORD));
     FX_DWORD dwRecodeEndPos = 0;
     if (pBuffer[5] == 0) {
         FX_DWORD dwStartIndex = *(FX_DWORD*)(pBuffer + 8);
@@ -480,7 +478,6 @@ extern "C" {
 FX_BOOL CPDF_CMap::LoadEmbedded(FX_LPCBYTE pData, FX_DWORD size)
 {
     m_pMapping = FX_Alloc(FX_WORD, 65536);
-    FXSYS_memset32(m_pMapping, 0, 65536 * sizeof(FX_WORD));
     CPDF_CMapParser parser;
     parser.Initialize(this);
     CPDF_SimpleParser syntax(pData, size);
@@ -1528,7 +1525,6 @@ FX_BOOL CPDF_CIDFont::LoadGB2312()
     CheckFontMetrics();
     m_DefaultWidth = 1000;
     m_pAnsiWidths = FX_Alloc(FX_WORD, 128);
-    FXSYS_memset32(m_pAnsiWidths, 0, 128 * sizeof(FX_WORD));
     for (int i = 32; i < 127; i ++) {
         m_pAnsiWidths[i] = 500;
     }

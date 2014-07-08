@@ -7,7 +7,7 @@
 #include "../include/fsdk_define.h"
 #include "../include/fpdfoom.h"
 
-void OOM_Handler(FXMEM_FoxitMgr* pFoxitMgr, void* param)
+void OOM_Handler(void* param)
 {
 	if (!param) return;
 	((OOM_INFO*)param)->FSDK_OOM_Handler((OOM_INFO*)param);

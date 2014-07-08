@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #include "../../include/fxcrt/fx_ext.h"
@@ -23,13 +23,9 @@ FX_BOOL FX_File_Exist(FX_WSTR fileName)
     }
     return (dwAttri & FILE_ATTRIBUTE_DIRECTORY) == 0;
 }
-IFXCRT_FileAccess* FXCRT_FileAccess_Create(IFX_Allocator* pAllocator)
+IFXCRT_FileAccess* FXCRT_FileAccess_Create()
 {
-    if (pAllocator) {
-        return FX_NewAtAllocator(pAllocator) CFXCRT_FileAccess_Win64;
-    } else {
-        return FX_NEW CFXCRT_FileAccess_Win64;
-    }
+    return FX_NEW CFXCRT_FileAccess_Win64;
 }
 void FXCRT_Windows_GetFileMode(FX_DWORD dwMode, FX_DWORD &dwAccess, FX_DWORD &dwShare, FX_DWORD &dwCreation)
 {
@@ -92,13 +88,9 @@ void CFXCRT_FileAccess_Win64::Close()
     ::CloseHandle(m_hFile);
     m_hFile = NULL;
 }
-void CFXCRT_FileAccess_Win64::Release(IFX_Allocator* pAllocator)
+void CFXCRT_FileAccess_Win64::Release()
 {
-    if (pAllocator) {
-        FX_DeleteAtAllocator(this, pAllocator, CFXCRT_FileAccess_Win64);
-    } else {
-        delete this;
-    }
+    delete this;
 }
 FX_FILESIZE CFXCRT_FileAccess_Win64::GetSize() const
 {

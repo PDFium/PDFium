@@ -721,7 +721,6 @@ FX_BOOL CPDF_StitchFunc::v_Init(CPDF_Object* pObj)
         return FALSE;
     }
     m_pSubFunctions = FX_Alloc(CPDF_Function*, m_nSubs);
-    FXSYS_memset32(m_pSubFunctions, 0, sizeof(CPDF_Function*)*m_nSubs);
     m_nOutputs = 0;
     int i;
     for (i = 0; i < m_nSubs; i ++) {

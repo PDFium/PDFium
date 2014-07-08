@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #include "../../include/fxcrt/fx_basic.h"
@@ -1061,58 +1061,6 @@ FX_FLOAT CFX_WideString::GetFloat() const
         return 0.0;
     }
     return FX_wtof(m_pData->m_String, m_pData->m_nDataLength);
-}
-void CFX_WideStringL::Empty(IFX_Allocator* pAllocator)
-{
-    if (m_Ptr) {
-        FX_Allocator_Free(pAllocator, (FX_LPVOID)m_Ptr);
-    }
-    m_Ptr = NULL, m_Length = 0;
-}
-void CFX_WideStringL::Set(FX_WSTR src, IFX_Allocator* pAllocator)
-{
-    Empty(pAllocator);
-    if (src.GetPtr() != NULL && src.GetLength() > 0) {
-        FX_LPWSTR str = FX_Allocator_Alloc(pAllocator, FX_WCHAR, src.GetLength() + 1);
-        if (!str) {
-            return;
-        }
-        FXSYS_memcpy32(str, src.GetPtr(), src.GetLength()*sizeof(FX_WCHAR));
-        str[src.GetLength()] = '\0';
-        *(FX_LPWSTR*)(&m_Ptr) = str;
-        m_Length = src.GetLength();
-    }
-}
-int CFX_WideStringL::GetInteger() const
-{
-    if (!m_Ptr) {
-        return 0;
-    }
-    return FXSYS_wtoi(m_Ptr);
-}
-FX_FLOAT CFX_WideStringL::GetFloat() const
-{
-    if (!m_Ptr) {
-        return 0.0f;
-    }
-    return FX_wtof(m_Ptr, m_Length);
-}
-void CFX_WideStringL::TrimRight(FX_LPCWSTR lpszTargets)
-{
-    if (!lpszTargets || *lpszTargets == 0 || !m_Ptr || m_Length < 1) {
-        return;
-    }
-    FX_STRSIZE pos = m_Length;
-    while (pos) {
-        if (FXSYS_wcschr(lpszTargets, m_Ptr[pos - 1]) == NULL) {
-            break;
-        }
-        pos --;
-    }
-    if (pos < m_Length) {
-        (*(FX_LPWSTR*)(&m_Ptr))[pos] = 0;
-        m_Length = pos;
-    }
 }
 static CFX_ByteString _DefMap_GetByteString(CFX_CharMap* pCharMap, const CFX_WideString& widestr)
 {

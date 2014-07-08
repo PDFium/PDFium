@@ -1,15 +1,11 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #ifndef _FX_BASIC_H_
 #define _FX_BASIC_H_
-#ifndef _STDINT_H_ 
-#define _STDINT_H_
-#include <stdint.h>
-#endif
 #ifndef _FX_SYSTEM_H_
 #include "fx_system.h"
 #endif
@@ -22,14 +18,11 @@
 #ifndef _FX_STREAM_H_
 #include "fx_stream.h"
 #endif
- 
 class CFX_BinaryBuf : public CFX_Object
 {
 public:
-
-    CFX_BinaryBuf(IFX_Allocator* pAllocator = NULL);
-
-    CFX_BinaryBuf(FX_STRSIZE size, IFX_Allocator* pAllocator = NULL);
+    CFX_BinaryBuf();
+    CFX_BinaryBuf(FX_STRSIZE size);
 
     ~CFX_BinaryBuf();
 
@@ -75,11 +68,8 @@ public:
     }
 
     CFX_ByteStringC			GetByteString() const;
-    void					GetByteStringL(CFX_ByteStringL &str) const;
 
     void					DetachBuffer();
-
-    IFX_Allocator*			m_pAllocator;
 protected:
 
     FX_STRSIZE				m_AllocStep;
@@ -95,8 +85,6 @@ protected:
 class CFX_ByteTextBuf : public CFX_BinaryBuf
 {
 public:
-
-    CFX_ByteTextBuf(IFX_Allocator* pAllocator = NULL) : CFX_BinaryBuf(pAllocator) {}
 
     void					operator = (FX_BSTR str);
 
@@ -123,8 +111,6 @@ public:
 class CFX_WideTextBuf : public CFX_BinaryBuf
 {
 public:
-
-    CFX_WideTextBuf(IFX_Allocator* pAllocator = NULL) : CFX_BinaryBuf(pAllocator) {}
 
     void					operator = (FX_LPCWSTR lpsz);
 
@@ -159,13 +145,11 @@ public:
     }
 
     CFX_WideStringC			GetWideString() const;
-    void					GetWideStringL(CFX_WideStringL& wideText) const;
 };
 class CFX_ArchiveSaver : public CFX_Object
 {
 public:
-
-    CFX_ArchiveSaver(IFX_Allocator* pAllocator = NULL) : m_SavingBuf(pAllocator), m_pStream(NULL) {}
+    CFX_ArchiveSaver() : m_pStream(NULL) {}
 
     CFX_ArchiveSaver&		operator << (FX_BYTE i);
 
@@ -239,8 +223,7 @@ protected:
 class IFX_BufferArchive
 {
 public:
-
-    IFX_BufferArchive(FX_STRSIZE size, IFX_Allocator* pAllocator = NULL);
+    IFX_BufferArchive(FX_STRSIZE size);
 
 
     virtual void			Clear();
@@ -262,9 +245,6 @@ protected:
 
     virtual	FX_BOOL			DoWork(const void* pBuf, size_t size) = 0;
 
-
-    IFX_Allocator*			m_pAllocator;
-
     FX_STRSIZE				m_BufSize;
 
     FX_LPBYTE				m_pBuffer;
@@ -274,7 +254,7 @@ protected:
 class CFX_FileBufferArchive : public IFX_BufferArchive, public CFX_Object
 {
 public:
-    CFX_FileBufferArchive(FX_STRSIZE size = 32768, IFX_Allocator* pAllocator = NULL);
+    CFX_FileBufferArchive(FX_STRSIZE size = 32768);
     ~CFX_FileBufferArchive();
     virtual void			Clear();
 
@@ -305,8 +285,7 @@ struct CFX_CharMap {
 class CFX_UTF8Decoder
 {
 public:
-
-    CFX_UTF8Decoder(IFX_Allocator* pAllocator = NULL) : m_Buffer(pAllocator)
+    CFX_UTF8Decoder()
     {
         m_PendingBytes = 0;
     }
@@ -326,10 +305,6 @@ public:
     {
         return m_Buffer.GetWideString();
     }
-    void			GetResult(CFX_WideStringL &result) const
-    {
-        m_Buffer.GetWideStringL(result);
-    }
 protected:
 
     int				m_PendingBytes;
@@ -341,8 +316,7 @@ protected:
 class CFX_UTF8Encoder
 {
 public:
-
-    CFX_UTF8Encoder(IFX_Allocator* pAllocator = NULL) : m_Buffer(pAllocator)
+    CFX_UTF8Encoder()
     {
         m_UTF16First = 0;
     }
@@ -359,10 +333,6 @@ public:
     {
         return m_Buffer.GetByteString();
     }
-    void			GetResult(CFX_ByteStringL &result) const
-    {
-        m_Buffer.GetByteStringL(result);
-    }
 protected:
 
     CFX_ByteTextBuf	m_Buffer;
@@ -375,12 +345,8 @@ CFX_ByteString FX_EncodeURI(const CFX_WideString& wsURI);
 CFX_WideString FX_DecodeURI(const CFX_ByteString& bsURI);
 class CFX_BasicArray : public CFX_Object
 {
-public:
-
-    IFX_Allocator*	m_pAllocator;
 protected:
-
-    CFX_BasicArray(int unit_size, IFX_Allocator* pAllocator = NULL);
+    CFX_BasicArray(int unit_size);
 
     ~CFX_BasicArray();
 
@@ -413,8 +379,7 @@ template<class TYPE>
 class CFX_ArrayTemplate : public CFX_BasicArray
 {
 public:
-
-    CFX_ArrayTemplate(IFX_Allocator* pAllocator = NULL) : CFX_BasicArray(sizeof(TYPE), pAllocator) {}
+    CFX_ArrayTemplate() : CFX_BasicArray(sizeof(TYPE)) {}
 
     int			GetSize() const
     {
@@ -580,8 +545,7 @@ template <class ObjectClass>
 class CFX_ObjectArray : public CFX_BasicArray
 {
 public:
-
-    CFX_ObjectArray(IFX_Allocator* pAllocator = NULL) : CFX_BasicArray(sizeof(ObjectClass), pAllocator) {}
+    CFX_ObjectArray() : CFX_BasicArray(sizeof(ObjectClass)) {}
 
     ~CFX_ObjectArray()
     {
@@ -697,8 +661,7 @@ typedef CFX_ObjectArray<CFX_WideString> CFX_WideStringArray;
 class CFX_BaseSegmentedArray : public CFX_Object
 {
 public:
-
-    CFX_BaseSegmentedArray(int unit_size = 1, int segment_units = 512, int index_size = 8, IFX_Allocator* pAllocator = NULL);
+    CFX_BaseSegmentedArray(int unit_size = 1, int segment_units = 512, int index_size = 8);
 
     ~CFX_BaseSegmentedArray();
 
@@ -728,8 +691,6 @@ public:
     }
 
     void*	Iterate(FX_BOOL (*callback)(void* param, void* pData), void* param) const;
-
-    IFX_Allocator*	m_pAllocator;
 private:
 
     int				m_UnitSize;
@@ -751,9 +712,8 @@ template <class ElementType>
 class CFX_SegmentedArray : public CFX_BaseSegmentedArray
 {
 public:
-
-    CFX_SegmentedArray(int segment_units, int index_size = 8, IFX_Allocator* pAllocator = NULL)
-        : CFX_BaseSegmentedArray(sizeof(ElementType), segment_units, index_size, pAllocator)
+    CFX_SegmentedArray(int segment_units, int index_size = 8)
+        : CFX_BaseSegmentedArray(sizeof(ElementType), segment_units, index_size)
     {}
 
     void	Add(ElementType data)
@@ -770,43 +730,32 @@ template <class DataType, int FixedSize>
 class CFX_FixedBufGrow : public CFX_Object
 {
 public:
-    CFX_FixedBufGrow(IFX_Allocator* pAllocator = NULL)
-        : m_pAllocator(pAllocator)
-        , m_pData(NULL)
+    CFX_FixedBufGrow() : m_pData(NULL)
     {}
-    CFX_FixedBufGrow(int data_size, IFX_Allocator* pAllocator = NULL)
-        : m_pAllocator(pAllocator)
-        , m_pData(NULL)
+    CFX_FixedBufGrow(int data_size) : m_pData(NULL)
     {
         if (data_size > FixedSize) {
-            m_pData = FX_Allocator_Alloc(m_pAllocator, DataType, data_size);
+            m_pData = FX_Alloc(DataType, data_size);
         } else {
-            if (FixedSize > SIZE_MAX/sizeof(DataType))
-                return;
-
             FXSYS_memset32(m_Data, 0, sizeof(DataType)*FixedSize);
         }
     }
     void SetDataSize(int data_size)
     {
         if (m_pData) {
-            FX_Allocator_Free(m_pAllocator, m_pData);
+            FX_Free(m_pData);
         }
         m_pData = NULL;
         if (data_size > FixedSize) {
-            m_pData = FX_Allocator_Alloc(m_pAllocator, DataType, data_size);
+            m_pData = FX_Alloc(DataType, data_size);
         } else {
-
-            if (FixedSize > SIZE_MAX/sizeof(DataType))
-                return;
-
             FXSYS_memset32(m_Data, 0, sizeof(DataType)*FixedSize);
         }
     }
     ~CFX_FixedBufGrow()
     {
         if (m_pData) {
-            FX_Allocator_Free(m_pAllocator, m_pData);
+            FX_Free(m_pData);
         }
     }
     operator DataType*()
@@ -814,7 +763,6 @@ public:
         return m_pData ? m_pData : m_Data;
     }
 private:
-    IFX_Allocator*	m_pAllocator;
     DataType		m_Data[FixedSize];
     DataType*		m_pData;
 };
@@ -822,14 +770,14 @@ template <class DataType>
 class CFX_TempBuf
 {
 public:
-    CFX_TempBuf(int size, IFX_Allocator* pAllocator = NULL) : m_pAllocator(pAllocator)
+    CFX_TempBuf(int size)
     {
-        m_pData = FX_Allocator_Alloc(m_pAllocator, DataType, size);
+        m_pData = FX_Alloc(DataType, size);
     }
     ~CFX_TempBuf()
     {
         if (m_pData) {
-            FX_Allocator_Free(m_pAllocator, m_pData);
+            FX_Free(m_pData);
         }
     }
     DataType&	operator[](int i)
@@ -842,7 +790,6 @@ public:
         return m_pData;
     }
 private:
-    IFX_Allocator*	m_pAllocator;
     DataType*		m_pData;
 };
 class CFX_MapPtrToPtr : public CFX_Object
@@ -858,8 +805,7 @@ protected:
         void* value;
     };
 public:
-
-    CFX_MapPtrToPtr(int nBlockSize = 10, IFX_Allocator* pAllocator = NULL);
+    CFX_MapPtrToPtr(int nBlockSize = 10);
 
     ~CFX_MapPtrToPtr();
 
@@ -903,8 +849,6 @@ public:
     void InitHashTable(FX_DWORD hashSize, FX_BOOL bAllocNow = TRUE);
 protected:
 
-    IFX_Allocator*	m_pAllocator;
-
     CAssoc** m_pHashTable;
 
     FX_DWORD m_nHashTableSize;
@@ -929,8 +873,7 @@ template <class KeyType, class ValueType>
 class CFX_MapPtrTemplate : public CFX_MapPtrToPtr
 {
 public:
-
-    CFX_MapPtrTemplate(IFX_Allocator* pAllocator = NULL) : CFX_MapPtrToPtr(10, pAllocator) {}
+    CFX_MapPtrTemplate() : CFX_MapPtrToPtr(10) {}
 
     FX_BOOL	Lookup(KeyType key, ValueType& rValue) const
     {
@@ -970,8 +913,6 @@ class CFX_CMapDWordToDWord : public CFX_Object
 {
 public:
 
-    CFX_CMapDWordToDWord(IFX_Allocator* pAllocator = NULL) : m_Buffer(pAllocator) {}
-
     FX_BOOL			Lookup(FX_DWORD key, FX_DWORD& value) const;
 
     void			SetAt(FX_DWORD key, FX_DWORD value);
@@ -1000,8 +941,7 @@ protected:
         void* value;
     };
 public:
-
-    CFX_MapByteStringToPtr(int nBlockSize = 10, IFX_Allocator* pAllocator = NULL);
+    CFX_MapByteStringToPtr(int nBlockSize = 10);
 
     int GetCount() const
     {
@@ -1045,8 +985,6 @@ public:
     FX_DWORD HashKey(FX_BSTR key) const;
 protected:
 
-    IFX_Allocator*	m_pAllocator;
-
     CAssoc** m_pHashTable;
 
     FX_DWORD m_nHashTableSize;
@@ -1071,8 +1009,7 @@ public:
 class CFX_CMapByteStringToPtr : public CFX_Object
 {
 public:
-
-    CFX_CMapByteStringToPtr(IFX_Allocator* pAllocator = NULL);
+    CFX_CMapByteStringToPtr();
 
     ~CFX_CMapByteStringToPtr();
 
@@ -1110,8 +1047,7 @@ protected:
         void* data;
     };
 public:
-
-    CFX_PtrList(int nBlockSize = 10, IFX_Allocator* pAllocator = NULL);
+    CFX_PtrList(int nBlockSize = 10);
 
     FX_POSITION GetHeadPosition() const
     {
@@ -1179,8 +1115,6 @@ public:
     void	RemoveAll();
 protected:
 
-    IFX_Allocator*	m_pAllocator;
-
     CNode* m_pNodeHead;
 
     CNode* m_pNodeTail;
@@ -1216,8 +1150,6 @@ struct FX_PRIVATEDATA {
 class CFX_PrivateData
 {
 public:
-
-    CFX_PrivateData(IFX_Allocator* pAllocator = NULL) : m_DataList(pAllocator) {}
 
     ~CFX_PrivateData();
 
@@ -1507,7 +1439,7 @@ protected:
     };
 public:
 
-    CFX_SortListArray(IFX_Allocator* pAllocator = NULL) : m_CurList(0), m_DataLists(pAllocator) {}
+    CFX_SortListArray() : m_CurList(0) {}
 
     ~CFX_SortListArray()
     {
@@ -1517,11 +1449,10 @@ public:
 
     void			Clear()
     {
-        IFX_Allocator* pAllocator = m_DataLists.m_pAllocator;
         for (FX_INT32 i = m_DataLists.GetUpperBound(); i >= 0; i--) {
             DataList list = m_DataLists.ElementAt(i);
             if (list.data) {
-                FX_Allocator_Free(pAllocator, list.data);
+                FX_Free(list.data);
             }
         }
         m_DataLists.RemoveAll();
@@ -1533,15 +1464,13 @@ public:
         if (nStart < 0) {
             return;
         }
-        IFX_Allocator* pAllocator = m_DataLists.m_pAllocator;
         while (nCount > 0) {
             FX_INT32 temp_count = FX_MIN(nCount, FX_DATALIST_LENGTH);
             DataList list;
-            list.data = FX_Allocator_Alloc(pAllocator, FX_BYTE, temp_count * unit);
+            list.data = FX_Alloc(FX_BYTE, temp_count * unit);
             if (!list.data) {
                 break;
             }
-            FXSYS_memset32(list.data, 0, temp_count * unit);
             list.start = nStart;
             list.count = temp_count;
             Append(list);

@@ -224,7 +224,6 @@ CFX_DIBitmap* CFX_WindowsDIB::LoadFromDDB(HDC hDC, HBITMAP hBitmap, FX_DWORD* pP
             }
             return NULL;
         }
-        FXSYS_memset32(pbmih, 0, sizeof (BITMAPINFOHEADER));
         pbmih->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
         pbmih->bmiHeader.biBitCount = bmih.biBitCount;
         pbmih->bmiHeader.biCompression = BI_RGB;

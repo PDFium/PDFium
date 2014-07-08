@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #include "../../include/fxcrt/fx_ext.h"
@@ -11,29 +11,29 @@
 #else
 #include <ctime>
 #endif
-FX_HFILE FX_File_Open(FX_BSTR fileName, FX_DWORD dwMode, IFX_Allocator* pAllocator)
+FX_HFILE FX_File_Open(FX_BSTR fileName, FX_DWORD dwMode)
 {
-    IFXCRT_FileAccess* pFA = FXCRT_FileAccess_Create(pAllocator);
+    IFXCRT_FileAccess* pFA = FXCRT_FileAccess_Create();
     if (pFA && !pFA->Open(fileName, dwMode)) {
-        pFA->Release(pAllocator);
+        pFA->Release();
         return NULL;
     }
     return (FX_HFILE)pFA;
 }
-FX_HFILE FX_File_Open(FX_WSTR fileName, FX_DWORD dwMode, IFX_Allocator* pAllocator)
+FX_HFILE FX_File_Open(FX_WSTR fileName, FX_DWORD dwMode)
 {
-    IFXCRT_FileAccess* pFA = FXCRT_FileAccess_Create(pAllocator);
+    IFXCRT_FileAccess* pFA = FXCRT_FileAccess_Create();
     if (pFA && !pFA->Open(fileName, dwMode)) {
-        pFA->Release(pAllocator);
+        pFA->Release();
         return NULL;
     }
     return (FX_HFILE)pFA;
 }
-void FX_File_Close(FX_HFILE hFile, IFX_Allocator* pAllocator)
+void FX_File_Close(FX_HFILE hFile)
 {
     FXSYS_assert(hFile != NULL);
     ((IFXCRT_FileAccess*)hFile)->Close();
-    ((IFXCRT_FileAccess*)hFile)->Release(pAllocator);
+    ((IFXCRT_FileAccess*)hFile)->Release();
 }
 FX_FILESIZE FX_File_GetSize(FX_HFILE hFile)
 {
@@ -80,69 +80,53 @@ FX_BOOL FX_File_Truncate(FX_HFILE hFile, FX_FILESIZE szFile)
     FXSYS_assert(hFile != NULL);
     return ((IFXCRT_FileAccess*)hFile)->Truncate(szFile);
 }
-IFX_FileStream* FX_CreateFileStream(FX_LPCSTR filename, FX_DWORD dwModes, IFX_Allocator* pAllocator)
+IFX_FileStream* FX_CreateFileStream(FX_LPCSTR filename, FX_DWORD dwModes)
 {
-    IFXCRT_FileAccess* pFA = FXCRT_FileAccess_Create(pAllocator);
+    IFXCRT_FileAccess* pFA = FXCRT_FileAccess_Create();
     if (!pFA) {
         return NULL;
     }
     if (!pFA->Open(filename, dwModes)) {
-        pFA->Release(pAllocator);
+        pFA->Release();
         return NULL;
     }
-    if (pAllocator) {
-        return FX_NewAtAllocator(pAllocator) CFX_CRTFileStream(pFA, pAllocator);
-    } else {
-        return FX_NEW CFX_CRTFileStream(pFA, pAllocator);
-    }
+    return FX_NEW CFX_CRTFileStream(pFA);
 }
-IFX_FileStream* FX_CreateFileStream(FX_LPCWSTR filename, FX_DWORD dwModes, IFX_Allocator* pAllocator)
+IFX_FileStream* FX_CreateFileStream(FX_LPCWSTR filename, FX_DWORD dwModes)
 {
-    IFXCRT_FileAccess* pFA = FXCRT_FileAccess_Create(pAllocator);
+    IFXCRT_FileAccess* pFA = FXCRT_FileAccess_Create();
     if (!pFA) {
         return NULL;
     }
     if (!pFA->Open(filename, dwModes)) {
-        pFA->Release(pAllocator);
+        pFA->Release();
         return NULL;
     }
-    if (pAllocator) {
-        return FX_NewAtAllocator(pAllocator) CFX_CRTFileStream(pFA, pAllocator);
-    } else {
-        return FX_NEW CFX_CRTFileStream(pFA, pAllocator);
-    }
+    return FX_NEW CFX_CRTFileStream(pFA);
 }
-IFX_FileWrite* FX_CreateFileWrite(FX_LPCSTR filename, IFX_Allocator* pAllocator)
+IFX_FileWrite* FX_CreateFileWrite(FX_LPCSTR filename)
 {
-    return FX_CreateFileStream(filename, FX_FILEMODE_Truncate, pAllocator);
+    return FX_CreateFileStream(filename, FX_FILEMODE_Truncate);
 }
-IFX_FileWrite* FX_CreateFileWrite(FX_LPCWSTR filename, IFX_Allocator* pAllocator)
+IFX_FileWrite* FX_CreateFileWrite(FX_LPCWSTR filename)
 {
-    return FX_CreateFileStream(filename, FX_FILEMODE_Truncate, pAllocator);
+    return FX_CreateFileStream(filename, FX_FILEMODE_Truncate);
 }
-IFX_FileRead* FX_CreateFileRead(FX_LPCSTR filename, IFX_Allocator* pAllocator)
+IFX_FileRead* FX_CreateFileRead(FX_LPCSTR filename)
 {
-    return FX_CreateFileStream(filename, FX_FILEMODE_ReadOnly, pAllocator);
+    return FX_CreateFileStream(filename, FX_FILEMODE_ReadOnly);
 }
-IFX_FileRead* FX_CreateFileRead(FX_LPCWSTR filename, IFX_Allocator* pAllocator)
+IFX_FileRead* FX_CreateFileRead(FX_LPCWSTR filename)
 {
-    return FX_CreateFileStream(filename, FX_FILEMODE_ReadOnly, pAllocator);
+    return FX_CreateFileStream(filename, FX_FILEMODE_ReadOnly);
 }
-IFX_MemoryStream* FX_CreateMemoryStream(FX_LPBYTE pBuffer, size_t dwSize, FX_BOOL bTakeOver, IFX_Allocator* pAllocator)
+IFX_MemoryStream* FX_CreateMemoryStream(FX_LPBYTE pBuffer, size_t dwSize, FX_BOOL bTakeOver)
 {
-    if (pAllocator) {
-        return FX_NewAtAllocator(pAllocator)CFX_MemoryStream(pBuffer, dwSize, bTakeOver, pAllocator);
-    } else {
-        return FX_NEW CFX_MemoryStream(pBuffer, dwSize, bTakeOver, NULL);
-    }
+    return FX_NEW CFX_MemoryStream(pBuffer, dwSize, bTakeOver);
 }
-IFX_MemoryStream* FX_CreateMemoryStream(FX_BOOL bConsecutive, IFX_Allocator* pAllocator)
+IFX_MemoryStream* FX_CreateMemoryStream(FX_BOOL bConsecutive)
 {
-    if (pAllocator) {
-        return FX_NewAtAllocator(pAllocator)CFX_MemoryStream(bConsecutive, pAllocator);
-    } else {
-        return FX_NEW CFX_MemoryStream(bConsecutive, NULL);
-    }
+    return FX_NEW CFX_MemoryStream(bConsecutive);
 }
 #ifdef __cplusplus
 extern "C" {

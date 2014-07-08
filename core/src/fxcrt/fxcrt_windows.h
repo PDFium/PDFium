@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #ifndef _FXCRT_WINDOWS_
@@ -16,7 +16,7 @@ public:
     virtual FX_BOOL		Open(FX_BSTR fileName, FX_DWORD dwMode);
     virtual FX_BOOL		Open(FX_WSTR fileName, FX_DWORD dwMode);
     virtual void		Close();
-    virtual void		Release(IFX_Allocator* pAllocator = NULL);
+    virtual void		Release();
     virtual FX_FILESIZE	GetSize() const;
     virtual FX_FILESIZE	GetPosition() const;
     virtual FX_FILESIZE	SetPosition(FX_FILESIZE pos);

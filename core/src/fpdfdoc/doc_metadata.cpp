@@ -27,7 +27,6 @@ const FX_LPCSTR gs_FPDFDOC_Metadata_Titles[] = {
 CPDF_Metadata::CPDF_Metadata()
 {
     m_pData = FX_Alloc(PDFDOC_METADATA, 1);
-    FXSYS_memset32(m_pData, 0, sizeof(PDFDOC_METADATA));
     CFX_CMapByteStringToPtr *&pStringMap = ((PDFDOC_LPMETADATA)m_pData)->m_pStringMap;
     pStringMap = FX_NEW(CFX_CMapByteStringToPtr);
     if (pStringMap != NULL) {

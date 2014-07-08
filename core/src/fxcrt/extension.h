@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #ifndef _FXCRT_EXTENSION_IMP_
@@ -13,7 +13,7 @@ public:
     virtual FX_BOOL		Open(FX_BSTR fileName, FX_DWORD dwMode) = 0;
     virtual FX_BOOL		Open(FX_WSTR fileName, FX_DWORD dwMode) = 0;
     virtual void		Close() = 0;
-    virtual void		Release(IFX_Allocator* pAllocator = NULL) = 0;
+    virtual void		Release() = 0;
     virtual FX_FILESIZE	GetSize() const = 0;
     virtual FX_FILESIZE	GetPosition() const = 0;
     virtual FX_FILESIZE	SetPosition(FX_FILESIZE pos) = 0;
@@ -24,15 +24,15 @@ public:
     virtual FX_BOOL		Flush() = 0;
     virtual FX_BOOL		Truncate(FX_FILESIZE szFile) = 0;
 };
-IFXCRT_FileAccess*	FXCRT_FileAccess_Create(IFX_Allocator* pAllocator = NULL);
+IFXCRT_FileAccess*	FXCRT_FileAccess_Create();
 class CFX_CRTFileStream : public IFX_FileStream, public CFX_Object
 {
 public:
-    CFX_CRTFileStream(IFXCRT_FileAccess* pFA, IFX_Allocator* pAllocator) : m_pAllocator(pAllocator), m_pFile(pFA), m_dwCount(1), m_bUseRange(FALSE), m_nOffset(0), m_nSize(0) {}
+    CFX_CRTFileStream(IFXCRT_FileAccess* pFA) : m_pFile(pFA), m_dwCount(1), m_bUseRange(FALSE), m_nOffset(0), m_nSize(0) {}
     ~CFX_CRTFileStream()
     {
         if (m_pFile) {
-            m_pFile->Release(m_pAllocator);
+            m_pFile->Release();
         }
     }
     virtual IFX_FileStream*		Retain()
@@ -44,11 +44,7 @@ public:
     {
         FX_DWORD nCount = -- m_dwCount;
         if (!nCount) {
-            if (m_pAllocator) {
-                FX_DeleteAtAllocator(this, m_pAllocator, CFX_CRTFileStream);
-            } else {
-                delete this;
-            }
+            delete this;
         }
     }
     virtual FX_FILESIZE			GetSize()
@@ -112,7 +108,6 @@ public:
     {
         return m_pFile->Flush();
     }
-    IFX_Allocator*		m_pAllocator;
     IFXCRT_FileAccess*	m_pFile;
     FX_DWORD			m_dwCount;
     FX_BOOL				m_bUseRange;
@@ -125,9 +120,8 @@ public:
 class CFX_MemoryStream : public IFX_MemoryStream, public CFX_Object
 {
 public:
-    CFX_MemoryStream(FX_BOOL bConsecutive, IFX_Allocator* pAllocator)
-        : m_Blocks(pAllocator)
-        , m_dwCount(1)
+    CFX_MemoryStream(FX_BOOL bConsecutive)
+        : m_dwCount(1)
         , m_nTotalSize(0)
         , m_nCurSize(0)
         , m_nCurPos(0)
@@ -136,9 +130,8 @@ public:
     {
         m_dwFlags = FX_MEMSTREAM_TakeOver | (bConsecutive ? FX_MEMSTREAM_Consecutive : 0);
     }
-    CFX_MemoryStream(FX_LPBYTE pBuffer, size_t nSize, FX_BOOL bTakeOver, IFX_Allocator* pAllocator)
-        : m_Blocks(pAllocator)
-        , m_dwCount(1)
+    CFX_MemoryStream(FX_LPBYTE pBuffer, size_t nSize, FX_BOOL bTakeOver)
+        : m_dwCount(1)
         , m_nTotalSize(nSize)
         , m_nCurSize(nSize)
         , m_nCurPos(0)
@@ -150,10 +143,9 @@ public:
     }
     ~CFX_MemoryStream()
     {
-        IFX_Allocator* pAllocator = m_Blocks.m_pAllocator;
         if (m_dwFlags & FX_MEMSTREAM_TakeOver) {
-            for (FX_INT32 i = 0; i < m_Blocks.GetSize(); i ++) {
-                FX_Allocator_Free(pAllocator, (FX_LPBYTE)m_Blocks[i]);
+            for (FX_INT32 i = 0; i < m_Blocks.GetSize(); i++) {
+                FX_Free((FX_LPBYTE)m_Blocks[i]);
             }
         }
         m_Blocks.RemoveAll();
@@ -169,12 +161,7 @@ public:
         if (nCount) {
             return;
         }
-        IFX_Allocator* pAllocator = m_Blocks.m_pAllocator;
-        if (pAllocator) {
-            FX_DeleteAtAllocator(this, pAllocator, CFX_MemoryStream);
-        } else {
-            delete this;
-        }
+        delete this;
     }
     virtual FX_FILESIZE			GetSize()
     {
@@ -265,13 +252,12 @@ public:
         if (m_dwFlags & FX_MEMSTREAM_Consecutive) {
             m_nCurPos = (size_t)offset + size;
             if (m_nCurPos > m_nTotalSize) {
-                IFX_Allocator* pAllocator = m_Blocks.m_pAllocator;
                 m_nTotalSize = (m_nCurPos + m_nGrowSize - 1) / m_nGrowSize * m_nGrowSize;
                 if (m_Blocks.GetSize() < 1) {
-                    void* block = FX_Allocator_Alloc(pAllocator, FX_BYTE, m_nTotalSize);
+                    void* block = FX_Alloc(FX_BYTE, m_nTotalSize);
                     m_Blocks.Add(block);
                 } else {
-                    m_Blocks[0] = FX_Allocator_Realloc(pAllocator, FX_BYTE, m_Blocks[0], m_nTotalSize);
+                    m_Blocks[0] = FX_Realloc(FX_BYTE, m_Blocks[0], m_nTotalSize);
                 }
                 if (!m_Blocks[0]) {
                     m_Blocks.RemoveAll();
@@ -315,7 +301,7 @@ public:
     {
         if (m_dwFlags & FX_MEMSTREAM_Consecutive) {
             if (m_Blocks.GetSize() < 1) {
-                FX_LPBYTE pBlock = FX_Allocator_Alloc(m_Blocks.m_pAllocator, FX_BYTE, FX_MAX(nInitSize, 4096));
+                FX_LPBYTE pBlock = FX_Alloc(FX_BYTE, FX_MAX(nInitSize, 4096));
                 if (pBlock) {
                     m_Blocks.Add(pBlock);
                 }
@@ -373,9 +359,8 @@ protected:
         FX_INT32 iCount = m_Blocks.GetSize();
         size = (size - m_nTotalSize + m_nGrowSize - 1) / m_nGrowSize;
         m_Blocks.SetSize(m_Blocks.GetSize() + (FX_INT32)size, -1);
-        IFX_Allocator* pAllocator = m_Blocks.m_pAllocator;
         while (size --) {
-            FX_LPBYTE pBlock = FX_Allocator_Alloc(pAllocator, FX_BYTE, m_nGrowSize);
+            FX_LPBYTE pBlock = FX_Alloc(FX_BYTE, m_nGrowSize);
             if (!pBlock) {
                 return FALSE;
             }

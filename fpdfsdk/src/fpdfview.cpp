@@ -96,9 +96,6 @@ FPDF_BOOL FSDK_IsSandBoxPolicyEnabled(FPDF_DWORD policy)
 	CPDF_ModuleMgr*	g_pModuleMgr = NULL;
 #else
 	CCodec_ModuleMgr*	g_pCodecModule = NULL;
-#ifdef _FXSDK_OPENSOURCE_
-	FXMEM_FoxitMgr* g_pFoxitMgr = NULL;
-#endif
 #endif
 
 //extern CPDFSDK_FormFillApp* g_pFormFillApp;
@@ -161,9 +158,6 @@ DLLEXPORT void STDCALL FPDF_InitLibrary(FX_LPVOID hInstance)
 	 	g_pModuleMgr->InitDesktop();
 	 #endif
 #else
-#ifdef _FXSDK_OPENSOURCE_
-	g_pFoxitMgr = FXMEM_CreateMemoryMgr(1024 * 1024 * 32, TRUE);
-#endif
 	g_pCodecModule = CCodec_ModuleMgr::Create();
 	
 	CFX_GEModule::Create();
@@ -225,7 +219,7 @@ DLLEXPORT void STDCALL FPDF_DestroyLibrary()
 #ifndef _FXSDK_OPENSOURCE_
 	FXMEM_CollectAll(FXMEM_GetDefaultMgr());
 #else
-	FXMEM_DestroyFoxitMgr(g_pFoxitMgr);
+
 #endif
 }
 

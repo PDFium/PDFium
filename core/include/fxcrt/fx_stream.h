@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #ifndef _FX_STREAM_H_
@@ -41,9 +41,9 @@ FX_DEFINEHANDLE(FX_HFILE)
 #define FX_FILEMODE_Write		0
 #define FX_FILEMODE_ReadOnly	1
 #define FX_FILEMODE_Truncate	2
-FX_HFILE	FX_File_Open(FX_BSTR fileName, FX_DWORD dwMode, IFX_Allocator* pAllocator = NULL);
-FX_HFILE	FX_File_Open(FX_WSTR fileName, FX_DWORD dwMode, IFX_Allocator* pAllocator = NULL);
-void		FX_File_Close(FX_HFILE hFile, IFX_Allocator* pAllocator = NULL);
+FX_HFILE	FX_File_Open(FX_BSTR fileName, FX_DWORD dwMode);
+FX_HFILE	FX_File_Open(FX_WSTR fileName, FX_DWORD dwMode);
+void		FX_File_Close(FX_HFILE hFile);
 FX_FILESIZE	FX_File_GetSize(FX_HFILE hFile);
 FX_FILESIZE	FX_File_GetPosition(FX_HFILE hFile);
 FX_FILESIZE	FX_File_SetPosition(FX_HFILE hFile, FX_FILESIZE pos);
@@ -85,8 +85,8 @@ public:
         return WriteBlock(pData, GetSize(), size);
     }
 };
-IFX_FileWrite* FX_CreateFileWrite(FX_LPCSTR filename, IFX_Allocator* pAllocator = NULL);
-IFX_FileWrite* FX_CreateFileWrite(FX_LPCWSTR filename, IFX_Allocator* pAllocator = NULL);
+IFX_FileWrite* FX_CreateFileWrite(FX_LPCSTR filename);
+IFX_FileWrite* FX_CreateFileWrite(FX_LPCWSTR filename);
 class IFX_StreamRead
 {
 public:
@@ -131,8 +131,8 @@ public:
         return 0;
     }
 };
-IFX_FileRead* FX_CreateFileRead(FX_LPCSTR filename, IFX_Allocator* pAllocator = NULL);
-IFX_FileRead* FX_CreateFileRead(FX_LPCWSTR filename, IFX_Allocator* pAllocator = NULL);
+IFX_FileRead* FX_CreateFileRead(FX_LPCSTR filename);
+IFX_FileRead* FX_CreateFileRead(FX_LPCWSTR filename);
 class IFX_FileStream : public IFX_FileRead, public IFX_FileWrite
 {
 public:
@@ -159,8 +159,8 @@ public:
 
     virtual FX_BOOL				Flush() = 0;
 };
-IFX_FileStream*		FX_CreateFileStream(FX_LPCSTR filename, FX_DWORD dwModes, IFX_Allocator* pAllocator = NULL);
-IFX_FileStream*		FX_CreateFileStream(FX_LPCWSTR filename, FX_DWORD dwModes, IFX_Allocator* pAllocator = NULL);
+IFX_FileStream*		FX_CreateFileStream(FX_LPCSTR filename, FX_DWORD dwModes);
+IFX_FileStream*		FX_CreateFileStream(FX_LPCWSTR filename, FX_DWORD dwModes);
 class IFX_MemoryStream : public IFX_FileStream
 {
 public:
@@ -175,8 +175,8 @@ public:
 
     virtual void			DetachBuffer() = 0;
 };
-IFX_MemoryStream*	FX_CreateMemoryStream(FX_LPBYTE pBuffer, size_t nSize, FX_BOOL bTakeOver = FALSE, IFX_Allocator* pAllocator = NULL);
-IFX_MemoryStream*	FX_CreateMemoryStream(FX_BOOL bConsecutive = FALSE, IFX_Allocator* pAllocator = NULL);
+IFX_MemoryStream*	FX_CreateMemoryStream(FX_LPBYTE pBuffer, size_t nSize, FX_BOOL bTakeOver = FALSE);
+IFX_MemoryStream*	FX_CreateMemoryStream(FX_BOOL bConsecutive = FALSE);
 class IFX_BufferRead : public IFX_StreamRead
 {
 public:

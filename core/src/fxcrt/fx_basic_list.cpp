@@ -1,14 +1,13 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #include "../../include/fxcrt/fx_basic.h"
 #include "plex.h"
-CFX_PtrList::CFX_PtrList(int nBlockSize, IFX_Allocator* pAllocator)
-    : m_pAllocator(pAllocator)
-    , m_pNodeHead(NULL)
+CFX_PtrList::CFX_PtrList(int nBlockSize)
+    : m_pNodeHead(NULL)
     , m_pNodeTail(NULL)
     , m_nCount(0)
     , m_pNodeFree(NULL)
@@ -84,14 +83,14 @@ void CFX_PtrList::RemoveAll()
 {
     m_nCount = 0;
     m_pNodeHead = m_pNodeTail = m_pNodeFree = NULL;
-    m_pBlocks->FreeDataChain(m_pAllocator);
+    m_pBlocks->FreeDataChain();
     m_pBlocks = NULL;
 }
 CFX_PtrList::CNode*
 CFX_PtrList::NewNode(CFX_PtrList::CNode* pPrev, CFX_PtrList::CNode* pNext)
 {
     if (m_pNodeFree == NULL) {
-        CFX_Plex* pNewBlock = CFX_Plex::Create(m_pAllocator, m_pBlocks, m_nBlockSize, sizeof(CNode));
+        CFX_Plex* pNewBlock = CFX_Plex::Create(m_pBlocks, m_nBlockSize, sizeof(CNode));
         CNode* pNode = (CNode*)pNewBlock->data();
         pNode += m_nBlockSize - 1;
         for (int i = m_nBlockSize - 1; i >= 0; i--, pNode--) {

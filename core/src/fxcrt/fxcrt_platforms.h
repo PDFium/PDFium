@@ -18,7 +18,7 @@ public:
     virtual FX_BOOL		Open(FX_BSTR fileName, FX_DWORD dwMode);
     virtual FX_BOOL		Open(FX_WSTR fileName, FX_DWORD dwMode);
     virtual void		Close();
-    virtual void		Release(IFX_Allocator* pAllocator = NULL);
+    virtual void		Release();
     virtual FX_FILESIZE	GetSize() const;
     virtual FX_FILESIZE	GetPosition() const;
     virtual FX_FILESIZE	SetPosition(FX_FILESIZE pos);

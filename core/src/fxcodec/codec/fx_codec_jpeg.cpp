@@ -196,7 +196,6 @@ static void _JpegEncode(const CFX_DIBSource* pSource, FX_LPBYTE& dest_buf, FX_ST
         dest_buf_length >>= 1;
         dest_buf = FX_Alloc(FX_BYTE, dest_buf_length);
     }
-    FXSYS_memset32(dest_buf, 0, dest_buf_length);
     struct jpeg_destination_mgr dest;
     dest.init_destination = _dest_do_nothing;
     dest.term_destination = _dest_do_nothing;

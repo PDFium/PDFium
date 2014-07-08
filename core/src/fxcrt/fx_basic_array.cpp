@@ -5,9 +5,8 @@
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #include "../../include/fxcrt/fx_basic.h"
-CFX_BasicArray::CFX_BasicArray(int unit_size, IFX_Allocator* pAllocator)
-    : m_pAllocator(pAllocator)
-    , m_pData(NULL)
+CFX_BasicArray::CFX_BasicArray(int unit_size)
+    : m_pData(NULL)
     , m_nSize(0)
     , m_nMaxSize(0)
     , m_nGrowBy(0)
@@ -20,15 +19,15 @@ CFX_BasicArray::CFX_BasicArray(int unit_size, IFX_Allocator* pAllocator)
 }
 CFX_BasicArray::~CFX_BasicArray()
 {
-    FX_Allocator_Free(m_pAllocator, m_pData);
+    FX_Free(m_pData);
 }
 FX_BOOL CFX_BasicArray::SetSize(int nNewSize, int nGrowBy)
 {
     if (nNewSize < 0 || nNewSize > (1 << 28) / m_nUnitSize) {
         if (m_pData != NULL) {
-            FX_Allocator_Free(m_pAllocator, m_pData);
+            FX_Free(m_pData);
             m_pData = NULL;
-		}
+        }
         m_nSize = m_nMaxSize = 0;
         return FALSE;
     }
@@ -37,17 +36,16 @@ FX_BOOL CFX_BasicArray::SetSize(int nNewSize, int nGrowBy)
     }
     if (nNewSize == 0) {
         if (m_pData != NULL) {
-            FX_Allocator_Free(m_pAllocator, m_pData);
+            FX_Free(m_pData);
             m_pData = NULL;
         }
         m_nSize = m_nMaxSize = 0;
     } else if (m_pData == NULL) {
-        m_pData = FX_Allocator_Alloc(m_pAllocator, FX_BYTE, nNewSize * m_nUnitSize);
+        m_pData = FX_Alloc(FX_BYTE, nNewSize * m_nUnitSize);
         if (!m_pData) {
             m_nSize = m_nMaxSize = 0;
             return FALSE;
         }
-        FXSYS_memset32(m_pData, 0, nNewSize * m_nUnitSize);
         m_nSize = m_nMaxSize = nNewSize;
     } else if (nNewSize <= m_nMaxSize) {
         if (nNewSize > m_nSize) {
@@ -66,7 +64,7 @@ FX_BOOL CFX_BasicArray::SetSize(int nNewSize, int nGrowBy)
         } else {
             nNewMax = nNewSize;
         }
-        FX_LPBYTE pNewData = FX_Allocator_Realloc(m_pAllocator, FX_BYTE, m_pData, nNewMax * m_nUnitSize);
+        FX_LPBYTE pNewData = FX_Realloc(FX_BYTE, m_pData, nNewMax * m_nUnitSize);
         if (pNewData == NULL) {
             return FALSE;
         }
@@ -147,9 +145,8 @@ const void* CFX_BasicArray::GetDataPtr(int index) const
     }
     return m_pData + index * m_nUnitSize;
 }
-CFX_BaseSegmentedArray::CFX_BaseSegmentedArray(int unit_size, int segment_units, int index_size, IFX_Allocator* pAllocator)
-    : m_pAllocator(pAllocator)
-    , m_UnitSize(unit_size)
+CFX_BaseSegmentedArray::CFX_BaseSegmentedArray(int unit_size, int segment_units, int index_size)
+    : m_UnitSize(unit_size)
     , m_SegmentSize(segment_units)
     , m_IndexSize(index_size)
     , m_IndexDepth(0)
@@ -168,26 +165,26 @@ CFX_BaseSegmentedArray::~CFX_BaseSegmentedArray()
 {
     RemoveAll();
 }
-static void _ClearIndex(IFX_Allocator* pAllcator, int level, int size, void** pIndex)
+static void _ClearIndex(int level, int size, void** pIndex)
 {
     if (level == 0) {
-        FX_Allocator_Free(pAllcator, pIndex);
+        FX_Free(pIndex);
         return;
     }
-    for (int i = 0; i < size; i ++) {
+    for (int i = 0; i < size; i++) {
         if (pIndex[i] == NULL) {
             continue;
         }
-        _ClearIndex(pAllcator, level - 1, size, (void**)pIndex[i]);
+        _ClearIndex(level - 1, size, (void**)pIndex[i]);
     }
-    FX_Allocator_Free(pAllcator, pIndex);
+    FX_Free(pIndex);
 }
 void CFX_BaseSegmentedArray::RemoveAll()
 {
     if (m_pIndex == NULL) {
         return;
     }
-    _ClearIndex(m_pAllocator, m_IndexDepth, m_IndexSize, (void**)m_pIndex);
+    _ClearIndex(m_IndexDepth, m_IndexSize, (void**)m_pIndex);
     m_pIndex = NULL;
     m_IndexDepth = 0;
     m_DataSize = 0;
@@ -197,7 +194,7 @@ void* CFX_BaseSegmentedArray::Add()
     if (m_DataSize % m_SegmentSize) {
         return GetAt(m_DataSize ++);
     }
-    void* pSegment = FX_Allocator_Alloc(m_pAllocator, FX_BYTE, m_UnitSize * m_SegmentSize);
+    void* pSegment = FX_Alloc(FX_BYTE, m_UnitSize * m_SegmentSize);
     if (!pSegment) {
         return NULL;
     }
@@ -207,12 +204,11 @@ void* CFX_BaseSegmentedArray::Add()
         return pSegment;
     }
     if (m_IndexDepth == 0) {
-        void** pIndex = (void**)FX_Allocator_Alloc(m_pAllocator, void*, m_IndexSize);
+        void** pIndex = (void**)FX_Alloc(void*, m_IndexSize);
         if (pIndex == NULL) {
-            FX_Allocator_Free(m_pAllocator, pSegment);
+            FX_Free(pSegment);
             return NULL;
         }
-        FXSYS_memset32(pIndex, 0, sizeof(void*) * m_IndexSize);
         pIndex[0] = m_pIndex;
         pIndex[1] = pSegment;
         m_pIndex = pIndex;
@@ -233,12 +229,11 @@ void* CFX_BaseSegmentedArray::Add()
         tree_size *= m_IndexSize;
     }
     if (m_DataSize == tree_size * m_SegmentSize) {
-        void** pIndex = (void**)FX_Allocator_Alloc(m_pAllocator, void*, m_IndexSize);
+        void** pIndex = (void**)FX_Alloc(void*, m_IndexSize);
         if (pIndex == NULL) {
-            FX_Allocator_Free(m_pAllocator, pSegment);
+            FX_Free(pSegment);
             return NULL;
         }
-        FXSYS_memset32(pIndex, 0, sizeof(void*) * m_IndexSize);
         pIndex[0] = m_pIndex;
         m_pIndex = pIndex;
         m_IndexDepth ++;
@@ -248,18 +243,17 @@ void* CFX_BaseSegmentedArray::Add()
     void** pSpot = (void**)m_pIndex;
     for (i = 1; i < m_IndexDepth; i ++) {
         if (pSpot[seg_index / tree_size] == NULL) {
-            pSpot[seg_index / tree_size] = (void*)FX_Allocator_Alloc(m_pAllocator, void*, m_IndexSize);
+            pSpot[seg_index / tree_size] = (void*)FX_Alloc(void*, m_IndexSize);
             if (pSpot[seg_index / tree_size] == NULL) {
                 break;
             }
-            FXSYS_memset32(pSpot[seg_index / tree_size], 0, sizeof(void*) * m_IndexSize);
         }
         pSpot = (void**)pSpot[seg_index / tree_size];
         seg_index = seg_index % tree_size;
         tree_size /= m_IndexSize;
     }
     if (i < m_IndexDepth) {
-        FX_Allocator_Free(m_pAllocator, pSegment);
+        FX_Free(pSegment);
         RemoveAll();
         return NULL;
     }
@@ -356,11 +350,11 @@ void CFX_BaseSegmentedArray::Delete(int index, int count)
         if(m_IndexDepth) {
             for (i = new_segs; i < old_segs; i ++) {
                 void** pIndex = GetIndex(i);
-                FX_Allocator_Free(m_pAllocator, pIndex[i % m_IndexSize]);
+                FX_Free(pIndex[i % m_IndexSize]);
                 pIndex[i % m_IndexSize] = NULL;
             }
         } else {
-            FX_Allocator_Free(m_pAllocator, m_pIndex);
+            FX_Free(m_pIndex);
             m_pIndex = NULL;
         }
     }

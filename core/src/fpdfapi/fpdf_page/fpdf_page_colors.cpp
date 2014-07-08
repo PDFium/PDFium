@@ -1163,7 +1163,6 @@ FX_FLOAT* CPDF_ColorSpace::CreateBuf()
 {
     int size = GetBufSize();
     FX_BYTE* pBuf = FX_Alloc(FX_BYTE, size);
-    FXSYS_memset32(pBuf, 0, size);
     return (FX_FLOAT*)pBuf;
 }
 FX_BOOL CPDF_ColorSpace::sRGB() const

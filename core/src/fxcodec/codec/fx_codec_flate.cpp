@@ -654,7 +654,6 @@ FX_BOOL CCodec_FlateScanlineDecoder::Create(FX_LPCBYTE src_buf, FX_DWORD src_siz
             if (m_pLastLine == NULL) {
                 return FALSE;
             }
-            FXSYS_memset32(m_pLastLine, 0, m_PredictPitch);
             m_pPredictRaw = FX_Alloc(FX_BYTE, m_PredictPitch + 1);
             if (m_pPredictRaw == NULL) {
                 return FALSE;
