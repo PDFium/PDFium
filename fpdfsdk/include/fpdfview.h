@@ -487,7 +487,11 @@ DLLEXPORT FPDF_BITMAP STDCALL FPDFBitmap_CreateEx(int width, int height, int for
 //			top			-	The top side position. Starting from 0 at the top-most scan line.
 //			width		-	Number of pixels to be filled in each scan line.
 //			height		-	Number of scan lines to be filled.
-//			color		-	A 32-bit value specifing the color, in 8888 ARGB format.
+//			red			-	A number from 0 to 255, identifying the red intensity.
+//			green		-	A number from 0 to 255, identifying the green intensity.
+//			blue		-	A number from 0 to 255, identifying the blue intensity.
+//			alpha		-	(Only if the alpha channeled is used when bitmap created) A number from 0 to 255,
+//							identifying the alpha value.
 // Return value:
 //			None.
 // Comments:
@@ -496,7 +500,8 @@ DLLEXPORT FPDF_BITMAP STDCALL FPDFBitmap_CreateEx(int width, int height, int for
 //			instead the background will be replaced by the source color and alpha.
 //			If alpha channel is not used, the "alpha" parameter is ignored.
 //
-DLLEXPORT void STDCALL FPDFBitmap_FillRect(FPDF_BITMAP bitmap, int left, int top, int width, int height, FPDF_DWORD color);
+DLLEXPORT void STDCALL FPDFBitmap_FillRect(FPDF_BITMAP bitmap, int left, int top, int width, int height, 
+									int red, int green, int blue, int alpha);
 
 // Function: FPDFBitmap_GetBuffer
 //			Get data buffer of an FXDIB
