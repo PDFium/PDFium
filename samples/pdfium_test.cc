@@ -230,7 +230,7 @@ void RenderPdf(const char* name, const char* pBuf, size_t len,
     int width = static_cast<int>(FPDF_GetPageWidth(page));
     int height = static_cast<int>(FPDF_GetPageHeight(page));
     FPDF_BITMAP bitmap = FPDFBitmap_Create(width, height, 0);
-    FPDFBitmap_FillRect(bitmap, 0, 0, width, height, 255, 255, 255, 255);
+    FPDFBitmap_FillRect(bitmap, 0, 0, width, height, 0xFFFFFFFF);
 
     FPDF_RenderPageBitmap(bitmap, page, 0, 0, width, height, 0, 0);
     FPDF_FFLDraw(form, bitmap, page, 0, 0, width, height, 0, 0);
