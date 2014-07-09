@@ -1211,7 +1211,7 @@ CPDF_StreamAcc* CPDF_Parser::GetObjectStream(FX_DWORD objnum)
     if (m_ObjectStreamMap.Lookup((void*)(FX_UINTPTR)objnum, (void*&)pStreamAcc)) {
         return pStreamAcc;
     }
-    const CPDF_Stream* pStream = (CPDF_Stream*)m_pDocument->GetIndirectObject(objnum);
+    const CPDF_Stream* pStream = m_pDocument ? (CPDF_Stream*)m_pDocument->GetIndirectObject(objnum) : NULL;
     if (pStream == NULL || pStream->GetType() != PDFOBJ_STREAM) {
         return NULL;
     }
