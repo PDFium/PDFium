@@ -525,7 +525,6 @@ static_library("fxcrt") {
     "core/src/fxcrt/fx_basic_list.cpp",
     "core/src/fxcrt/fx_basic_maps.cpp",
     "core/src/fxcrt/fx_basic_memmgr.cpp",
-    "core/src/fxcrt/fx_basic_memmgr_mini.cpp",
     "core/src/fxcrt/fx_basic_plex.cpp",
     "core/src/fxcrt/fx_basic_utf.cpp",
     "core/src/fxcrt/fx_basic_util.cpp",
@@ -535,7 +534,6 @@ static_library("fxcrt") {
     "core/src/fxcrt/fx_unicode.cpp",
     "core/src/fxcrt/fx_xml_composer.cpp",
     "core/src/fxcrt/fx_xml_parser.cpp",
-    "core/src/fxcrt/mem_int.h",
     "core/src/fxcrt/plex.h",
     "core/src/fxcrt/xml_int.h",
   ]
