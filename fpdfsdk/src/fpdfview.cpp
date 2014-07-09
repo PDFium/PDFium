@@ -725,8 +725,7 @@ DLLEXPORT FPDF_BITMAP STDCALL FPDFBitmap_CreateEx(int width, int height, int for
 	return pBitmap;
 }
 
-DLLEXPORT void STDCALL FPDFBitmap_FillRect(FPDF_BITMAP bitmap, int left, int top, int width, int height, 
-									int red, int green, int blue, int alpha)
+DLLEXPORT void STDCALL FPDFBitmap_FillRect(FPDF_BITMAP bitmap, int left, int top, int width, int height, FPDF_DWORD color)
 {
 	if (bitmap == NULL) return;
 #ifdef _SKIA_SUPPORT_
@@ -735,9 +734,9 @@ DLLEXPORT void STDCALL FPDFBitmap_FillRect(FPDF_BITMAP bitmap, int left, int top
 	CFX_FxgeDevice device;
 #endif
 	device.Attach((CFX_DIBitmap*)bitmap);
-	if (!((CFX_DIBitmap*)bitmap)->HasAlpha()) alpha = 255;
+	if (!((CFX_DIBitmap*)bitmap)->HasAlpha()) color |= 0xFF000000;
 	FX_RECT rect(left, top, left+width, top+height);
-	device.FillRect(&rect, FXARGB_MAKE(alpha, red, green, blue));
+	device.FillRect(&rect, color);
 }
 
 DLLEXPORT void* STDCALL FPDFBitmap_GetBuffer(FPDF_BITMAP bitmap)
