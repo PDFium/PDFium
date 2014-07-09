@@ -46,7 +46,9 @@ int CPDF_Dest::GetZoomMode()
     if (m_pObj == NULL || m_pObj->GetType() != PDFOBJ_ARRAY) {
         return 0;
     }
-    CFX_ByteString mode = ((CPDF_Array*)m_pObj)->GetElementValue(1)->GetString();
+    CFX_ByteString mode;
+    CPDF_Object* pObj = ((CPDF_Array*)m_pObj)->GetElementValue(1);
+    mode = pObj ? pObj->GetString() : CFX_ByteString();
     int i = 0;
     while (g_sZoomModes[i][0] != '\0') {
         if (mode == g_sZoomModes[i]) {
