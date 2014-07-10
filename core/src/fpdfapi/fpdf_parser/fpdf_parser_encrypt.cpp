@@ -406,6 +406,7 @@ FX_BOOL CPDF_StandardSecurityHandler::CheckUserPassword(FX_LPCBYTE password, FX_
             copy_len = ukey.GetLength();
         }
         FXSYS_memset32(test, 0, sizeof(test));
+        FXSYS_memset32(tmpkey, 0, sizeof(tmpkey));
         FXSYS_memcpy32(test, (FX_LPCSTR)ukey, copy_len);
         for (int i = 19; i >= 0; i --) {
             for (int j = 0; j < key_len; j ++) {
@@ -466,6 +467,7 @@ CFX_ByteString CPDF_StandardSecurityHandler::GetUserPassword(FX_LPCBYTE owner_pa
     } else {
         for (int i = 19; i >= 0; i --) {
             FX_BYTE tempkey[32];
+            FXSYS_memset32(tempkey, 0, sizeof(tempkey));
             for (int j = 0; j < m_KeyLen; j ++) {
                 tempkey[j] = enckey[j] ^ i;
             }
