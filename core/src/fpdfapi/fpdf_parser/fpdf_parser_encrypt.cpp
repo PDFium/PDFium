@@ -461,6 +461,7 @@ CFX_ByteString CPDF_StandardSecurityHandler::GetUserPassword(FX_LPCBYTE owner_pa
         okeylen = 32;
     }
     FX_BYTE okeybuf[64];
+    FXSYS_memset32(okeybuf, 0, sizeof(okeybuf));
     FXSYS_memcpy32(okeybuf, (FX_LPCSTR)okey, okeylen);
     if (m_Revision == 2) {
         CRYPT_ArcFourCryptBlock(okeybuf, okeylen, enckey, key_len);
