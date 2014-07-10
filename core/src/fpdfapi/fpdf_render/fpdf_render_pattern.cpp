@@ -389,6 +389,8 @@ static void _DrawFreeGouraudShading(CFX_DIBitmap* pBitmap, CFX_AffineMatrix* pOb
         return;
     }
     CPDF_MeshVertex triangle[3];
+    FXSYS_memset32(triangle, 0, sizeof(triangle));
+
     while (!stream.m_BitStream.IsEOF()) {
         CPDF_MeshVertex vertex;
         FX_DWORD flag = stream.GetVertex(vertex, pObject2Bitmap);
