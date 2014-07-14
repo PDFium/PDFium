@@ -66,7 +66,7 @@ static void _DrawAxialShading(CFX_DIBitmap* pBitmap, CFX_AffineMatrix* pObject2B
                 }
             }
         }
-        FX_FLOAT R, G, B;
+        FX_FLOAT R = 0.0f, G = 0.0f, B = 0.0f;
         pCS->GetRGB(pResults, R, G, B);
         rgb_array[i] = FXARGB_TODIB(FXARGB_MAKE(alpha, FXSYS_round(R * 255), FXSYS_round(G * 255), FXSYS_round(B * 255)));
     }
@@ -755,7 +755,7 @@ void CPDF_RenderStatus::DrawShading(CPDF_ShadingPattern* pPattern, CFX_AffineMat
             for (int i = 0; i < pColorSpace->CountComponents(); i ++) {
                 comps[i] = pBackColor->GetNumber(i);
             }
-            FX_FLOAT R, G, B;
+            FX_FLOAT R = 0.0f, G = 0.0f, B = 0.0f;
             pColorSpace->GetRGB(comps, R, G, B);
             background = ArgbEncode(255, (FX_INT32)(R * 255), (FX_INT32)(G * 255), (FX_INT32)(B * 255));
         }
