@@ -1657,6 +1657,11 @@ public:
 
     FX_BOOL PrintScaling() const;
 
+    FX_INT32 NumCopies() const;
+
+    CPDF_Array* PrintPageRange() const;
+
+    CFX_ByteString Duplex() const;
 
 protected:
     CPDF_Document*	m_pDoc;

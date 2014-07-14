@@ -34,6 +34,7 @@ typedef void*	FPDF_BOOKMARK;
 typedef void*	FPDF_DEST;
 typedef void*	FPDF_ACTION;
 typedef void*	FPDF_LINK;
+typedef void*   FPDF_PAGERANGE;
 
 // Basic data types
 typedef int				FPDF_BOOL;
@@ -41,6 +42,14 @@ typedef int				FPDF_ERROR;
 typedef unsigned long	FPDF_DWORD;
 
 typedef	float			FS_FLOAT;
+
+// Duplex types
+typedef enum _FPDF_DUPLEXTYPE_ {
+    DuplexUndefined = 0,
+    Simplex,
+    DuplexFlipShortEdge,
+    DuplexFlipLongEdge
+} FPDF_DUPLEXTYPE;
 
 // String types
 typedef unsigned short			FPDF_WCHAR;
@@ -555,6 +564,33 @@ DLLEXPORT void STDCALL FPDFBitmap_Destroy(FPDF_BITMAP bitmap);
 //			None.
 //
 DLLEXPORT FPDF_BOOL STDCALL FPDF_VIEWERREF_GetPrintScaling(FPDF_DOCUMENT document);
+
+// Function: FPDF_VIEWERREF_GetNumCopies
+//			Returns the number of copies to be printed.
+// Parameters:
+//			document	-	Handle to the loaded document.
+// Return value:
+//          The number of copies to be printed.
+//
+DLLEXPORT int STDCALL FPDF_VIEWERREF_GetNumCopies(FPDF_DOCUMENT document);
+
+// Function: FPDF_VIEWERREF_GetPrintPageRange
+//			Page numbers to initialize print dialog box when file is printed.
+// Parameters:
+//			document	-	Handle to the loaded document.
+// Return value:
+//          The print page range to be used for printing.
+//
+DLLEXPORT FPDF_PAGERANGE STDCALL FPDF_VIEWERREF_GetPrintPageRange(FPDF_DOCUMENT document);
+
+// Function: FPDF_VIEWERREF_GetDuplex
+//			Returns the paper handling option to be used when printing from print dialog.
+// Parameters:
+//			document	-	Handle to the loaded document.
+// Return value:
+//          The paper handling option to be used when printing.
+//
+DLLEXPORT FPDF_DUPLEXTYPE STDCALL FPDF_VIEWERREF_GetDuplex(FPDF_DOCUMENT document);
 
 // Function: FPDF_GetNamedDestByName
 //			get a special dest handle by the index.

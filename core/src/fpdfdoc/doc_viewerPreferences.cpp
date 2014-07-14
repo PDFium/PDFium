@@ -29,3 +29,32 @@ FX_BOOL CPDF_ViewerPreferences::PrintScaling() const
     }
     return FX_BSTRC("None") != pDict->GetString(FX_BSTRC("PrintScaling"));
 }
+FX_INT32 CPDF_ViewerPreferences::NumCopies() const
+{
+    CPDF_Dictionary *pDict = m_pDoc->GetRoot();
+    pDict = pDict->GetDict(FX_BSTRC("ViewerPreferences"));
+    if (!pDict) {
+        return 1;
+    }
+    return pDict->GetInteger(FX_BSTRC("NumCopies"));
+}
+CPDF_Array* CPDF_ViewerPreferences::PrintPageRange() const
+{
+    CPDF_Dictionary *pDict = m_pDoc->GetRoot();
+    CPDF_Array *pRange = NULL;
+    pDict = pDict->GetDict(FX_BSTRC("ViewerPreferences"));
+    if (!pDict) {
+        return pRange;
+    }
+    pRange = pDict->GetArray(FX_BSTRC("PrintPageRange"));
+    return pRange;
+}
+CFX_ByteString CPDF_ViewerPreferences::Duplex() const
+{
+    CPDF_Dictionary *pDict = m_pDoc->GetRoot();
+    pDict = pDict->GetDict(FX_BSTRC("ViewerPreferences"));
+    if (!pDict) {
+        return FX_BSTRC("None");
+    }
+    return pDict->GetString(FX_BSTRC("Duplex"));
+}

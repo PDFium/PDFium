@@ -859,6 +859,37 @@ DLLEXPORT FPDF_BOOL STDCALL FPDF_VIEWERREF_GetPrintScaling(FPDF_DOCUMENT documen
 	return viewRef.PrintScaling();
 }
 
+DLLEXPORT int STDCALL FPDF_VIEWERREF_GetNumCopies(FPDF_DOCUMENT document)
+{
+    CPDF_Document* pDoc = (CPDF_Document*)document;
+    if (!pDoc) return 1;
+    CPDF_ViewerPreferences viewRef(pDoc);
+    return viewRef.NumCopies();
+}
+
+DLLEXPORT FPDF_PAGERANGE STDCALL FPDF_VIEWERREF_GetPrintPageRange(FPDF_DOCUMENT document)
+{
+    CPDF_Document* pDoc = (CPDF_Document*)document;
+    if (!pDoc) return NULL;
+    CPDF_ViewerPreferences viewRef(pDoc);
+    return viewRef.PrintPageRange();
+}
+
+DLLEXPORT FPDF_DUPLEXTYPE STDCALL FPDF_VIEWERREF_GetDuplex(FPDF_DOCUMENT document)
+{
+    CPDF_Document* pDoc = (CPDF_Document*)document;
+    if (!pDoc) return DuplexUndefined;
+    CPDF_ViewerPreferences viewRef(pDoc);
+    CFX_ByteString duplex = viewRef.Duplex();
+    if (FX_BSTRC("Simplex") == duplex)
+        return Simplex;
+    if (FX_BSTRC("DuplexFlipShortEdge") == duplex)
+        return DuplexFlipShortEdge;
+    if (FX_BSTRC("DuplexFlipLongEdge") == duplex)
+        return DuplexFlipLongEdge;
+    return DuplexUndefined;
+}
+
 DLLEXPORT FPDF_DEST STDCALL FPDF_GetNamedDestByName(FPDF_DOCUMENT document,FPDF_BYTESTRING name)
 {
 	if (document == NULL)
