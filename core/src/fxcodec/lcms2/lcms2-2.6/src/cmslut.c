@@ -1279,7 +1279,7 @@ void _LUTeval16(register const cmsUInt16Number In[], register cmsUInt16Number Ou
 {
     cmsPipeline* lut = (cmsPipeline*) D;
     cmsStage *mpe;
-    cmsFloat32Number Storage[2][MAX_STAGE_CHANNELS];
+    cmsFloat32Number Storage[2][MAX_STAGE_CHANNELS] = {0.0f};
     int Phase = 0, NextPhase;
 
     From16ToFloat(In, &Storage[Phase][0], lut ->InputChannels);
