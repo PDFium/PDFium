@@ -690,6 +690,11 @@ static void _DrawCoonPatchMeshes(FX_BOOL bTensor, CFX_DIBitmap* pBitmap, CFX_Aff
         pPoints[i].m_Flag = FXPT_BEZIERTO;
     }
     CFX_FloatPoint coords[16];
+    for (int i = 0; i < 16; i ++)
+    {
+        coords[i].Set(0.0f, 0.0f);
+    }
+
     int point_count = bTensor ? 16 : 12;
     while (!stream.m_BitStream.IsEOF()) {
         FX_DWORD flag = stream.GetFlag();
