@@ -945,7 +945,7 @@ FX_BOOL CPDF_SeparationCS::GetRGB(FX_FLOAT* pBuf, FX_FLOAT& R, FX_FLOAT& G, FX_F
         return TRUE;
     }
     CFX_FixedBufGrow<FX_FLOAT, 16> results(m_pFunc->CountOutputs());
-    int nresults;
+    int nresults = 0;
     m_pFunc->Call(pBuf, 1, results, nresults);
     if (nresults == 0) {
         return FALSE;
