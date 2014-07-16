@@ -204,23 +204,16 @@ const _FontNameMap g_JpFontNameMap[] = {
     {"MS Mincho", "Heiseimin-W3"},
     {"MS Gothic", "Jun101-Light"},
 };
-const _FontNameMap g_GbFontNameMap[1];
 extern "C" {
     static int compareString(const void* key, const void* element)
     {
         return FXSYS_stricmp((FX_LPCSTR)key, ((_FontNameMap*)element)->m_pSrcFontName);
     }
 }
-FX_BOOL _GetSubFontName(CFX_ByteString& name, int lang)
+FX_BOOL _GetSubFontName(CFX_ByteString& name)
 {
     int size = sizeof g_JpFontNameMap;
     void* pFontnameMap = (void*)g_JpFontNameMap;
-    if (lang == 1) {
-        size = sizeof g_GbFontNameMap;
-        pFontnameMap = (void*)g_GbFontNameMap;
-    } else if (lang == 2) {
-        size = 0;
-    }
     _FontNameMap* found = (_FontNameMap*)FXSYS_bsearch((FX_LPCSTR)name, pFontnameMap,
                           size / sizeof (_FontNameMap), sizeof (_FontNameMap), compareString);
     if (found == NULL) {
@@ -280,7 +273,7 @@ void CWin32FontInfo::GetJapanesePreference(CFX_ByteString& face, int weight, int
         }
         return;
     }
-    if (_GetSubFontName(face, 0)) {
+    if (_GetSubFontName(face)) {
         return;
     }
     if (!(picth_family & FF_ROMAN) && weight > 400) {
