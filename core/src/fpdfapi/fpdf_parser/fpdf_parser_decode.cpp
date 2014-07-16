@@ -16,7 +16,6 @@ FX_DWORD _A85Decode(const FX_BYTE* src_buf, FX_DWORD src_size, FX_LPBYTE& dest_b
     if (src_size == 0) {
         return 0;
     }
-    FX_DWORD orig_size = dest_size;
     FX_DWORD zcount = 0;
     FX_DWORD pos = 0;
     while (pos < src_size) {
@@ -88,7 +87,6 @@ FX_DWORD _A85Decode(const FX_BYTE* src_buf, FX_DWORD src_size, FX_LPBYTE& dest_b
 }
 FX_DWORD _HexDecode(const FX_BYTE* src_buf, FX_DWORD src_size, FX_LPBYTE& dest_buf, FX_DWORD& dest_size)
 {
-    FX_DWORD orig_size = dest_size;
     FX_DWORD i;
     for (i = 0; i < src_size; i ++)
         if (src_buf[i] == '>') {
@@ -129,7 +127,6 @@ FX_DWORD _HexDecode(const FX_BYTE* src_buf, FX_DWORD src_size, FX_LPBYTE& dest_b
 }
 FX_DWORD RunLengthDecode(const FX_BYTE* src_buf, FX_DWORD src_size, FX_LPBYTE& dest_buf, FX_DWORD& dest_size)
 {
-    FX_DWORD orig_size = dest_size;
     FX_DWORD i = 0;
     FX_DWORD old;
     dest_size = 0;
@@ -468,8 +465,8 @@ CFX_ByteString PDF_EncodeText(FX_LPCWSTR pString, int len, CFX_CharMap* pCharMap
             return result;
         }
     }
-   
-    if(len > INT_MAX/2-1) 
+
+    if(len > INT_MAX/2-1)
     {
         result.ReleaseBuffer(0);
         return result;
