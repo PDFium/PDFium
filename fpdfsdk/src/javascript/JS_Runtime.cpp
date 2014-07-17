@@ -27,6 +27,8 @@
 #include "../../include/javascript/global.h"
 #include "../../include/javascript/console.h"
 
+#include <libplatform/libplatform.h>
+
 CJS_RuntimeFactory::~CJS_RuntimeFactory()
 {
 }
@@ -36,6 +38,8 @@ IFXJS_Runtime*					CJS_RuntimeFactory::NewJSRuntime(CPDFDoc_Environment* pApp)
 	if (!m_bInit)
 	{
 		JS_Initial();
+                m_platform = v8::platform::CreateDefaultPlatform();
+                v8::V8::InitializePlatform(m_platform);
 		
 		m_bInit = TRUE;
 	}
@@ -55,6 +59,9 @@ void							CJS_RuntimeFactory::Release()
 		{
 			JS_Release();
 			ReleaseGlobalData();
+                        v8::V8::ShutdownPlatform();
+                        delete m_platform;
+                        m_platform = NULL;
 			m_bInit = FALSE;
 		}
 	}

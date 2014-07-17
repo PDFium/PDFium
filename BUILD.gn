@@ -803,6 +803,7 @@ static_library("javascript") {
   }
   configs += [ ":pdfium_config", "//build/config/compiler:no_chromium_code" ]
   include_dirs = [
+    "//v8",
     "//v8/include",
   ]
   deps = [
@@ -823,6 +824,7 @@ static_library("jsapi") {
   }
   configs += [ ":pdfium_config", "//build/config/compiler:no_chromium_code" ]
   include_dirs = [
+    "//v8",
     "//v8/include",
   ]
   deps = [

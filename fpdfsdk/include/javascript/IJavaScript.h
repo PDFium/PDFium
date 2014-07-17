@@ -7,6 +7,10 @@
 #ifndef _IJAVASCRIPT_H_
 #define _IJAVASCRIPT_H_
 
+namespace v8 {
+class Platform;
+}
+
 class IFXJS_Context  
 {
 public:
@@ -92,7 +96,7 @@ class CJS_GlobalData;
 class CJS_RuntimeFactory
 {
 public:
-	CJS_RuntimeFactory():m_bInit(FALSE),m_nRef(0),m_pGlobalData(NULL),m_nGlobalDataCount(0) {}
+	CJS_RuntimeFactory():m_bInit(FALSE),m_nRef(0),m_pGlobalData(NULL),m_nGlobalDataCount(0),m_platform(NULL) {}
 	~CJS_RuntimeFactory();
 	IFXJS_Runtime*					NewJSRuntime(CPDFDoc_Environment* pApp);
 	void							DeleteJSRuntime(IFXJS_Runtime* pRuntime);
@@ -106,6 +110,7 @@ private:
 	int m_nRef;
 	CJS_GlobalData*					m_pGlobalData;
 	FX_INT32						m_nGlobalDataCount;
+        v8::Platform*						m_platform;
 };
 
 #endif //_IJAVASCRIPT_H_
