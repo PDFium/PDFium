@@ -1650,7 +1650,7 @@ FX_DWORD CPDF_Parser::LoadLinearizedMainXRefTable()
         m_Syntax.m_MetadataObjnum = dwSaveMetadataObjnum;
         return PDFPARSE_ERROR_FORMAT;
     }
-    FXSYS_qsort(m_SortedOffset.GetData(), m_SortedOffset.GetSize(), sizeof(FX_DWORD), _CompareDWord);
+    FXSYS_qsort(m_SortedOffset.GetData(), m_SortedOffset.GetSize(), sizeof(FX_FILESIZE), _CompareFileSize);
     m_Syntax.m_MetadataObjnum = dwSaveMetadataObjnum;
     return PDFPARSE_ERROR_SUCCESS;
 }
