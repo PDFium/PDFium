@@ -624,7 +624,7 @@ double CJS_PublicMethods::MakeRegularDate(const CFX_WideString & value, const CF
 	FX_BOOL bPm = FALSE;
 	FX_BOOL bExit = FALSE;
 	bWrongFormat = FALSE;
-	
+
 	int i=0;
 	int j=0;
 
@@ -632,7 +632,7 @@ double CJS_PublicMethods::MakeRegularDate(const CFX_WideString & value, const CF
 	{
 		if (bExit) break;
 
-		FX_WCHAR c = format.GetAt(i);		
+		FX_WCHAR c = format.GetAt(i);
 		switch (c)
 		{
 			case ':':
@@ -643,7 +643,7 @@ double CJS_PublicMethods::MakeRegularDate(const CFX_WideString & value, const CF
 				i++;
 				j++;
 				break;
-				
+
 			case 'y':
 			case 'm':
 			case 'd':
@@ -655,8 +655,9 @@ double CJS_PublicMethods::MakeRegularDate(const CFX_WideString & value, const CF
 				{
 					int oldj = j;
 					int nSkip = 0;
+					int remaining = format.GetLength() - i - 1;
 
-					if (format.GetAt(i+1) != c)
+					if (remaining == 0 || format.GetAt(i+1) != c)
 					{
 						switch (c)
 						{
@@ -695,13 +696,13 @@ double CJS_PublicMethods::MakeRegularDate(const CFX_WideString & value, const CF
 								j += nSkip;
 								break;
 							case 't':
-								bPm = value.GetAt(i) == 'p';
+								bPm = (j < value.GetLength() && value.GetAt(j) == 'p');
 								i++;
 								j++;
 								break;
-						}					
+						}
 					}
-					else if (format.GetAt(i+1) == c && format.GetAt(i+2) != c)
+					else if (remaining == 1 || format.GetAt(i+2) != c)
 					{
 						switch (c)
 						{
@@ -741,13 +742,13 @@ double CJS_PublicMethods::MakeRegularDate(const CFX_WideString & value, const CF
 								j += nSkip;
 								break;
 							case 't':
-								bPm = (value.GetAt(j) == 'p' && value.GetAt(j+1) == 'm');
+								bPm = (j + 1 < value.GetLength() && value.GetAt(j) == 'p' && value.GetAt(j+1) == 'm');
 								i += 2;
 								j += 2;
 								break;
 						}
 					}
-					else if (format.GetAt(i+1) == c && format.GetAt(i+2) == c && format.GetAt(i+3) != c)
+					else if (remaining == 2 || format.GetAt(i+3) != c)
 					{
 						switch (c)
 						{
@@ -766,7 +767,7 @@ double CJS_PublicMethods::MakeRegularDate(const CFX_WideString & value, const CF
 											break;
 										}
 									}
-									
+
 									if (!bFind)
 									{
 										nMonth = ParseStringInteger(value, j, nSkip, 3);
@@ -783,7 +784,7 @@ double CJS_PublicMethods::MakeRegularDate(const CFX_WideString & value, const CF
 								break;
 						}
 					}
-					else if (format.GetAt(i+1) == c && format.GetAt(i+2) == c && format.GetAt(i+3) == c && format.GetAt(i+4) != c)
+					else if (remaining == 3 || format.GetAt(i+4) != c)
 					{
 						switch (c)
 						{
@@ -815,7 +816,7 @@ double CJS_PublicMethods::MakeRegularDate(const CFX_WideString & value, const CF
 											break;
 										}
 									}
-									
+
 									if (!bFind)
 									{
 										nMonth = ParseStringInteger(value, j, nSkip, 4);
@@ -828,11 +829,11 @@ double CJS_PublicMethods::MakeRegularDate(const CFX_WideString & value, const CF
 								i += 4;
 								j += 4;
 								break;
-						}					
+						}
 					}
 					else
 					{
-						if (format.GetAt(i) != value.GetAt(j))
+						if (j >= value.GetLength() || format.GetAt(i) != value.GetAt(j))
 						{
 							bWrongFormat = TRUE;
 							bExit = TRUE;
@@ -840,7 +841,7 @@ double CJS_PublicMethods::MakeRegularDate(const CFX_WideString & value, const CF
 						i++;
 						j++;
 					}
-					
+
 					if (oldj == j)
 					{
 						bWrongFormat = TRUE;
@@ -848,7 +849,7 @@ double CJS_PublicMethods::MakeRegularDate(const CFX_WideString & value, const CF
 					}
 				}
 
-				break;			
+				break;
 			default:
 				if (value.GetLength() <= j)
 				{
@@ -863,7 +864,7 @@ double CJS_PublicMethods::MakeRegularDate(const CFX_WideString & value, const CF
 				i++;
 				j++;
 				break;
-		}		
+		}
 	}
 
 	if (bPm) nHour += 12;
