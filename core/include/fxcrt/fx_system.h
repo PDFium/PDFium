@@ -275,5 +275,14 @@ int			FXSYS_round(FX_FLOAT f);
 #define		FXSYS_sqrt2(a, b) (FX_FLOAT)FXSYS_sqrt((a)*(a) + (b)*(b))
 #ifdef __cplusplus
 };
+
+#if defined(__clang__) || defined(_MSC_VER)
+#define FX_FINAL final
+#elif defined(__GNUC__) && __cplusplus >= 201103 && \
+      (__GNUC__ * 10000 + __GNUC_MINOR__ * 100) >= 40700
+#define FX_FINAL final
+#else
+#define FX_FINAL
+#endif
 #endif
 #endif

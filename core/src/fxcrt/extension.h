@@ -25,7 +25,7 @@ public:
     virtual FX_BOOL		Truncate(FX_FILESIZE szFile) = 0;
 };
 IFXCRT_FileAccess*	FXCRT_FileAccess_Create();
-class CFX_CRTFileStream : public IFX_FileStream, public CFX_Object
+class CFX_CRTFileStream FX_FINAL : public IFX_FileStream, public CFX_Object
 {
 public:
     CFX_CRTFileStream(IFXCRT_FileAccess* pFA) : m_pFile(pFA), m_dwCount(1), m_bUseRange(FALSE), m_nOffset(0), m_nSize(0) {}
@@ -117,7 +117,7 @@ public:
 #define FX_MEMSTREAM_BlockSize		(64 * 1024)
 #define FX_MEMSTREAM_Consecutive	0x01
 #define FX_MEMSTREAM_TakeOver		0x02
-class CFX_MemoryStream : public IFX_MemoryStream, public CFX_Object
+class CFX_MemoryStream FX_FINAL : public IFX_MemoryStream, public CFX_Object
 {
 public:
     CFX_MemoryStream(FX_BOOL bConsecutive)

@@ -101,7 +101,7 @@ typedef unsigned int FX_UINT;
 
 #include "fpdfview.h"
 
-class CPDF_CustomAccess : public IFX_FileRead, public CFX_Object
+class CPDF_CustomAccess FX_FINAL : public IFX_FileRead, public CFX_Object
 {
 public:
 	CPDF_CustomAccess(FPDF_FILEACCESS* pFileAccess);

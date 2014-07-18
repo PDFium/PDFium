@@ -406,7 +406,7 @@ private:
     struct TFeatureList FeatureList;
     struct TLookupList LookupList;
 };
-class CFX_GSUBTable : public IFX_GSUBTable, public CFX_Object
+class CFX_GSUBTable FX_FINAL : public IFX_GSUBTable, public CFX_Object
 {
 public:
     virtual void	Release()

@@ -316,7 +316,7 @@ class CFX_FolderFontInfo : public IFX_SystemFontInfo
 {
 public:
     CFX_FolderFontInfo();
-    ~CFX_FolderFontInfo();
+    virtual ~CFX_FolderFontInfo();
     void				AddPath(FX_BSTR path);
     virtual void		Release();
     virtual	FX_BOOL		EnumFontList(CFX_FontMapper* pMapper);

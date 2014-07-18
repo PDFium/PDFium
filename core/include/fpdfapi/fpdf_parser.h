@@ -397,7 +397,7 @@ public:
 #define PDFPARSE_ERROR_PASSWORD		3
 #define PDFPARSE_ERROR_HANDLER		4
 #define PDFPARSE_ERROR_CERT			5
-class CPDF_Parser : public IPDF_DocParser
+class CPDF_Parser FX_FINAL : public IPDF_DocParser
 {
 public:
 
@@ -945,7 +945,7 @@ enum PDF_DATAAVAIL_STATUS {
     PDF_DATAAVAIL_LOADALLFILE,
     PDF_DATAAVAIL_TRAILER_APPEND
 };
-class CPDF_DataAvail : public CFX_Object, public IPDF_DataAvail
+class CPDF_DataAvail FX_FINAL : public CFX_Object, public IPDF_DataAvail
 {
 public:
 

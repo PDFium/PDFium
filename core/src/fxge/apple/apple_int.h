@@ -185,7 +185,7 @@ protected:
     FX_INT32	_horzSize;
     FX_INT32	_vertSize;
 };
-class CFX_FontProvider : public IFX_FileRead
+class CFX_FontProvider FX_FINAL : public IFX_FileRead
 {
 public:
     virtual void			Release()

@@ -7,7 +7,7 @@
 #include "../include/fsdk_define.h"
 #include "../include/fpdf_sysfontinfo.h"
 
-class CSysFontInfo_Ext : public IFX_SystemFontInfo
+class CSysFontInfo_Ext FX_FINAL : public IFX_SystemFontInfo
 {
 public:
 	FPDF_SYSFONTINFO*	m_pInfo;

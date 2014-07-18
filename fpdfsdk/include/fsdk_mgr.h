@@ -31,7 +31,7 @@ class CJS_RuntimeFactory;
 
 #include "javascript/IJavaScript.h"
 
-class CPDFDoc_Environment
+class CPDFDoc_Environment FX_FINAL
 {
 public:
 	CPDFDoc_Environment(CPDF_Document * pDoc);
@@ -39,21 +39,14 @@ public:
 
 	int RegAppHandle(FPDF_FORMFILLINFO* pFFinfo);//{ m_pInfo  = pFFinfo; return TRUE;}
 
-	virtual void		Release()
-	{
-		if (m_pInfo && m_pInfo->Release)
-			m_pInfo->Release(m_pInfo);
-		delete this;
-	}
-
-	virtual void FFI_Invalidate(FPDF_PAGE page, double left, double top, double right, double bottom)
+	void FFI_Invalidate(FPDF_PAGE page, double left, double top, double right, double bottom)
 	{
 		if (m_pInfo && m_pInfo->FFI_Invalidate) 
 		{
 			m_pInfo->FFI_Invalidate(m_pInfo, page, left, top, right, bottom);
 		}
 	}
-	virtual void FFI_OutputSelectedRect(FPDF_PAGE page, double left, double top, double right, double bottom)
+	void FFI_OutputSelectedRect(FPDF_PAGE page, double left, double top, double right, double bottom)
 	{
 		if (m_pInfo && m_pInfo->FFI_OutputSelectedRect) 
 		{
@@ -61,7 +54,7 @@ public:
 		}
 	}
 
-	virtual void FFI_SetCursor(int nCursorType)
+	void FFI_SetCursor(int nCursorType)
 	{
 		if (m_pInfo && m_pInfo->FFI_SetCursor) 
 		{
@@ -69,7 +62,7 @@ public:
 		}
 	}
 
-	virtual	int  FFI_SetTimer(int uElapse, TimerCallback lpTimerFunc)
+	int  FFI_SetTimer(int uElapse, TimerCallback lpTimerFunc)
 	{
 		if (m_pInfo && m_pInfo->FFI_SetTimer) 
 		{
@@ -78,7 +71,7 @@ public:
 		return -1;
 	}
 		
-	virtual void FFI_KillTimer(int nTimerID)
+	void FFI_KillTimer(int nTimerID)
 	{
 		if (m_pInfo && m_pInfo->FFI_KillTimer) 
 		{
@@ -103,7 +96,7 @@ public:
 		return fxtime;
 	}
 
-	virtual void FFI_OnChange()
+	void FFI_OnChange()
 	{
 		if(m_pInfo && m_pInfo->FFI_OnChange)
 		{
@@ -111,27 +104,27 @@ public:
 		}
 	}
 
-	virtual	FX_BOOL	FFI_IsSHIFTKeyDown(FX_DWORD nFlag)
+	FX_BOOL	FFI_IsSHIFTKeyDown(FX_DWORD nFlag)
 	{
 		
 		return (nFlag & FWL_EVENTFLAG_ShiftKey) != 0;
 	}
-	virtual	FX_BOOL	FFI_IsCTRLKeyDown(FX_DWORD nFlag)
+	FX_BOOL	FFI_IsCTRLKeyDown(FX_DWORD nFlag)
 	{
 
 		return (nFlag & FWL_EVENTFLAG_ControlKey) != 0;
 	}
-	virtual	FX_BOOL	FFI_IsALTKeyDown(FX_DWORD nFlag)
+	FX_BOOL	FFI_IsALTKeyDown(FX_DWORD nFlag)
 	{
 
 		return (nFlag & FWL_EVENTFLAG_AltKey) != 0;
 	}
-	virtual	FX_BOOL	FFI_IsINSERTKeyDown(FX_DWORD nFlag)
+	FX_BOOL	FFI_IsINSERTKeyDown(FX_DWORD nFlag)
 	{
 		return FALSE;
 	}
 
-	virtual int JS_appAlert(FX_LPCWSTR Msg, FX_LPCWSTR Title, FX_UINT Type, FX_UINT Icon)
+	int JS_appAlert(FX_LPCWSTR Msg, FX_LPCWSTR Title, FX_UINT Type, FX_UINT Icon)
 	{
 		if(m_pInfo && m_pInfo->m_pJsPlatform && m_pInfo->m_pJsPlatform->app_alert)
 		{
@@ -147,7 +140,7 @@ public:
 		return -1;
 	}
 
-	virtual int JS_appResponse(FX_LPCWSTR Question, FX_LPCWSTR Title, FX_LPCWSTR Default, FX_LPCWSTR cLabel, FPDF_BOOL bPassword, void* response, int length)
+	int JS_appResponse(FX_LPCWSTR Question, FX_LPCWSTR Title, FX_LPCWSTR Default, FX_LPCWSTR cLabel, FPDF_BOOL bPassword, void* response, int length)
 	{
 		if (m_pInfo && m_pInfo->m_pJsPlatform && m_pInfo->m_pJsPlatform->app_response)
 		{
@@ -170,7 +163,7 @@ public:
 		return -1;
 	}
 
-	virtual void JS_appBeep(int nType)
+	void JS_appBeep(int nType)
 	{
 		if(m_pInfo && m_pInfo->m_pJsPlatform && m_pInfo->m_pJsPlatform->app_beep)
 		{
@@ -178,7 +171,7 @@ public:
 		}
 	}
 
-	virtual CFX_WideString JS_fieldBrowse()
+	CFX_WideString JS_fieldBrowse()
 	{
 		if(m_pInfo && m_pInfo->m_pJsPlatform && m_pInfo->m_pJsPlatform->Field_browse)
 		{
@@ -283,7 +276,7 @@ public:
 		}
 	}
 
-	virtual FPDF_PAGE	FFI_GetPage(FPDF_DOCUMENT document,int nPageIndex)
+	FPDF_PAGE	FFI_GetPage(FPDF_DOCUMENT document,int nPageIndex)
 	{
 		if(m_pInfo && m_pInfo->FFI_GetPage)
 		{
@@ -292,7 +285,7 @@ public:
 		return NULL;
 	}
 
-	virtual FPDF_PAGE FFI_GetCurrentPage(FPDF_DOCUMENT document)
+	FPDF_PAGE FFI_GetCurrentPage(FPDF_DOCUMENT document)
 	{
 		if(m_pInfo && m_pInfo->FFI_GetCurrentPage)
 		{
@@ -456,13 +449,13 @@ private:
 	FX_BOOL					m_bChangeMask;
 };
 
-class CPDFSDK_PageView
+class CPDFSDK_PageView FX_FINAL
 {
 public:
 	CPDFSDK_PageView(CPDFSDK_Document* pSDKDoc,CPDF_Page* page);
 	~CPDFSDK_PageView();
 public:
-	virtual	void PageView_OnDraw(CFX_RenderDevice* pDevice, CPDF_Matrix* pUser2Device,CPDF_RenderOptions* pOptions) ;
+	void PageView_OnDraw(CFX_RenderDevice* pDevice, CPDF_Matrix* pUser2Device,CPDF_RenderOptions* pOptions) ;
 public:
 	CPDF_Annot*						GetPDFAnnotAtPoint(FX_FLOAT pageX, FX_FLOAT pageY);
 	CPDFSDK_Annot*					GetFXAnnotAtPoint(FX_FLOAT pageX, FX_FLOAT pageY);
@@ -485,23 +478,23 @@ public:
 	CPDF_Document*					GetPDFDocument();
 	CPDFSDK_Document*				GetSDKDocument() {return m_pSDKDoc;}	
 public:
-	virtual FX_BOOL					OnLButtonDown(const CPDF_Point & point, FX_UINT nFlag);
-	virtual FX_BOOL					OnLButtonUp(const CPDF_Point & point, FX_UINT nFlag);
-	virtual FX_BOOL					OnChar(int nChar, FX_UINT nFlag);
-	virtual FX_BOOL					OnKeyDown(int nKeyCode, int nFlag);
-	virtual FX_BOOL					OnKeyUp(int nKeyCode, int nFlag);
+	FX_BOOL					OnLButtonDown(const CPDF_Point & point, FX_UINT nFlag);
+	FX_BOOL					OnLButtonUp(const CPDF_Point & point, FX_UINT nFlag);
+	FX_BOOL					OnChar(int nChar, FX_UINT nFlag);
+	FX_BOOL					OnKeyDown(int nKeyCode, int nFlag);
+	FX_BOOL					OnKeyUp(int nKeyCode, int nFlag);
 
-	virtual FX_BOOL					OnMouseMove(const CPDF_Point & point, int nFlag);
-	virtual FX_BOOL					OnMouseWheel(double deltaX, double deltaY,const CPDF_Point& point, int nFlag);
-	virtual FX_BOOL					IsValidAnnot(FX_LPVOID p);
+	FX_BOOL					OnMouseMove(const CPDF_Point & point, int nFlag);
+	FX_BOOL					OnMouseWheel(double deltaX, double deltaY,const CPDF_Point& point, int nFlag);
+	FX_BOOL					IsValidAnnot(FX_LPVOID p);
 public:
-	virtual void					GetCurrentMatrix(CPDF_Matrix& matrix) {matrix = m_curMatrix;}
-	virtual void					UpdateRects(CFX_RectArray& rects);
+	void					GetCurrentMatrix(CPDF_Matrix& matrix) {matrix = m_curMatrix;}
+	void					UpdateRects(CFX_RectArray& rects);
 	void							UpdateView(CPDFSDK_Annot* pAnnot);
 	CFX_PtrArray*					GetAnnotList(){ return &m_fxAnnotArray; }
 
 public:
-	virtual int						GetPageIndex();
+	int						GetPageIndex();
 	void							LoadFXAnnots();
 private:
 	CPDF_Matrix m_curMatrix;

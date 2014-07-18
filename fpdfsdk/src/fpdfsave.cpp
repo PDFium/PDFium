@@ -13,7 +13,7 @@
 #include <ctime>
 #endif
 
-class CFX_IFileWrite:public IFX_StreamWrite
+class CFX_IFileWrite FX_FINAL : public IFX_StreamWrite
 {
 	
 public:
