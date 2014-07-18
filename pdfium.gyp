@@ -13,30 +13,27 @@
       ['pdf_use_skia==1', {
         'defines': ['_SKIA_SUPPORT_'],
       }],
+      # pdfium uses exceptions. Override the default exceptions-off setting
+      # from chromium.
+      # TODO: Instead, change pdfium to not use exceptions, and remove this.
+      ['OS=="mac"', {
+        'xcode_settings': { 'GCC_ENABLE_CPP_EXCEPTIONS': 'YES', },
+      }],
+      ['OS=="win"', {
+        'msvs_settings': { 'VCCLCompilerTool': { 'ExceptionHandling': '1', }, },
+        'defines!': [ '_HAS_EXCEPTIONS=0', ],
+      }],
       ['OS=="linux"', {
-        'cflags!': [
-          '-fno-exceptions',
-        ],
+        'cflags!': [ '-fno-exceptions', ],
         'conditions': [
           ['target_arch=="x64"', {
-            'defines' : [
-              '_FX_CPU_=_FX_X64_',
-            ],
-            'cflags': [
-              '-fPIC',
-            ],
+            'defines' : [ '_FX_CPU_=_FX_X64_', ],
+            'cflags': [ '-fPIC', ],
           }],
           ['target_arch=="ia32"', {
-            'defines' : [
-              '_FX_CPU_=_FX_X86_',
-            ],
+            'defines' : [ '_FX_CPU_=_FX_X86_', ],
           }],
         ],
-      }],
-      ['OS=="mac"', {
-        'xcode_settings': {
-          'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
-        },
       }],
     ],
     'msvs_disabled_warnings': [
