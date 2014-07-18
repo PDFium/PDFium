@@ -2864,13 +2864,27 @@ FX_BOOL CPDF_DataAvail::IsObjectsAvail(CFX_PtrArray& obj_array, FX_BOOL bParsePa
                     CPDF_Reference *pRef = (CPDF_Reference*)pObj;
                     FX_DWORD dwNum = pRef->GetRefObjNum();
                     FX_FILESIZE offset;
-                    FX_DWORD size = GetObjectSize(pRef->GetRefObjNum(), offset);
-                    if (!size) {
+                    FX_DWORD original_size = GetObjectSize(dwNum, offset);
+                    base::CheckedNumeric<FX_DWORD> size = original_size;
+                    if (size.ValueOrDefault(0) == 0 || offset < 0 || offset >= m_dwFileLen) {
                         break;
                     }
-                    size = (FX_DWORD)((FX_FILESIZE)(offset + size + 512) > m_dwFileLen ? m_dwFileLen - offset : size + 512);
-                    if (!m_pFileAvail->IsDataAvail(offset, size)) {
-                        pHints->AddSegment(offset, size);
+
+                    size += offset;
+                    size += 512;
+                    if (!size.IsValid()) {
+                        break;
+                    }
+                    if (size.ValueOrDie() > m_dwFileLen) {
+                        size = m_dwFileLen - offset;
+                    } else {
+                        size = original_size + 512;
+                    }
+                    if (!size.IsValid()) {
+                        break;
+                    }
+                    if (!m_pFileAvail->IsDataAvail(offset, size.ValueOrDie())) {
+                        pHints->AddSegment(offset, size.ValueOrDie());
                         ret_array.Add(pObj);
                         count++;
                     } else if (!m_objnum_array.Find(dwNum)) {
