@@ -16,7 +16,7 @@
 #include "../agg/include/fx_agg_driver.h"
 #include "../../../include/fxge/fx_freetype.h"
 #include "../../../include/fxcodec/fx_codec.h"
-class CWin32FontInfo : public IFX_SystemFontInfo
+class CWin32FontInfo FX_FINAL : public IFX_SystemFontInfo
 {
 public:
     CWin32FontInfo();

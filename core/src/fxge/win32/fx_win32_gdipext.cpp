@@ -1003,7 +1003,7 @@ BOOL CGdiplusExt::DrawPath(HDC hDC, const CFX_PathData* pPathData,
     CallFunc(GdipDeleteGraphics)(pGraphics);
     return TRUE;
 }
-class GpStream : public IStream, public CFX_Object
+class GpStream FX_FINAL : public IStream, public CFX_Object
 {
     LONG	m_RefCount;
     int     m_ReadPos;
