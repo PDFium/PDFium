@@ -253,7 +253,10 @@ static FX_BOOL GenerateWidgetAP(CPDF_Document* pDoc, CPDF_Dictionary* pAnnotDict
     if (!pFormDict) {
         return FALSE;
     }
-    CFX_ByteString DA = FPDF_GetFieldAttr(pAnnotDict, "DA") ? FPDF_GetFieldAttr(pAnnotDict, "DA")->GetString() : CFX_ByteString();
+    CFX_ByteString DA;
+    if (CPDF_Object* pDAObj = FPDF_GetFieldAttr(pAnnotDict, "DA")) {
+        DA = pDAObj->GetString();
+    }
     if (DA.IsEmpty()) {
         DA = pFormDict->GetString("DA");
     }
