@@ -222,16 +222,10 @@ CFX_WideString CJS_PublicMethods::StrLTrim(FX_LPCWSTR pStr)
 CFX_WideString CJS_PublicMethods::StrRTrim(FX_LPCWSTR pStr)
 {
 	FX_LPCWSTR p = pStr;
-
 	while (*p) p++;
-	p--;
-	if (p >= pStr)
-	{		
-		while (*p && *p == L' ') p--;
-		p++;
-		return CFX_WideString(pStr,p-pStr);
-	}
-	return L"";
+	while (p > pStr && *(p - 1) == L' ') p--;
+
+	return CFX_WideString(pStr, p - pStr);
 }
 
 CFX_WideString CJS_PublicMethods::StrTrim(FX_LPCWSTR pStr)
@@ -243,22 +237,16 @@ CFX_ByteString CJS_PublicMethods::StrLTrim(FX_LPCSTR pStr)
 {
 	while (*pStr && *pStr == ' ') pStr++;
 
-    return pStr;
+        return pStr;
 }
 
 CFX_ByteString CJS_PublicMethods::StrRTrim(FX_LPCSTR pStr)
 {
 	FX_LPCSTR p = pStr;
-
 	while (*p) p++;
-	p--;
-	if (p >= pStr)
-	{		
-		while (*p && *p == ' ') p--;
-		p++;
-		return CFX_ByteString(pStr,p-pStr);
-	}
-	return "";
+	while (p > pStr && *(p - 1) == L' ') p--;
+
+	return CFX_ByteString(pStr,p-pStr);
 }
 
 CFX_ByteString CJS_PublicMethods::StrTrim(FX_LPCSTR pStr)
