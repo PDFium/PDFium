@@ -276,7 +276,7 @@ int			FXSYS_round(FX_FLOAT f);
 #ifdef __cplusplus
 };
 
-#if defined(__clang__) || defined(_MSC_VER)
+#if defined(__clang__) || _MSC_VER >= 1700
 #define FX_FINAL final
 #elif defined(__GNUC__) && __cplusplus >= 201103 && \
       (__GNUC__ * 10000 + __GNUC_MINOR__ * 100) >= 40700
