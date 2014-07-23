@@ -350,7 +350,7 @@ protected:
 
     ~CFX_BasicArray();
 
-    FX_BOOL			SetSize(int nNewSize, int nGrowBy);
+    FX_BOOL			SetSize(int nNewSize);
 
     FX_BOOL			Append(const CFX_BasicArray& src);
 
@@ -371,8 +371,6 @@ protected:
 
     int				m_nMaxSize;
 
-    int				m_nGrowBy;
-
     int				m_nUnitSize;
 };
 template<class TYPE>
@@ -391,14 +389,14 @@ public:
         return m_nSize - 1;
     }
 
-    FX_BOOL		SetSize(int nNewSize, int nGrowBy = -1)
+    FX_BOOL		SetSize(int nNewSize)
     {
-        return CFX_BasicArray::SetSize(nNewSize, nGrowBy);
+        return CFX_BasicArray::SetSize(nNewSize);
     }
 
     void		RemoveAll()
     {
-        SetSize(0, -1);
+        SetSize(0);
     }
 
     const TYPE	GetAt(int nIndex) const
@@ -442,7 +440,7 @@ public:
             return FALSE;
         }
         if (nIndex >= m_nSize)
-            if (!SetSize(nIndex + 1, -1)) {
+            if (!SetSize(nIndex + 1)) {
                 return FALSE;
             }
         ((TYPE*)m_pData)[nIndex] = newElement;
@@ -453,7 +451,7 @@ public:
     {
         if (m_nSize < m_nMaxSize) {
             m_nSize ++;
-        } else if (!SetSize(m_nSize + 1, -1)) {
+        } else if (!SetSize(m_nSize + 1)) {
             return FALSE;
         }
         ((TYPE*)m_pData)[m_nSize - 1] = newElement;
@@ -616,7 +614,7 @@ public:
             return 0;
         }
         RemoveAll();
-        SetSize(nCount, -1);
+        SetSize(nCount);
         ObjectClass* pStartObj = (ObjectClass*)m_pData;
         nSize = nStart + nCount;
         for (FX_INT32 i = nStart; i < nSize; i ++, pStartObj++) {
@@ -653,7 +651,7 @@ public:
         for (int i = 0; i < m_nSize; i ++) {
             ((ObjectClass*)GetDataPtr(i))->~ObjectClass();
         }
-        CFX_BasicArray::SetSize(0, -1);
+        CFX_BasicArray::SetSize(0);
     }
 };
 typedef CFX_ObjectArray<CFX_ByteString> CFX_ByteStringArray;

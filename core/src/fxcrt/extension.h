@@ -358,7 +358,7 @@ protected:
         }
         FX_INT32 iCount = m_Blocks.GetSize();
         size = (size - m_nTotalSize + m_nGrowSize - 1) / m_nGrowSize;
-        m_Blocks.SetSize(m_Blocks.GetSize() + (FX_INT32)size, -1);
+        m_Blocks.SetSize(m_Blocks.GetSize() + (FX_INT32)size);
         while (size --) {
             FX_LPBYTE pBlock = FX_Alloc(FX_BYTE, m_nGrowSize);
             if (!pBlock) {
