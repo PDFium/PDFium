@@ -22,8 +22,19 @@
   #define snprintf _snprintf
 #endif
 
-static void WritePpm(const char* pdf_name, int num,
-                     const char* buffer, int stride, int width, int height) {
+enum OutputFormat {
+  OUTPUT_NONE,
+  OUTPUT_PPM,
+#ifdef _WIN32
+  OUTPUT_BMP,
+  OUTPUT_EMF,
+#endif
+};
+
+static void WritePpm(const char* pdf_name, int num, const void* buffer_void,
+                     int stride, int width, int height) {
+  const char* buffer = reinterpret_cast<const char*>(buffer_void);
+
   if (stride < 0 || width < 0 || height < 0)
     return;
   if (height > 0 && width > INT_MAX / height)
@@ -60,6 +71,68 @@ static void WritePpm(const char* pdf_name, int num,
   }
   fclose(fp);
 }
+
+#ifdef _WIN32
+static void WriteBmp(const char* pdf_name, int num, const void* buffer,
+                     int stride, int width, int height) {
+  if (stride < 0 || width < 0 || height < 0)
+    return;
+  if (height > 0 && width > INT_MAX / height)
+    return;
+  int out_len = stride * height;
+  if (out_len > INT_MAX / 3)
+    return;
+
+  char filename[256];
+  snprintf(filename, sizeof(filename), "%s.%d.bmp", pdf_name, num);
+  FILE* fp = fopen(filename, "wb");
+  if (!fp)
+    return;
+
+  BITMAPINFO bmi = {0};
+  bmi.bmiHeader.biSize = sizeof(bmi) - sizeof(RGBQUAD);
+  bmi.bmiHeader.biWidth = width;
+  bmi.bmiHeader.biHeight = -height;  // top-down image
+  bmi.bmiHeader.biPlanes = 1;
+  bmi.bmiHeader.biBitCount = 32;
+  bmi.bmiHeader.biCompression = BI_RGB;
+  bmi.bmiHeader.biSizeImage = 0;
+
+  BITMAPFILEHEADER file_header = {0};
+  file_header.bfType = 0x4d42;
+  file_header.bfSize = sizeof(file_header) + bmi.bmiHeader.biSize + out_len;
+  file_header.bfOffBits = file_header.bfSize - out_len;
+
+  fwrite(&file_header, sizeof(file_header), 1, fp);
+  fwrite(&bmi, bmi.bmiHeader.biSize, 1, fp);
+  fwrite(buffer, out_len, 1, fp);
+  fclose(fp);
+}
+
+void WriteEmf(FPDF_PAGE page, const char* pdf_name, int num) {
+  int width = static_cast<int>(FPDF_GetPageWidth(page));
+  int height = static_cast<int>(FPDF_GetPageHeight(page));
+
+  char filename[256];
+  snprintf(filename, sizeof(filename), "%s.%d.emf", pdf_name, num);
+
+  HDC dc = CreateEnhMetaFileA(NULL, filename, NULL, NULL);
+  
+  HRGN rgn = CreateRectRgn(0, 0, width, height); 
+  SelectClipRgn(dc, rgn); 
+  DeleteObject(rgn);
+
+  SelectObject(dc, GetStockObject(NULL_PEN));
+  SelectObject(dc, GetStockObject(WHITE_BRUSH));
+  // If a PS_NULL pen is used, the dimensions of the rectangle are 1 pixel less.
+  Rectangle(dc, 0, 0, width + 1, height + 1);
+
+  FPDF_RenderPage(dc, page, 0, 0, width, height, 0,
+                  FPDF_ANNOT | FPDF_PRINTING | FPDF_NO_CATCH);
+
+  DeleteEnhMetaFile(CloseEnhMetaFile(dc));
+}
+#endif
 
 int Form_Alert(IPDF_JSPLATFORM*, FPDF_WIDESTRING, FPDF_WIDESTRING, int, int) {
   printf("Form_Alert called.\n");
@@ -110,15 +183,21 @@ void Unsupported_Handler(UNSUPPORT_INFO*, int type) {
   printf("Unsupported feature: %s.\n", feature.c_str());
 }
 
-bool ParseCommandLine(int argc, const char* argv[], bool* write_images,
+bool ParseCommandLine(int argc, const char* argv[], OutputFormat* output_format,
                       std::list<const char*>* files) {
-  *write_images = false;
+  *output_format = OUTPUT_NONE;
   files->clear();
 
   int cur_arg = 1;
-  if (cur_arg < argc &&
-      strcmp(argv[cur_arg], "--write_images") == 0) {
-    *write_images = true;
+  if (cur_arg < argc) {
+    if (strcmp(argv[cur_arg], "--ppm") == 0)
+      *output_format = OUTPUT_PPM;
+#ifdef _WIN32
+    if (strcmp(argv[cur_arg], "--emf") == 0)
+      *output_format = OUTPUT_EMF;
+    if (strcmp(argv[cur_arg], "--bmp") == 0)
+      *output_format = OUTPUT_BMP;
+#endif
     cur_arg++;
   }
 
@@ -159,7 +238,7 @@ void Add_Segment(FX_DOWNLOADHINTS* pThis, size_t offset, size_t size) {
 }
 
 void RenderPdf(const char* name, const char* pBuf, size_t len,
-               bool write_images) {
+               OutputFormat format) {
   printf("Rendering PDF file %s.\n", name);
 
   IPDF_JSPLATFORM platform_callbacks;
@@ -234,11 +313,25 @@ void RenderPdf(const char* name, const char* pBuf, size_t len,
 
     FPDF_RenderPageBitmap(bitmap, page, 0, 0, width, height, 0, 0);
     FPDF_FFLDraw(form, bitmap, page, 0, 0, width, height, 0, 0);
-    if (write_images) {
-      const char* buffer = reinterpret_cast<const char*>(
-          FPDFBitmap_GetBuffer(bitmap));
-      int stride = FPDFBitmap_GetStride(bitmap);
-      WritePpm(name, i, buffer, stride, width, height);
+    int stride = FPDFBitmap_GetStride(bitmap);
+    const char* buffer =
+        reinterpret_cast<const char*>(FPDFBitmap_GetBuffer(bitmap));
+
+    switch (format) {
+#ifdef _WIN32
+      case OUTPUT_BMP:
+        WriteBmp(name, i, buffer, stride, width, height);
+        break;
+
+      case OUTPUT_EMF:
+        WriteEmf(page, name, i);
+        break;
+#endif
+      case OUTPUT_PPM:
+        WritePpm(name, i, buffer, stride, width, height);
+        break;
+      default:
+        break;
     }
 
     FPDFBitmap_Destroy(bitmap);
@@ -259,11 +352,15 @@ void RenderPdf(const char* name, const char* pBuf, size_t len,
 
 int main(int argc, const char* argv[]) {
   v8::V8::InitializeICU();
-  bool write_images = false;
+  OutputFormat format = OUTPUT_NONE;
   std::list<const char*> files;
-  if (!ParseCommandLine(argc, argv, &write_images, &files)) {
-    printf("Usage is: test [--write_images] /path/to/pdf\n");
-    printf("--write_images - to write page images <pdf-name>.<page-number>.ppm\n");
+  if (!ParseCommandLine(argc, argv, &format, &files)) {
+    printf("Usage: pdfium_test [OPTIONS] [FILE]\n");
+    printf("--ppm    write page images <pdf-name>.<page-number>.ppm\n");
+#ifdef _WIN32
+    printf("--bmp    write page images <pdf-name>.<page-number>.bmp\n");
+    printf("--emf    write page meta files <pdf-name>.<page-number>.emf\n");
+#endif
     return 1;
   }
 
@@ -293,7 +390,7 @@ int main(int argc, const char* argv[]) {
     if (ret != len) {
       fprintf(stderr, "Failed to read: %s\n", filename);
     } else {
-      RenderPdf(filename, pBuf, len, write_images);
+      RenderPdf(filename, pBuf, len, format);
     }
     free(pBuf);
   }
@@ -302,4 +399,3 @@ int main(int argc, const char* argv[]) {
 
   return 0;
 }
-
