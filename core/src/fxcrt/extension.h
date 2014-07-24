@@ -6,6 +6,9 @@
 
 #ifndef _FXCRT_EXTENSION_IMP_
 #define _FXCRT_EXTENSION_IMP_
+
+#include "../../../third_party/numerics/safe_math.h"
+
 class IFXCRT_FileAccess
 {
 public:
@@ -181,9 +184,13 @@ public:
     }
     virtual FX_BOOL				SetRange(FX_FILESIZE offset, FX_FILESIZE size)
     {
-        if (offset < 0 || (size_t)(offset + size) > m_nCurSize) {
+        base::CheckedNumeric<FX_FILESIZE> range = size;
+        range += size;
+ 
+        if (!range.IsValid() || offset <= 0 || size <= 0 || range.ValueOrDie() > m_nCurSize) {
             return FALSE;
         }
+        
         m_nOffset = (size_t)offset, m_nSize = (size_t)size;
         m_bUseRange = TRUE;
         m_nCurPos = m_nOffset;
@@ -198,13 +205,25 @@ public:
         if (!buffer || !size) {
             return FALSE;
         }
+
+        base::CheckedNumeric<FX_FILESIZE> safeOffset = offset;
         if (m_bUseRange) {
-            offset += (FX_FILESIZE)m_nOffset;
+            safeOffset += m_nOffset;
         }
-        if ((size_t)offset + size > m_nCurSize) {
+         
+        if (!safeOffset.IsValid()) {
             return FALSE;
         }
-        m_nCurPos = (size_t)offset + size;
+
+        offset = safeOffset.ValueOrDie();
+
+        base::CheckedNumeric<size_t> newPos = size;
+        newPos += offset;
+        if (!newPos.IsValid() || newPos.ValueOrDefault(0) == 0 || newPos.ValueOrDie() > m_nCurSize) {
+            return FALSE;
+        }
+
+        m_nCurPos = newPos.ValueOrDie();
         if (m_dwFlags & FX_MEMSTREAM_Consecutive) {
             FXSYS_memcpy32(buffer, (FX_LPBYTE)m_Blocks[0] + (size_t)offset, size);
             return TRUE;
@@ -250,7 +269,12 @@ public:
             offset += (FX_FILESIZE)m_nOffset;
         }
         if (m_dwFlags & FX_MEMSTREAM_Consecutive) {
-            m_nCurPos = (size_t)offset + size;
+            base::CheckedNumeric<size_t> newPos = size; 
+            newPos += offset;
+            if (!newPos.IsValid())
+                return FALSE;
+
+            m_nCurPos = newPos.ValueOrDie();
             if (m_nCurPos > m_nTotalSize) {
                 m_nTotalSize = (m_nCurPos + m_nGrowSize - 1) / m_nGrowSize * m_nGrowSize;
                 if (m_Blocks.GetSize() < 1) {
@@ -270,10 +294,16 @@ public:
             }
             return TRUE;
         }
-        if (!ExpandBlocks((size_t)offset + size)) {
+
+        base::CheckedNumeric<size_t> newPos = size;
+        newPos += offset;
+        if (!newPos.IsValid())
+            return FALSE;
+
+        if (!ExpandBlocks(newPos.ValueOrDie())) {
             return FALSE;
         }
-        m_nCurPos = (size_t)offset + size;
+        m_nCurPos = newPos.ValueOrDie();
         size_t nStartBlock = (size_t)offset / m_nGrowSize;
         offset -= (FX_FILESIZE)(nStartBlock * m_nGrowSize);
         while (size) {

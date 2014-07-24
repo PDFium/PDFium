@@ -2869,7 +2869,7 @@ FX_BOOL CPDF_DataAvail::IsObjectsAvail(CFX_PtrArray& obj_array, FX_BOOL bParsePa
                     if (size.ValueOrDefault(0) == 0 || offset < 0 || offset >= m_dwFileLen) {
                         break;
                     }
-
+                    
                     size += offset;
                     size += 512;
                     if (!size.IsValid()) {
@@ -3074,42 +3074,64 @@ FX_BOOL CPDF_DataAvail::LoadAllXref(IFX_DownloadHints* pHints)
 }
 CPDF_Object* CPDF_DataAvail::GetObject(FX_DWORD objnum, IFX_DownloadHints* pHints, FX_BOOL *pExistInFile)
 {
-    CPDF_Object *pRet = NULL;
-    if (pExistInFile) {
+    CPDF_Object *pRet         = NULL;
+    FX_DWORD    original_size = 0;
+    FX_FILESIZE offset        = 0;
+    CPDF_Parser *pParser      = NULL;
+
+    if (pExistInFile) { 
         *pExistInFile = TRUE;
     }
+
     if (m_pDocument == NULL) {
-        FX_FILESIZE offset = m_parser.GetObjectOffset(objnum);
-        if (offset < 0) {
-            *pExistInFile = FALSE;
-            return NULL;
-        }
-        FX_DWORD size = (FX_DWORD)m_parser.GetObjectSize(objnum);
-        size = (FX_DWORD)(((FX_FILESIZE)(offset + size + 512)) > m_dwFileLen ? m_dwFileLen - offset : size + 512);
-        if (!m_pFileAvail->IsDataAvail(offset, size)) {
-            pHints->AddSegment(offset, size);
-            return NULL;
-        }
-        pRet = m_parser.ParseIndirectObject(NULL, objnum);
-        if (!pRet && pExistInFile) {
-            *pExistInFile = FALSE;
-        }
-        return pRet;
+        original_size = (FX_DWORD)m_parser.GetObjectSize(objnum);
+        offset        = m_parser.GetObjectOffset(objnum);
+        pParser       = &m_parser; 
+    } else {
+        original_size = GetObjectSize(objnum, offset);
+        pParser       = (CPDF_Parser *)(m_pDocument->GetParser());
     }
-    FX_FILESIZE offset = 0;
-    FX_DWORD size = GetObjectSize(objnum, offset);
-    size = (FX_DWORD)((FX_FILESIZE)(offset + size + 512) > m_dwFileLen ? m_dwFileLen - offset : size + 512);
-    if (!m_pFileAvail->IsDataAvail(offset, size)) {
-        pHints->AddSegment(offset, size);
+
+    base::CheckedNumeric<FX_DWORD> size = original_size;
+    if (size.ValueOrDefault(0) == 0 || offset < 0 || offset >= m_dwFileLen) {
+        if (pExistInFile)
+           *pExistInFile = FALSE;
+
         return NULL;
     }
-    CPDF_Parser *pParser = (CPDF_Parser *)(m_pDocument->GetParser());
-    pRet = pParser->ParseIndirectObject(NULL, objnum, NULL);
+ 
+    size += offset;
+    size += 512;
+    if (!size.IsValid()) {
+        return NULL;
+    }
+
+    if (size.ValueOrDie() > m_dwFileLen) {
+        size = m_dwFileLen - offset;
+    } else {
+        size = original_size + 512;
+    }
+
+    if (!size.IsValid()) {
+        return NULL;
+    }
+
+    if (!m_pFileAvail->IsDataAvail(offset, size.ValueOrDie())) {
+        pHints->AddSegment(offset, size.ValueOrDie());
+        return NULL;
+    }
+
+    if (pParser) {
+        pRet = pParser->ParseIndirectObject(NULL, objnum, NULL);
+    }
+
     if (!pRet && pExistInFile) {
         *pExistInFile = FALSE;
     }
+ 
     return pRet;
 }
+
 FX_BOOL CPDF_DataAvail::CheckInfo(IFX_DownloadHints* pHints)
 {
     FX_BOOL bExist = FALSE;
