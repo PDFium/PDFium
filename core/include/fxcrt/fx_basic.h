@@ -1578,4 +1578,50 @@ typedef enum {
 } FX_ProgressiveStatus;
 #define ProgressiveStatus	FX_ProgressiveStatus
 #define FX_NAMESPACE_DECLARE(namespace, type)       namespace::type
+
+class CFX_Vector_3by1 : public CFX_Object
+{
+public:
+
+    CFX_Vector_3by1() :
+        a(0.0f), b(0.0f), c(0.0f)
+    {}
+
+    CFX_Vector_3by1(FX_FLOAT a1, FX_FLOAT b1, FX_FLOAT c1):
+        a(a1), b(b1), c(c1)
+    {}
+
+    FX_FLOAT a;
+    FX_FLOAT b;
+    FX_FLOAT c;
+};
+class CFX_Matrix_3by3 : public CFX_Object
+{
+public:
+
+    CFX_Matrix_3by3():
+        a(0.0f), b(0.0f), c(0.0f), d(0.0f), e(0.0f), f(0.0f), g(0.0f), h(0.0f), i(0.0f)
+    {}
+
+    CFX_Matrix_3by3(FX_FLOAT a1, FX_FLOAT b1, FX_FLOAT c1, FX_FLOAT d1, FX_FLOAT e1, FX_FLOAT f1, FX_FLOAT g1, FX_FLOAT h1, FX_FLOAT i1) :
+        a(a1), b(b1), c(c1), d(d1), e(e1), f(f1), g(g1), h(h1), i(i1)
+    {}
+
+    CFX_Matrix_3by3 Inverse();
+
+    CFX_Matrix_3by3 Multiply(const CFX_Matrix_3by3 &m);
+
+    CFX_Vector_3by1 TransformVector(const CFX_Vector_3by1 &v);
+
+    FX_FLOAT a;
+    FX_FLOAT b;
+    FX_FLOAT c;
+    FX_FLOAT d;
+    FX_FLOAT e;
+    FX_FLOAT f;
+    FX_FLOAT g;
+    FX_FLOAT h;
+    FX_FLOAT i;
+};
+
 #endif
