@@ -518,8 +518,8 @@ public:
         return m_fCharSpace;
     }
 
-    inline CPVT_WordPlace					GetBeginWordPlace() const;
-    inline CPVT_WordPlace					GetEndWordPlace() const;
+    CPVT_WordPlace							GetBeginWordPlace() const;
+    CPVT_WordPlace							GetEndWordPlace() const;
     CPVT_WordPlace							GetPrevWordPlace(const CPVT_WordPlace & place) const;
     CPVT_WordPlace							GetNextWordPlace(const CPVT_WordPlace & place) const;
     CPVT_WordPlace							SearchWordPlace(const CPDF_Point & point) const;
