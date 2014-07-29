@@ -22,8 +22,8 @@ protected:
 class CFX_CTTGSUBTable : public CFX_Object
 {
 public:
-    CFX_CTTGSUBTable(void): loaded(false), m_bFeautureMapLoad(FALSE) {};
-    CFX_CTTGSUBTable(FT_Bytes gsub): loaded(false), m_bFeautureMapLoad(FALSE)
+    CFX_CTTGSUBTable(void): m_bFeautureMapLoad(FALSE), loaded(false) {};
+    CFX_CTTGSUBTable(FT_Bytes gsub): m_bFeautureMapLoad(FALSE), loaded(false)
     {
         LoadGSUBTable(gsub);
     }
@@ -274,7 +274,7 @@ private:
     struct TSingleSubstFormat1: public TSubTableBase {
         TCoverageFormatBase *Coverage;
         TT_int16_t DeltaGlyphID;
-        TSingleSubstFormat1(): DeltaGlyphID(0), Coverage(NULL)
+        TSingleSubstFormat1(): Coverage(NULL), DeltaGlyphID(0)
         {
             SubstFormat = 1;
         }

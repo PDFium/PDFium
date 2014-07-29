@@ -603,14 +603,11 @@ private:
     FX_FLOAT								m_fCharSpace;
     FX_INT32								m_nHorzScale;
     FX_WORD									m_wSubWord;
-    FX_FLOAT								m_fWordSpace;
     FX_FLOAT								m_fFontSize;
 
 private:
     FX_BOOL									m_bInitial;
     FX_BOOL									m_bRichText;
-    FX_FLOAT								m_fCaretOriginX;
-    FX_INT32								m_nCurFontIndex;
     IPDF_VariableText_Provider *			m_pVTProvider;
     CPDF_VariableText_Iterator *			m_pVTIterator;
 };

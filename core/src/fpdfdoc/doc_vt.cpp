@@ -815,7 +815,6 @@ CPDF_VariableText::CPDF_VariableText() :
     m_nCharArray(0),
     m_nAlignment(0),
     m_fCharSpace(0.0f),
-    m_fWordSpace(0.0f),
     m_fFontSize(0.0f),
     m_nHorzScale(100),
     m_wSubWord(0),

@@ -71,7 +71,6 @@ static void _DrawAxialShading(CFX_DIBitmap* pBitmap, CFX_AffineMatrix* pObject2B
         rgb_array[i] = FXARGB_TODIB(FXARGB_MAKE(alpha, FXSYS_round(R * 255), FXSYS_round(G * 255), FXSYS_round(B * 255)));
     }
     int pitch = pBitmap->GetPitch();
-    int Bpp = pBitmap->GetBPP() / 8;
     for (int row = 0; row < height; row ++) {
         FX_DWORD* dib_buf = (FX_DWORD*)(pBitmap->GetBuffer() + row * pitch);
         for (int column = 0; column < width; column ++) {
@@ -156,7 +155,6 @@ static void _DrawRadialShading(CFX_DIBitmap* pBitmap, CFX_AffineMatrix* pObject2
     int width = pBitmap->GetWidth();
     int height = pBitmap->GetHeight();
     int pitch = pBitmap->GetPitch();
-    int Bpp = pBitmap->GetBPP() / 8;
     FX_BOOL bDecreasing = FALSE;
     if (start_r > end_r) {
         int length = (int)FXSYS_sqrt((FXSYS_Mul(start_x - end_x, start_x - end_x) + FXSYS_Mul(start_y - end_y, start_y - end_y)));
@@ -245,7 +243,6 @@ static void _DrawFuncShading(CFX_DIBitmap* pBitmap, CFX_AffineMatrix* pObject2Bi
     int width = pBitmap->GetWidth();
     int height = pBitmap->GetHeight();
     int pitch = pBitmap->GetPitch();
-    int Bpp = pBitmap->GetBPP() / 8;
     int total_results = 0;
     for (int j = 0; j < nFuncs; j ++) {
         if (pFuncs[j]) {
@@ -743,8 +740,6 @@ static void _DrawCoonPatchMeshes(FX_BOOL bTensor, CFX_DIBitmap* pBitmap, CFX_Aff
 void CPDF_RenderStatus::DrawShading(CPDF_ShadingPattern* pPattern, CFX_AffineMatrix* pMatrix,
                                     FX_RECT& clip_rect, int alpha, FX_BOOL bAlphaMode)
 {
-    int width = clip_rect.Width();
-    int height = clip_rect.Height();
     CPDF_Function** pFuncs = pPattern->m_pFunctions;
     int nFuncs = pPattern->m_nFuncs;
     CPDF_Dictionary* pDict = pPattern->m_pShadingObj->GetDict();

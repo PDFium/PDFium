@@ -68,25 +68,26 @@ struct stru_TbConvert
 	FX_LPCSTR lpszCppMark;
 };
 
-static const stru_TbConvert fcTable[] = {"mmmm","%B",
-	"mmm", "%b",
-	"mm",  "%m",
+static const stru_TbConvert fcTable[] = {
+	{ "mmmm","%B" },
+	{ "mmm", "%b" },
+	{ "mm",  "%m" },
 	//"m"
-	"dddd","%A",
-	"ddd", "%a",
-	"dd",  "%d",
+	{ "dddd","%A" },
+	{ "ddd", "%a" },
+	{ "dd",  "%d" },
 	//"d",   "%w",
-	"yyyy","%Y",
-	"yy",  "%y",
-	"HH",  "%H",
+	{ "yyyy","%Y" },
+	{ "yy",  "%y" },
+	{ "HH",  "%H" },
 	//"H"
-	"hh",  "%I",
+	{ "hh",  "%I" },
 	//"h"
-	"MM",  "%M",
+	{ "MM",  "%M" },
 	//"M"
-	"ss",  "%S",
+	{ "ss",  "%S" },
 	//"s
-	"tt",  "%p"
+	{ "tt",  "%p" },
 	//"t"
 };
 

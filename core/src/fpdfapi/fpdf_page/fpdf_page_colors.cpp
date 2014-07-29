@@ -785,9 +785,6 @@ FX_BOOL CPDF_IndexedCS::v_Load(CPDF_Document* pDoc, CPDF_Array* pArray)
     if (pTableObj == NULL) {
         return FALSE;
     }
-    FX_LPCBYTE pTable = NULL;
-    FX_DWORD size = 0;
-    CPDF_StreamAcc* pStreamAcc = NULL;
     if (pTableObj->GetType() == PDFOBJ_STRING) {
         m_Table = ((CPDF_String*)pTableObj)->GetString();
     } else if (pTableObj->GetType() == PDFOBJ_STREAM) {

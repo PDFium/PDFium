@@ -146,7 +146,6 @@ CPDF_DocPageData::~CPDF_DocPageData()
 {
     Clear(FALSE);
     Clear(TRUE);
-    FX_POSITION pos = NULL;
 }
 void CPDF_DocPageData::Clear(FX_BOOL bRelease)
 {

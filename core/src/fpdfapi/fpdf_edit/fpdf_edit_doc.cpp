@@ -685,7 +685,7 @@ CPDF_Font* CPDF_Document::AddMacFont(CTFontRef pFont, FX_BOOL bVert, FX_BOOL bTr
             pBaseDict->SetAtName(FX_BSTRC("Encoding"), "WinAnsiEncoding");
         } else {
             flags |= PDFFONT_NONSYMBOLIC;
-            int i;
+            size_t i;
             for (i = 0; i < sizeof g_FX_CharsetUnicodes / sizeof(FX_CharsetUnicodes); i ++) {
                 charSets.RemoveAll();
                 charSets.Add(g_FX_CharsetUnicodes[i].m_Charset);
@@ -913,7 +913,7 @@ CPDF_Font* CPDF_Document::AddFont(CFX_Font* pFont, int charset, FX_BOOL bVert)
             }
         } else {
             flags |= PDFFONT_NONSYMBOLIC;
-            int i;
+            size_t i;
             for (i = 0; i < sizeof g_FX_CharsetUnicodes / sizeof(FX_CharsetUnicodes); i ++)
                 if (g_FX_CharsetUnicodes[i].m_Charset == charset) {
                     break;

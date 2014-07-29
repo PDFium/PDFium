@@ -313,7 +313,6 @@ void CPDF_TextObject::SetText(int nChars, FX_DWORD* pCharCodes, FX_FLOAT* pKerni
             }
         }
     } else {
-        int offset = 0;
         m_pCharCodes = (FX_DWORD*)(FX_UINTPTR)pCharCodes[0];
     }
     RecalcPositionData();
@@ -354,7 +353,6 @@ FX_FLOAT CPDF_TextObject::GetSpaceCharWidth() const
 }
 void CPDF_TextObject::GetCharRect(int index, CFX_FloatRect& rect) const
 {
-    FX_FLOAT curpos = 0;
     CPDF_Font* pFont = m_TextState.GetFont();
     FX_BOOL bVertWriting = FALSE;
     CPDF_CIDFont* pCIDFont = pFont->GetCIDFont();
@@ -526,8 +524,6 @@ void CPDF_TextObject::CalcPositionData(FX_FLOAT* pTextAdvanceX, FX_FLOAT* pTextA
 }
 void CPDF_TextObject::CalcCharPos(FX_FLOAT* pPosArray) const
 {
-    FX_FLOAT curpos = 0;
-    int count = 0;
     CPDF_Font* pFont = m_TextState.GetFont();
     FX_BOOL bVertWriting = FALSE;
     CPDF_CIDFont* pCIDFont = pFont->GetCIDFont();

@@ -171,16 +171,16 @@ void CPDF_PageRenderCache::ResetBitmap(CPDF_Stream* pStream, const CFX_DIBitmap*
     m_nCacheSize = pImageCache->EstimateSize() - oldsize;
 }
 CPDF_ImageCache::CPDF_ImageCache(CPDF_Document* pDoc, CPDF_Stream* pStream)
-    : m_pDocument(pDoc)
-    , m_pStream(pStream)
-    , m_pCachedBitmap(NULL)
-    , m_pCachedMask(NULL)
-    , m_dwCacheSize(0)
-    , m_dwTimeCount(0)
+    : m_dwTimeCount(0)
     , m_pCurBitmap(NULL)
     , m_pCurMask(NULL)
     , m_MatteColor(0)
     , m_pRenderStatus(NULL)
+    , m_pDocument(pDoc)
+    , m_pStream(pStream)
+    , m_pCachedBitmap(NULL)
+    , m_pCachedMask(NULL)
+    , m_dwCacheSize(0)
 {
 }
 CPDF_ImageCache::~CPDF_ImageCache()

@@ -544,8 +544,8 @@ FX_FILESIZE CPDF_ObjectStream::End(CPDF_Creator* pCreator)
 }
 CPDF_XRefStream::CPDF_XRefStream()
     : m_PrevOffset(0)
-    , m_iSeg(0)
     , m_dwTempObjNum(0)
+    , m_iSeg(0)
 {
 }
 FX_BOOL CPDF_XRefStream::Start()

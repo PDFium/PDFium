@@ -859,11 +859,11 @@ typedef struct _FX_FontStyle {
     FX_INT32 len;
 } FX_FontStyle;
 const FX_FontStyle g_FontStyles[] = {
-    "Bold", 4,
-    "Italic", 6,
-    "BoldItalic", 10,
-    "Reg", 3,
-    "Regular", 7,
+  { "Bold", 4 },
+  { "Italic", 6 },
+  { "BoldItalic", 10 },
+  { "Reg", 3 },
+  { "Regular", 7 },
 };
 CFX_ByteString ParseStyle(FX_LPCSTR pStyle, int iLen, int iIndex)
 {

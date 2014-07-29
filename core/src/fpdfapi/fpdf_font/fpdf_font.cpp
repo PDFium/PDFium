@@ -995,7 +995,7 @@ FX_BOOL CPDF_SimpleFont::LoadCommon()
     }
     if (m_Flags & PDFFONT_ALLCAP) {
         unsigned char lowercases[] = {'a', 'z', 0xe0, 0xf6, 0xf8, 0xfd};
-        for (int range = 0; range < sizeof lowercases / 2; range ++) {
+        for (size_t range = 0; range < sizeof lowercases / 2; range ++) {
             for (int i = lowercases[range * 2]; i <= lowercases[range * 2 + 1]; i ++) {
                 if (m_GlyphIndex[i] != 0xffff && m_pFontFile != NULL) {
                     continue;

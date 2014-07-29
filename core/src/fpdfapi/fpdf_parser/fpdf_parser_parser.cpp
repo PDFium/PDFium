@@ -1269,7 +1269,7 @@ void CPDF_Parser::GetIndirectBinary(FX_DWORD objnum, FX_LPBYTE& pBuffer, FX_DWOR
                 if (n == 1) {
                     size = totalsize - (thisoff + offset);
                 } else {
-                    FX_DWORD nextnum = syntax.GetDirectNum();
+                    syntax.GetDirectNum();  // Skip nextnum.
                     FX_DWORD nextoff = syntax.GetDirectNum();
                     size = nextoff - thisoff;
                 }

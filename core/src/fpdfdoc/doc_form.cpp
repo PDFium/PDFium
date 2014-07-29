@@ -1492,10 +1492,10 @@ const struct _SupportFieldEncoding {
     FX_LPCSTR m_name;
     FX_INT32 m_codePage;
 } g_fieldEncoding[] = {
-    "BigFive", 950,
-    "GBK", 936,
-    "Shift-JIS", 932,
-    "UHC", 949,
+    { "BigFive", 950 },
+    { "GBK", 936 },
+    { "Shift-JIS", 932 },
+    { "UHC", 949 },
 };
 static void FPDFDOC_FDF_GetFieldValue(CPDF_Dictionary *pFieldDict, CFX_WideString &csValue, CFX_ByteString &bsEncoding)
 {

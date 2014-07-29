@@ -945,7 +945,6 @@ void CPDF_DIBSource::TranslateScanline24bpp(FX_LPBYTE dest_scan, FX_LPCBYTE src_
     if (m_bDefaultDecode) {
         if (m_Family == PDFCS_DEVICERGB || m_Family == PDFCS_CALRGB) {
             if (m_bpc == 16) {
-                FX_LPBYTE dest_pos = dest_scan;
                 FX_LPCBYTE src_pos = src_scan;
                 for (int col = 0; col < m_Width; col ++) {
                     *dest_scan++ = src_pos[4];
@@ -954,7 +953,6 @@ void CPDF_DIBSource::TranslateScanline24bpp(FX_LPBYTE dest_scan, FX_LPCBYTE src_
                     src_pos += 6;
                 }
             } else if (m_bpc == 8) {
-                FX_LPBYTE dest_pos = dest_scan;
                 FX_LPCBYTE src_pos = src_scan;
                 for (int column = 0; column < m_Width; column ++) {
                     *dest_scan++ = src_pos[2];
@@ -1360,7 +1358,6 @@ void CPDF_DIBSource::DownSampleScanline(int line, FX_LPBYTE dest_scan, int dest_
                             if (src_x % 2) {
                                 src_bit_pos = 4;
                             }
-                            int value = (1 << bpc)  - 1;
                             for (FX_DWORD i = 0; i < m_nComponents; i ++) {
                                 temp[i] = (FX_BYTE)(_GetBits8(pSrcPixel, src_bit_pos, bpc) * unit_To8Bpc);
                                 src_bit_pos += bpc;

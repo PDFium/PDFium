@@ -91,7 +91,6 @@ private:
 private:
 	CFX_ArrayTemplate<CJS_GlobalData_Element*>	m_arrayGlobalData;
 	CFX_WideString								m_sFilePath;
-	CPDFDoc_Environment*								m_pApp;
 };
 
 #endif //_JS_GLOBALDATA_H_

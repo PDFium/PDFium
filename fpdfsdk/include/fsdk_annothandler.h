@@ -85,7 +85,7 @@ public:
 class CPDFSDK_BFAnnotHandler:public IPDFSDK_AnnotHandler
 {
 public:
-	CPDFSDK_BFAnnotHandler(CPDFDoc_Environment*	pApp):m_pFormFiller(NULL),m_pApp(pApp) {}
+	CPDFSDK_BFAnnotHandler(CPDFDoc_Environment* pApp) : m_pApp(pApp), m_pFormFiller(NULL) {}
 	virtual	~CPDFSDK_BFAnnotHandler() {}
 public:
 

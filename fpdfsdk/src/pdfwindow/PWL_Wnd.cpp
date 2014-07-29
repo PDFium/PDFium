@@ -14,8 +14,8 @@
 static CFX_MapPtrTemplate<FX_INT32, CPWL_Timer*>	g_TimeMap;
 
 CPWL_Timer::CPWL_Timer(CPWL_TimerHandler* pAttached, IFX_SystemHandler* pSystemHandler) : 
-	m_pAttached(pAttached),
 	m_nTimerID(0),
+	m_pAttached(pAttached),
 	m_pSystemHandler(pSystemHandler)
 {
 	ASSERT(m_pAttached != NULL);

@@ -22,7 +22,7 @@ FX_LPVOID FXFC_LoadPackage(FX_LPCSTR name)
         return NULL;
     }
     FX_BYTE buf[256];
-    size_t read = FXSYS_fread(buf, 1, 20, file);
+    FXSYS_fread(buf, 1, 20, file);
     if (*(FX_DWORD*)buf != 0x43465846) {
         FXSYS_fclose(file);
         return NULL;
@@ -45,15 +45,14 @@ FX_BOOL FXFC_LoadFile(FX_LPVOID p, FX_LPCSTR name, FX_LPBYTE& pBuffer, FX_DWORD&
     FXFC_PACKAGE* pPackage = (FXFC_PACKAGE*)p;
     FXSYS_fseek(pPackage->m_pFile, pPackage->m_IndexOffset, FXSYS_SEEK_SET);
     FX_BYTE buf[128];
-    size_t read = 0;
     for (int i = 0; i < pPackage->m_nFiles; i ++) {
-        read = FXSYS_fread(buf, pPackage->m_IndexSize, 1, pPackage->m_pFile);
+        FXSYS_fread(buf, pPackage->m_IndexSize, 1, pPackage->m_pFile);
         if (FXSYS_stricmp((FX_LPCSTR)buf, name) == 0) {
             FX_DWORD offset = *(FX_DWORD*)&buf[64];
             size = *(FX_DWORD*)&buf[68];
             pBuffer = FX_Alloc(FX_BYTE, size);
             FXSYS_fseek(pPackage->m_pFile, offset, FXSYS_SEEK_SET);
-            read = FXSYS_fread(pBuffer, size, 1, pPackage->m_pFile);
+            FXSYS_fread(pBuffer, size, 1, pPackage->m_pFile);
             if (buf[72]) {
                 FX_DWORD orig_size;
                 FX_LPBYTE comp_buf = pBuffer;
