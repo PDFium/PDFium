@@ -72,11 +72,10 @@ typedef struct _IPDF_JsPlatform
 	*			None
 	*/
 	void (*app_beep)(struct _IPDF_JsPlatform* pThis,  int nType);
-	
-	
+
 	/** 
 	* Method: app_response
-	*			Displays a dialog box containing a question and an entry field for the user to reply to the question.  
+	*			Displays a dialog box containing a question and an entry field for the user to reply to the question.
 	* Interface Version:
 	*			1
 	* Implementation Required:
@@ -86,23 +85,20 @@ typedef struct _IPDF_JsPlatform
 	*			Question	-	The question to be posed to the user.
 	*			Title		-	The title of the dialog box.
 	*			Default		-	A default value for the answer to the question. If not specified, no default value is presented.
-	*			cLabel		-	A short string to appear in front of and on the same line as the edit text field. 
-	*			bPassword	-	If true, indicates that the user's response should show as asterisks (*) or bullets (?) to mask the response, which might be sensitive information. The default is false.		
-	*			response	-	A string buffer allocated by SDK, to receive the user's response. 
+	*			cLabel		-	A short string to appear in front of and on the same line as the edit text field.
+	*			bPassword	-	If true, indicates that the user's response should show as asterisks (*) or bullets (?) to mask the response, which might be sensitive information. The default is false.
+	*			response	-	A string buffer allocated by SDK, to receive the user's response.
 	*			length		-   The length of the buffer, number of bytes. Currently, It's always be 2048.
 	* Return Value:
-	*			Number of bytes the user input text consumes, not including trailing zeros. If the text exceed 2048 bytes,
-	*			the exceeded part will be ignored.
+	*		Number of bytes the complete user input would actually require, not including trailing zeros, regardless of the value of the length
+	*		parameter or the presence of the response buffer.
 	* Comments:
-	*			No matter on what platform, the response should be always input in UTF-16LE encoding.
-	*			The return value always indicated number of bytes required for the buffer, even when there is
-	*			no buffer specified, or the buffer size is less then required. In this case, the buffer will not
-	*			be modified.
+	*		No matter on what platform, the response buffer should be always written using UTF-16LE encoding. If a response buffer is
+	*		present and the size of the user input exceeds the capacity of the buffer as specified by the length parameter, only the
+	*		first "length" bytes of the user input are to be written to the buffer.
 	*/
 	int (*app_response)(struct _IPDF_JsPlatform* pThis, FPDF_WIDESTRING Question, FPDF_WIDESTRING Title, FPDF_WIDESTRING Default, FPDF_WIDESTRING cLabel, FPDF_BOOL bPassword, void* response, int length);
-	
-	
-	
+
 	/*
 	* Method: Doc_getFilePath
 	*			Get the file path of the current document. 
