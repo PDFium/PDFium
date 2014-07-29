@@ -4181,7 +4181,7 @@ FX_BOOL CPDF_DataAvail::HaveResourceAncestor(CPDF_Dictionary *pDict)
     if (!pParentDict) {
         return FALSE;
     }
-    CPDF_Object *pRet = pParentDict->GetElement("Resource");
+    CPDF_Object *pRet = pParentDict->GetElement("Resources");
     if (pRet) {
         m_pPageResource = pRet;
         return TRUE;
@@ -4287,11 +4287,12 @@ FX_BOOL CPDF_DataAvail::IsPageAvail(FX_INT32 iPage, IFX_DownloadHints* pHints)
         }
     }
     if (m_pPageDict && !m_bNeedDownLoadResource) {
-        CPDF_Object *pRes = m_pPageDict->GetElement("Resource");
-        if (!pRes) {
+        m_pPageResource = m_pPageDict->GetElement("Resources");
+        if (!m_pPageResource) {
             m_bNeedDownLoadResource = HaveResourceAncestor(m_pPageDict);
+        } else {
+            m_bNeedDownLoadResource = TRUE;
         }
-        m_bNeedDownLoadResource = FALSE;
     }
     if (m_bNeedDownLoadResource) {
         FX_BOOL bRet = CheckResources(pHints);
