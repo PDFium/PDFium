@@ -40,7 +40,6 @@ CFX_Font::~CFX_Font()
 #endif
     if (m_Face) {
 #ifdef FOXIT_CHROME_BUILD
-        FXFT_Library library = FXFT_Get_Face_FreeType(m_Face);
         if (FXFT_Get_Face_External_Stream(m_Face)) {
             FXFT_Clear_Face_External_Stream(m_Face);
         }

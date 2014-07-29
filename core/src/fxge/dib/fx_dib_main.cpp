@@ -447,7 +447,6 @@ FX_BOOL CFX_DIBitmap::TransferMask(int dest_left, int dest_top, int width, int h
     if (width == 0 || height == 0) {
         return TRUE;
     }
-    int src_pitch = pMask->GetPitch();
     int src_bpp = pMask->GetBPP();
     int alpha;
     FX_DWORD dst_color;

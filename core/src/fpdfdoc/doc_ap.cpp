@@ -309,7 +309,6 @@ static FX_BOOL GenerateWidgetAP(CPDF_Document* pDoc, CPDF_Dictionary* pAnnotDict
     if (!pDefFont) {
         return FALSE;
     }
-    CFX_CharMap* pCharMap = pDefFont->GetCharMap();
     CPDF_Rect rcAnnot = pAnnotDict->GetRect("Rect");
     FX_INT32 nRotate = 0;
     if (CPDF_Dictionary * pMKDict = pAnnotDict->GetDict("MK")) {

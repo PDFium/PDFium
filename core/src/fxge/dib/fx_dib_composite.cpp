@@ -2951,7 +2951,6 @@ inline void _CompositeRow_Argb2Rgb_Blend_RgbByteOrder(FX_LPBYTE dest_scan, FX_LP
 }
 inline void _CompositeRow_Rgb2Argb_NoBlend_NoClip_RgbByteOrder(FX_LPBYTE dest_scan, FX_LPCBYTE src_scan, int width, int src_Bpp)
 {
-    int src_gap = src_Bpp - 3;
     for (int col = 0; col < width; col ++) {
         if (src_Bpp == 4) {
             FXARGB_SETRGBORDERDIB(dest_scan, 0xff000000 | FXARGB_GETDIB(src_scan));

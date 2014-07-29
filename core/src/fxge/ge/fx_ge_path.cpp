@@ -405,7 +405,6 @@ void CFX_PathData::Transform(const CFX_AffineMatrix* pMatrix)
         pMatrix->Transform(m_pPoints[i].m_PointX, m_pPoints[i].m_PointY);
     }
 }
-const int g_Distant[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 FX_BOOL CFX_PathData::GetZeroAreaPath(CFX_PathData& NewPath, CFX_AffineMatrix* pMatrix, FX_BOOL&bThin, FX_BOOL bAdjust) const
 {
     if (m_PointCount < 3) {

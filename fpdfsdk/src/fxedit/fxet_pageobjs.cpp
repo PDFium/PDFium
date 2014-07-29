@@ -469,30 +469,6 @@ static CPDF_TextObject* AddTextObjToPageObjects(CPDF_PageObjects* pPageObjs, FX_
 	return pTxtObj;
 }
 
-/*
-List of currently supported standard fonts:
-Courier, Courier-Bold, Courier-BoldOblique, Courier-Oblique
-Helvetica, Helvetica-Bold, Helvetica-BoldOblique, Helvetica-Oblique
-Times-Roman, Times-Bold, Times-Italic, Times-BoldItalic
-Symbol, ZapfDingbats
-*/
-
-const char* g_sFXEDITStandardFontName[] = {"Courier", "Courier-Bold", "Courier-BoldOblique", "Courier-Oblique",
-	"Helvetica", "Helvetica-Bold", "Helvetica-BoldOblique", "Helvetica-Oblique",
-	"Times-Roman", "Times-Bold", "Times-Italic", "Times-BoldItalic",
-	"Symbol", "ZapfDingbats"};
-
-static FX_BOOL FX_EDIT_IsStandardFont(const CFX_ByteString& sFontName)
-{
-	for (FX_INT32 i=0; i<14; i++)
-	{
-		if (sFontName == g_sFXEDITStandardFontName[i])
-			return TRUE;
-	}
-
-	return FALSE;
-}
-
 void IFX_Edit::GeneratePageObjects(CPDF_PageObjects* pPageObjects, IFX_Edit* pEdit,
 								   const CPDF_Point& ptOffset, const CPVT_WordRange* pRange, FX_COLORREF crText, CFX_ArrayTemplate<CPDF_TextObject*>& ObjArray)
 {

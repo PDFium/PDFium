@@ -975,8 +975,6 @@ FXFT_Face CFX_FontMapper::FindSubstFont(const CFX_ByteString& name, FX_BOOL bTru
     FX_BOOL bItalic = FALSE;
     FX_DWORD nStyle = 0;
     FX_BOOL bStyleAvail = FALSE;
-    FX_BOOL bFamilyStyleIsWhole = FALSE;
-    FX_BOOL bNextF = FALSE;
     if (iBaseFont < 12) {
         family = g_Base14FontNames[iBaseFont];
         if ((iBaseFont % 4) == 1 || (iBaseFont % 4) == 2) {
@@ -1535,7 +1533,7 @@ FX_DWORD CFX_FolderFontInfo::GetFontData(void* hFont, FX_DWORD table, FX_LPBYTE 
     }
     if (datasize && size >= datasize && pFile) {
         FXSYS_fseek(pFile, offset, FXSYS_SEEK_SET);
-        size_t readCnt = FXSYS_fread(buffer, datasize, 1, pFile);
+        FXSYS_fread(buffer, datasize, 1, pFile);
     }
     if (pFile) {
         FXSYS_fclose(pFile);

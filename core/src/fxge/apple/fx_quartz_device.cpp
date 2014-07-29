@@ -853,7 +853,6 @@ FX_BOOL CFX_QuartzDeviceDriver::CG_DrawGlypRun(int                        nChars
                              a / 255.f);
     SaveState();
     if (pGlyphMatrix) {
-        CGAffineTransform ctm = CGContextGetCTM(_context);
         CGPoint origin = CGPointMake( glyph_positions[0].x,  glyph_positions[0].y);
         origin = CGPointApplyAffineTransform(origin, matrix_cg);
         CGContextTranslateCTM(_context, origin.x, origin.y);

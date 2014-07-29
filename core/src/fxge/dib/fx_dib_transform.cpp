@@ -538,7 +538,6 @@ FX_BOOL CFX_ImageTransformer::Continue(IFX_Pause* pPause)
         int Bpp = m_Storer.GetBitmap()->GetBPP() / 8;
         int destBpp = pTransformed->GetBPP() / 8;
         if (Bpp == 1) {
-            FX_BOOL bHasAlpha = m_Storer.GetBitmap()->HasAlpha();
             FX_DWORD argb[256];
             FX_ARGB* pPal = m_Storer.GetBitmap()->GetPalette();
             if (pPal) {

@@ -128,8 +128,6 @@ void CTextPage::ProcessObject(CPDF_PageObject* pObject)
             segment_left = char_left;
             segment = "";
         }
-        CFX_WideString wCh = pText->GetFont()->UnicodeFromCharCode(charcode);
-        FX_DWORD ch = wCh.GetLength() > 0 ? wCh.GetAt(0) : charcode;
         if (space_count > 1) {
             pBaseLine = InsertTextBox(pBaseLine, baseline, leftx + segment_left, leftx + segment_right,
                                       topy, bottomy, spacew, fontsize_v, segment, pFont);
@@ -381,7 +379,6 @@ void NormalizeString(CFX_WideString& str)
                     i = j;
                     j = n;
                     for(; n <= i; n += 3) {
-                        int ret = order.GetAt(n);
                         int start = order.GetAt(n - 2);
                         int count1 = order.GetAt(n - 1);
                         int end = start + count1 ;
@@ -561,7 +558,6 @@ FX_BOOL CTextBaseLine::CanMerge(CTextBaseLine* pOther)
     FX_FLOAT dy = (FX_FLOAT)FXSYS_fabs(m_BaseLine - pOther->m_BaseLine);
     for (int i = 0; i < m_TextList.GetSize(); i ++) {
         CTextBox* pText = (CTextBox*)m_TextList.GetAt(i);
-        FX_FLOAT width = pText->m_Right - pText->m_Left;
         for (int j = 0; j < pOther->m_TextList.GetSize(); j ++) {
             CTextBox* pOtherText = (CTextBox*)pOther->m_TextList.GetAt(j);
             FX_FLOAT inter_left, inter_right;

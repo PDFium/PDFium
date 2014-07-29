@@ -318,7 +318,6 @@ int CPDF_TextPage::GetIndexAtPos(CPDF_Point point , FX_FLOAT xTorelance, FX_FLOA
     if (!m_IsParsered)	{
         return	-3;
     }
-    FX_FLOAT distance = 0;
     int pos = 0;
     int NearPos = -1;
     double xdif = 5000, ydif = 5000;
@@ -408,9 +407,6 @@ void CPDF_TextPage::GetRectsArrayByRect(CFX_FloatRect rect, CFX_RectArray& resRe
         PAGECHAR_INFO info_curchar = *(PAGECHAR_INFO*)m_charList.GetAt(pos++);
         if (info_curchar.m_Flag == FPDFTEXT_CHAR_GENERATED) {
             continue;
-        }
-        if(pos == 494) {
-            int a = 0;
         }
         if (IsRectIntersect(rect, info_curchar.m_CharBox)) {
             if(!pCurObj) {
@@ -816,9 +812,6 @@ int	CPDF_TextPage::CountBoundedSegments(FX_FLOAT left, FX_FLOAT top, FX_FLOAT ri
     FX_BOOL		segmentStatus = 0;
     FX_BOOL		IsContainPreChar = FALSE;
     while (pos < nCount) {
-        if(pos == 493) {
-            int a = 0;
-        }
         PAGECHAR_INFO charinfo = *(PAGECHAR_INFO*)m_charList.GetAt(pos);
         if(bContains && rect.Contains(charinfo.m_CharBox)) {
             if (segmentStatus == 0 || segmentStatus == 2) {
@@ -1293,7 +1286,6 @@ void CPDF_TextPage::CloseTempLine()
                     i = j;
                     j = n;
                     for(; n <= i; n += 3) {
-                        int ret = order.GetAt(n);
                         int start = order.GetAt(n - 2);
                         int count1 = order.GetAt(n - 1);
                         int end = start + count1 ;
@@ -2183,7 +2175,6 @@ CPDF_TextPageFind::CPDF_TextPageFind(const IPDF_TextPage* pTextPage)
     if (!pTextPage) {
         return;
     }
-    CPDF_ModuleMgr* pPDFModule = CPDF_ModuleMgr::Get();
     m_pTextPage = pTextPage;
     m_strText = m_pTextPage->GetPageText();
     int nCount = pTextPage->CountChars();
@@ -2499,9 +2490,6 @@ FX_BOOL CPDF_TextPageFind::IsMatchWholeWord(CFX_WideString csPageText, int start
     }
     if(startPos + char_count < csPageText.GetLength()) {
         char_right = csPageText.GetAt(startPos + char_count);
-    }
-    if(char_left == 0x61) {
-        int a = 0;
     }
     if ((char_left > 'A' && char_left < 'a') || (char_left > 'a' && char_left < 'z') || (char_left > 0xfb00 && char_left < 0xfb06) || (char_left >= '0' && char_left <= '9') ||
             (char_right > 'A' && char_right < 'a') || (char_right > 'a' && char_right < 'z') || (char_right > 0xfb00 && char_right < 0xfb06) || (char_right >= '0' && char_right <= '9')) {

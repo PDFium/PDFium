@@ -184,7 +184,6 @@ static FX_BOOL _CMap_GetCodeRange(_CMap_CodeRange& range, FX_BSTR first, FX_BSTR
     if (first.GetLength() == 0 || first.GetAt(0) != '<') {
         return FALSE;
     }
-    int num = 0;
     int i;
     for (i = 1; i < first.GetLength(); i ++)
         if (first.GetAt(i) == '>') {

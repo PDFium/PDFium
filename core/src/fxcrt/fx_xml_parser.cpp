@@ -863,9 +863,6 @@ void CXML_AttrMap::RemoveAll()
     if (!m_pMap) {
         return;
     }
-    for (int i = 0; i < m_pMap->GetSize(); i ++) {
-        CXML_AttrItem& item = (*m_pMap)[i];
-    }
     m_pMap->RemoveAll();
     delete m_pMap;
     m_pMap = NULL;

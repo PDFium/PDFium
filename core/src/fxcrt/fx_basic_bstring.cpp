@@ -947,7 +947,7 @@ CFX_ByteString CFX_ByteString::LoadFromFile(FX_BSTR filename)
     FXSYS_fseek(file, 0, FXSYS_SEEK_SET);
     CFX_ByteString str;
     FX_LPSTR buf = str.GetBuffer(len);
-    size_t readCnt = FXSYS_fread(buf, 1, len, file);
+    FXSYS_fread(buf, 1, len, file);
     str.ReleaseBuffer(len);
     FXSYS_fclose(file);
     return str;
