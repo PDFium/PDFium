@@ -11,7 +11,8 @@
 #include "../../../include/fpdfapi/fpdf_pageobj.h"
 #include "../fpdf_page/pageint.h"
 #include "render_int.h"
-#include <limits.h>
+#include "../../../../third_party/numerics/safe_math.h"
+
 static unsigned int _GetBits8(FX_LPCBYTE pData, int bitpos, int nbits)
 {
     unsigned int byte = pData[bitpos / 8];
@@ -175,27 +176,23 @@ FX_BOOL CPDF_DIBSource::Load(CPDF_Document* pDoc, const CPDF_Stream* pStream, CP
     if (!LoadColorInfo(m_pStream->GetObjNum() != 0 ? NULL : pFormResources, pPageResources)) {
         return FALSE;
     }
-    FX_DWORD src_pitch = m_bpc;
-    if (m_bpc != 0 && m_nComponents != 0) {
-        if (src_pitch > 0 && m_nComponents > (unsigned)INT_MAX / src_pitch) {
-            return FALSE;
-        }
-        src_pitch *= m_nComponents;
-        if (src_pitch > 0 && (FX_DWORD)m_Width > (unsigned)INT_MAX / src_pitch) {
-            return FALSE;
-        }
-        src_pitch *= m_Width;
-        if (src_pitch + 7 < src_pitch) {
-            return FALSE;
-        }
-        src_pitch += 7;
-        src_pitch /= 8;
-        if (src_pitch > 0 && (FX_DWORD)m_Height > (unsigned)INT_MAX / src_pitch) {
-            return FALSE;
-        }
+
+    if (m_bpc == 0 || m_nComponents == 0) {
+        return FALSE;
     }
+
+    FX_SAFE_DWORD src_pitch = m_bpc;
+    src_pitch *= m_nComponents;
+    src_pitch *= m_Width;
+    src_pitch += 7;
+    src_pitch /= 8;
+    src_pitch *= m_Height;
+    if (!src_pitch.IsValid()) {
+        return FALSE;
+    }
+
     m_pStreamAcc = FX_NEW CPDF_StreamAcc;
-    m_pStreamAcc->LoadAllData(pStream, FALSE, m_Height * src_pitch, TRUE);
+    m_pStreamAcc->LoadAllData(pStream, FALSE, src_pitch.ValueOrDie(), TRUE);
     if (m_pStreamAcc->GetSize() == 0 || m_pStreamAcc->GetData() == NULL) {
         return FALSE;
     }
@@ -218,20 +215,16 @@ FX_BOOL CPDF_DIBSource::Load(CPDF_Document* pDoc, const CPDF_Stream* pStream, CP
     } else {
         m_bpp = 24;
     }
-    if (!m_bpc || !m_nComponents) {
+
+    FX_SAFE_DWORD pitch = m_Width;
+    pitch *= m_bpp;
+    pitch += 31;
+    pitch /= 8;
+    if (!pitch.IsValid()) {
         return FALSE;
     }
-    m_Pitch = m_Width;
-    if ((FX_DWORD)m_bpp > (unsigned)INT_MAX / m_Pitch) {
-        return FALSE;
-    }
-    m_Pitch *= m_bpp;
-    if (m_Pitch + 31 < m_Pitch) {
-        return FALSE;
-    }
-    m_Pitch += 31;
-    m_Pitch = m_Pitch / 32 * 4;
-    m_pLineBuf = FX_Alloc(FX_BYTE, m_Pitch);
+  
+    m_pLineBuf = FX_Alloc(FX_BYTE, pitch.ValueOrDie());
     if (m_pColorSpace && bStdCS) {
         m_pColorSpace->EnableStdConversion(TRUE);
     }
@@ -239,18 +232,17 @@ FX_BOOL CPDF_DIBSource::Load(CPDF_Document* pDoc, const CPDF_Stream* pStream, CP
     if (m_bColorKey) {
         m_bpp = 32;
         m_AlphaFlag = 2;
-        m_Pitch = m_Width;
-        if ((FX_DWORD)m_bpp > (unsigned)INT_MAX / m_Pitch) {
+        pitch = m_Width;
+        pitch *= m_bpp;
+        pitch += 31;
+        pitch /= 8;
+        if (!pitch.IsValid()) {
             return FALSE;
         }
-        m_Pitch *= m_bpp;
-        if (m_Pitch + 31 < m_Pitch) {
-            return FALSE;
-        }
-        m_Pitch += 31;
-        m_Pitch = m_Pitch / 32 * 4;
-        m_pMaskedLine = FX_Alloc(FX_BYTE, m_Pitch);
+
+        m_pMaskedLine = FX_Alloc(FX_BYTE, pitch.ValueOrDie());
     }
+    m_Pitch = pitch.ValueOrDie();
     if (ppMask) {
         *ppMask = LoadMask(*pMatteColor);
     }
@@ -276,17 +268,14 @@ int	CPDF_DIBSource::ContinueToLoadMask()
     if (!m_bpc || !m_nComponents) {
         return 0;
     }
-    m_Pitch = m_Width;
-    if ((FX_DWORD)m_bpp > (unsigned)INT_MAX / m_Pitch) {
+    FX_SAFE_DWORD pitch = m_Width;
+    pitch *= m_bpp;
+    pitch += 31;
+    pitch /= 8;
+    if (!pitch.IsValid()) {
         return 0;
     }
-    m_Pitch *= m_bpp;
-    if (m_Pitch + 31 < m_Pitch) {
-        return 0;
-    }
-    m_Pitch += 31;
-    m_Pitch = m_Pitch / 32 * 4;
-    m_pLineBuf = FX_Alloc(FX_BYTE, m_Pitch);
+    m_pLineBuf = FX_Alloc(FX_BYTE, pitch.ValueOrDie());
     if (m_pColorSpace && m_bStdCS) {
         m_pColorSpace->EnableStdConversion(TRUE);
     }
@@ -294,18 +283,16 @@ int	CPDF_DIBSource::ContinueToLoadMask()
     if (m_bColorKey) {
         m_bpp = 32;
         m_AlphaFlag = 2;
-        m_Pitch = m_Width;
-        if ((FX_DWORD)m_bpp > (unsigned)INT_MAX / m_Pitch) {
+        pitch = m_Width;
+        pitch *= m_bpp;
+        pitch += 31;
+        pitch /= 8;
+        if (!pitch.IsValid()) {
             return 0;
         }
-        m_Pitch *= m_bpp;
-        if (m_Pitch + 31 < m_Pitch) {
-            return 0;
-        }
-        m_Pitch += 31;
-        m_Pitch = m_Pitch / 32 * 4;
-        m_pMaskedLine = FX_Alloc(FX_BYTE, m_Pitch);
+        m_pMaskedLine = FX_Alloc(FX_BYTE, pitch.ValueOrDie());
     }
+    m_Pitch = pitch.ValueOrDie();
     return 1;
 }
 int	CPDF_DIBSource::StartLoadDIBSource(CPDF_Document* pDoc, const CPDF_Stream* pStream, FX_BOOL bHasMask,
@@ -330,27 +317,23 @@ int	CPDF_DIBSource::StartLoadDIBSource(CPDF_Document* pDoc, const CPDF_Stream* p
     if (!LoadColorInfo(m_pStream->GetObjNum() != 0 ? NULL : pFormResources, pPageResources)) {
         return 0;
     }
-    FX_DWORD src_pitch = m_bpc;
-    if (m_bpc != 0 && m_nComponents != 0) {
-        if (src_pitch > 0 && m_nComponents > (unsigned)INT_MAX / src_pitch) {
-            return 0;
-        }
-        src_pitch *= m_nComponents;
-        if (src_pitch > 0 && (FX_DWORD)m_Width > (unsigned)INT_MAX / src_pitch) {
-            return 0;
-        }
-        src_pitch *= m_Width;
-        if (src_pitch + 7 < src_pitch) {
-            return 0;
-        }
-        src_pitch += 7;
-        src_pitch /= 8;
-        if (src_pitch > 0 && (FX_DWORD)m_Height > (unsigned)INT_MAX / src_pitch) {
-            return 0;
-        }
+
+    if (m_bpc == 0 || m_nComponents == 0) {
+        return 0;
     }
+
+    FX_SAFE_DWORD src_pitch = m_bpc;
+    src_pitch *= m_nComponents;
+    src_pitch *= m_Width;
+    src_pitch += 7;
+    src_pitch /= 8;
+    src_pitch *= m_Height;
+    if (!src_pitch.IsValid()) {
+        return 0;
+    }
+
     m_pStreamAcc = FX_NEW CPDF_StreamAcc;
-    m_pStreamAcc->LoadAllData(pStream, FALSE, m_Height * src_pitch, TRUE);
+    m_pStreamAcc->LoadAllData(pStream, FALSE, src_pitch.ValueOrDie(), TRUE);
     if (m_pStreamAcc->GetSize() == 0 || m_pStreamAcc->GetData() == NULL) {
         return 0;
     }
@@ -1182,16 +1165,35 @@ FX_BOOL CPDF_DIBSource::SkipToScanline(int line, IFX_Pause* pPause) const
 void CPDF_DIBSource::DownSampleScanline(int line, FX_LPBYTE dest_scan, int dest_bpp,
                                         int dest_width, FX_BOOL bFlipX, int clip_left, int clip_width) const
 {
+    if (line < 0 || dest_scan == NULL || dest_bpp <= 0 ||
+        dest_width <= 0 || clip_left < 0 || clip_width <= 0) {
+        return;
+    }
+
     FX_DWORD bpc = GetValidBpc();
     FX_DWORD src_width = m_Width;
-    FX_DWORD src_pitch = (src_width * bpc * m_nComponents + 7) / 8;
+    FX_SAFE_DWORD pitch = src_width;
+    pitch *= bpc;
+    pitch *= m_nComponents;
+    pitch += 7;
+    pitch /= 8;
+    if (!pitch.IsValid()) { 
+        return;
+    }
+
     FX_LPCBYTE pSrcLine = NULL;
     if (m_pCachedBitmap) {
         pSrcLine = m_pCachedBitmap->GetScanline(line);
     } else if (m_pDecoder) {
         pSrcLine = m_pDecoder->GetScanline(line);
     } else {
-        if (m_pStreamAcc->GetSize() >= (line + 1) * src_pitch) {
+        FX_DWORD src_pitch = pitch.ValueOrDie();
+        pitch *= (line+1);
+        if (!pitch.IsValid()) { 
+            return;
+        }
+ 
+        if (m_pStreamAcc->GetSize() >= pitch.ValueOrDie()) {
             pSrcLine = m_pStreamAcc->GetData() + line * src_pitch;
         }
     }
@@ -1201,6 +1203,15 @@ void CPDF_DIBSource::DownSampleScanline(int line, FX_LPBYTE dest_scan, int dest_
         FXSYS_memset32(dest_scan, 0xff, dest_Bpp * clip_width);
         return;
     }
+
+    FX_SAFE_INT max_src_x = clip_left;
+    max_src_x += clip_width - 1;
+    max_src_x *= src_width;
+    max_src_x /= dest_width;
+    if (!max_src_x.IsValid()) {
+        return;
+    }
+
     CFX_FixedBufGrow<FX_BYTE, 128> temp(orig_Bpp);
     if (bpc * m_nComponents == 1) {
         FX_DWORD set_argb = (FX_DWORD) - 1, reset_argb = 0;
