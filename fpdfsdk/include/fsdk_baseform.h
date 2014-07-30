@@ -60,7 +60,7 @@ public:
 
 	int								GetFieldType() const;
 	//define layout order to 2.
-	virtual int						GetLayoutOrder() {return 2;}
+	virtual int						GetLayoutOrder() const {return 2;}
 	/*
 	FIELDFLAG_READONLY
 	FIELDFLAG_REQUIRED
