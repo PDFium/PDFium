@@ -55,7 +55,7 @@ FX_BOOL CPWL_CheckBox::IsChecked() const
 	return m_bChecked;
 }
 
-FX_BOOL CPWL_CheckBox::OnLButtonUp(const CPDF_Point & point)
+FX_BOOL CPWL_CheckBox::OnLButtonUp(const CPDF_Point & point, FX_DWORD nFlag)
 {
 	if (IsReadOnly()) return FALSE;
 
@@ -63,7 +63,7 @@ FX_BOOL CPWL_CheckBox::OnLButtonUp(const CPDF_Point & point)
 	return TRUE;
 }
 
-FX_BOOL CPWL_CheckBox::OnChar(FX_WORD nChar)
+FX_BOOL CPWL_CheckBox::OnChar(FX_WORD nChar, FX_DWORD nFlag)
 {
 	SetCheck(!IsChecked());
 	return TRUE;
@@ -84,7 +84,7 @@ CFX_ByteString CPWL_RadioButton::GetClassName() const
 	return "CPWL_RadioButton";
 }
 
-FX_BOOL	CPWL_RadioButton::OnLButtonUp(const CPDF_Point & point)
+FX_BOOL	CPWL_RadioButton::OnLButtonUp(const CPDF_Point & point, FX_DWORD nFlag)
 {
 	if (IsReadOnly()) return FALSE;
 
@@ -102,7 +102,7 @@ FX_BOOL CPWL_RadioButton::IsChecked() const
 	return m_bChecked;
 }
 
-FX_BOOL CPWL_RadioButton::OnChar(FX_WORD nChar)
+FX_BOOL CPWL_RadioButton::OnChar(FX_WORD nChar, FX_DWORD nFlag)
 {
 	SetCheck(TRUE);
 	return TRUE;

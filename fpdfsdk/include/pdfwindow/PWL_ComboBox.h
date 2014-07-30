@@ -23,8 +23,8 @@ public:
 public:
 	virtual FX_BOOL				OnLButtonUp(const CPDF_Point & point, FX_DWORD nFlag);
 
-	virtual FX_BOOL				OnKeyDown(FX_WORD nChar, FX_BOOL & bExit, FX_DWORD nFlag);
-	virtual FX_BOOL				OnChar(FX_WORD nChar, FX_BOOL & bExit, FX_DWORD nFlag);
+	FX_BOOL				OnKeyDownWithExit(FX_WORD nChar, FX_BOOL & bExit, FX_DWORD nFlag);
+	FX_BOOL				OnCharWithExit(FX_WORD nChar, FX_BOOL & bExit, FX_DWORD nFlag);
 };
 
 #define PWL_COMBOBOX_BUTTON_WIDTH		13

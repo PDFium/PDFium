@@ -30,8 +30,8 @@ public:
 
 public:
 	virtual CFX_ByteString		GetClassName() const;
-	virtual FX_BOOL				OnLButtonUp(const CPDF_Point & point);
-	virtual FX_BOOL				OnChar(FX_WORD nChar);
+	virtual FX_BOOL				OnLButtonUp(const CPDF_Point & point, FX_DWORD nFlag);
+	virtual FX_BOOL				OnChar(FX_WORD nChar, FX_DWORD nFlag);
 
 	void						SetCheck(FX_BOOL bCheck);
 	FX_BOOL						IsChecked() const;
@@ -48,8 +48,8 @@ public:
 
 public:
 	virtual CFX_ByteString		GetClassName() const;
-	virtual FX_BOOL				OnLButtonUp(const CPDF_Point & point);
-	virtual FX_BOOL				OnChar(FX_WORD nChar);
+	virtual FX_BOOL				OnLButtonUp(const CPDF_Point & point, FX_DWORD nFlag);
+	virtual FX_BOOL				OnChar(FX_WORD nChar, FX_DWORD nFlag);
 
 	void						SetCheck(FX_BOOL bCheck);
 	FX_BOOL						IsChecked() const;

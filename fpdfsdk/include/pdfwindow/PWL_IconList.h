@@ -72,10 +72,10 @@ public:
 
 protected:
 	virtual void						CreateChildWnd(const PWL_CREATEPARAM & cp);
-	virtual FX_BOOL						OnLButtonDown(const CPDF_Point & point);
-	virtual FX_BOOL						OnLButtonUp(const CPDF_Point & point);
-	virtual FX_BOOL						OnMouseMove(const CPDF_Point & point);
-	virtual FX_BOOL						OnKeyDown(FX_WORD nChar);
+	virtual FX_BOOL						OnLButtonDown(const CPDF_Point & point, FX_DWORD nFlag);
+	virtual FX_BOOL						OnLButtonUp(const CPDF_Point & point, FX_DWORD nFlag);
+	virtual FX_BOOL						OnMouseMove(const CPDF_Point & point, FX_DWORD nFlag);
+	virtual FX_BOOL						OnKeyDown(FX_WORD nChar, FX_DWORD nFlag);
 
 private:
 	CPWL_IconList_Item*					GetListItem(FX_INT32 nItemIndex) const;
@@ -95,7 +95,7 @@ public:
 	CPWL_IconList(FX_INT32 nListCount);
 	virtual ~CPWL_IconList();
 
-	virtual FX_BOOL						OnMouseWheel(short zDelta, const CPDF_Point & point);
+	virtual FX_BOOL						OnMouseWheel(short zDelta, const CPDF_Point & point, FX_DWORD nFlag);
 
 	void								SetSelect(FX_INT32 nIndex);
 	void								SetTopItem(FX_INT32 nIndex);

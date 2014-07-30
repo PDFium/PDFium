@@ -192,7 +192,7 @@ void CPWL_IconList_Content::CreateChildWnd(const PWL_CREATEPARAM & cp)
 	}
 }
 
-FX_BOOL	CPWL_IconList_Content::OnLButtonDown(const CPDF_Point & point)
+FX_BOOL	CPWL_IconList_Content::OnLButtonDown(const CPDF_Point & point, FX_DWORD nFlag)
 {
 	SetFocus();
 
@@ -206,7 +206,7 @@ FX_BOOL	CPWL_IconList_Content::OnLButtonDown(const CPDF_Point & point)
 	return TRUE;
 }
 
-FX_BOOL	CPWL_IconList_Content::OnLButtonUp(const CPDF_Point & point)
+FX_BOOL	CPWL_IconList_Content::OnLButtonUp(const CPDF_Point & point, FX_DWORD nFlag)
 {
 	m_bMouseDown = FALSE;
 	ReleaseCapture();
@@ -214,7 +214,7 @@ FX_BOOL	CPWL_IconList_Content::OnLButtonUp(const CPDF_Point & point)
 	return TRUE;
 }
 
-FX_BOOL CPWL_IconList_Content::OnMouseMove(const CPDF_Point & point)
+FX_BOOL CPWL_IconList_Content::OnMouseMove(const CPDF_Point & point, FX_DWORD nFlag)
 {
 	if (m_bMouseDown)
 	{
@@ -226,7 +226,7 @@ FX_BOOL CPWL_IconList_Content::OnMouseMove(const CPDF_Point & point)
 	return TRUE;
 }
 
-FX_BOOL	CPWL_IconList_Content::OnKeyDown(FX_WORD nChar)
+FX_BOOL	CPWL_IconList_Content::OnKeyDown(FX_WORD nChar, FX_DWORD nFlag)
 {
 	switch (nChar)
 	{
@@ -552,7 +552,7 @@ void CPWL_IconList::SetIconFillColor(const CPWL_Color& color)
 	m_pListContent->SetIconFillColor(color);
 }
 
-FX_BOOL	CPWL_IconList::OnMouseWheel(short zDelta, const CPDF_Point & point)
+FX_BOOL	CPWL_IconList::OnMouseWheel(short zDelta, const CPDF_Point & point, FX_DWORD nFlag)
 {
 	CPDF_Point ptScroll = m_pListContent->GetScrollPos();
 	CPDF_Rect rcScroll = m_pListContent->GetScrollArea();
