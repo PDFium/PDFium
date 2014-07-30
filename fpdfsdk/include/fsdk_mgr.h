@@ -173,18 +173,24 @@ public:
 
 	CFX_WideString JS_fieldBrowse()
 	{
-		if(m_pInfo && m_pInfo->m_pJsPlatform && m_pInfo->m_pJsPlatform->Field_browse)
+		if (m_pInfo && m_pInfo->m_pJsPlatform && m_pInfo->m_pJsPlatform->Field_browse)
 		{
-			int nLen = m_pInfo->m_pJsPlatform->Field_browse(m_pInfo->m_pJsPlatform, NULL, 0);
-			if(nLen <= 0)
+			int nRequiredLen = m_pInfo->m_pJsPlatform->Field_browse(m_pInfo->m_pJsPlatform, NULL, 0);
+			if (nRequiredLen <= 0)
 				return L"";
-			char* pbuff = new char[nLen];
-			if(pbuff)
-				memset(pbuff, 0, nLen);
-			else	
+
+			char* pbuff = new char[nRequiredLen];
+			if (!pbuff)
 				return L"";
-			nLen = m_pInfo->m_pJsPlatform->Field_browse(m_pInfo->m_pJsPlatform, pbuff, nLen);
-			CFX_ByteString bsRet = CFX_ByteString(pbuff, nLen);
+
+			memset(pbuff, 0, nRequiredLen);
+			int nActualLen = m_pInfo->m_pJsPlatform->Field_browse(m_pInfo->m_pJsPlatform, pbuff, nRequiredLen);
+			if (nActualLen <= 0 || nActualLen > nRequiredLen)
+			{
+				delete[] pbuff;
+				return L"";
+			}
+			CFX_ByteString bsRet = CFX_ByteString(pbuff, nActualLen);
 			CFX_WideString wsRet = CFX_WideString::FromLocal(bsRet);
 			delete[] pbuff;
 			return wsRet;
@@ -193,19 +199,25 @@ public:
 	}
 
 	CFX_WideString JS_docGetFilePath()
-	{		
-		if(m_pInfo && m_pInfo->m_pJsPlatform && m_pInfo->m_pJsPlatform->Doc_getFilePath)
+	{
+		if (m_pInfo && m_pInfo->m_pJsPlatform && m_pInfo->m_pJsPlatform->Doc_getFilePath)
 		{
-			int nLen = m_pInfo->m_pJsPlatform->Doc_getFilePath(m_pInfo->m_pJsPlatform, NULL, 0);
-			if(nLen <= 0)
+			int nRequiredLen = m_pInfo->m_pJsPlatform->Doc_getFilePath(m_pInfo->m_pJsPlatform, NULL, 0);
+			if (nRequiredLen <= 0)
 				return L"";
-			char* pbuff = new char[nLen];
-			if(pbuff)
-				memset(pbuff, 0, nLen);
-			else
+
+			char* pbuff = new char[nRequiredLen];
+			if (!pbuff)
 				return L"";
-			nLen = m_pInfo->m_pJsPlatform->Doc_getFilePath(m_pInfo->m_pJsPlatform, pbuff, nLen);
-			CFX_ByteString bsRet = CFX_ByteString(pbuff, nLen);
+
+			memset(pbuff, 0, nRequiredLen);
+			int nActualLen = m_pInfo->m_pJsPlatform->Doc_getFilePath(m_pInfo->m_pJsPlatform, pbuff, nRequiredLen);
+			if (nActualLen <= 0 || nActualLen > nRequiredLen)
+			{
+				delete[] pbuff;
+				return L"";
+			}
+			CFX_ByteString bsRet = CFX_ByteString(pbuff, nActualLen);
 			CFX_WideString wsRet = CFX_WideString::FromLocal(bsRet);
 			delete[] pbuff;
 			return wsRet;
