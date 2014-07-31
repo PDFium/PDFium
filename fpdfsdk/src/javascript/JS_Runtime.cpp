@@ -104,8 +104,8 @@ void CJS_RuntimeFactory::ReleaseGlobalData()
 CJS_Runtime::CJS_Runtime(CPDFDoc_Environment * pApp) : 
 	m_pApp(pApp),
 	m_pDocument(NULL),
-	m_pFieldEventPath(NULL),
 	m_bBlocking(FALSE),
+	m_pFieldEventPath(NULL),
 	m_bRegistered(FALSE)
 {
 	m_isolate = v8::Isolate::New();

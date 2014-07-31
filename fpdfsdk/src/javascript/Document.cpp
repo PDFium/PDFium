@@ -158,11 +158,11 @@ FX_BOOL	CJS_Document::InitInstance(IFXJS_Context* cc)
 /* --------------------------------- Document --------------------------------- */
 
 Document::Document(CJS_Object* pJSObject) : CJS_EmbedObj(pJSObject),
-	m_cwBaseURL(L""),
+	m_isolate(NULL),
 	m_pIconTree(NULL),
 	m_pDocument(NULL),
-	m_bDelay(FALSE),
-	m_isolate(NULL)
+	m_cwBaseURL(L""),
+	m_bDelay(FALSE)
 {
 }
 

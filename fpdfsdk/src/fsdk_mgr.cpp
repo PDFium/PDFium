@@ -218,9 +218,14 @@ CJS_RuntimeFactory* GetJSRuntimeFactory()
 	return &s_JSRuntimeFactory;
 }
 
-CPDFDoc_Environment::CPDFDoc_Environment(CPDF_Document * pDoc):m_pInfo(NULL),m_pIFormFiller(NULL),
-								m_pAnnotHandlerMgr(NULL),m_pActionHandler(NULL),m_pJSRuntime(NULL),
-								m_pSDKDoc(NULL), m_pPDFDoc(pDoc)
+CPDFDoc_Environment::CPDFDoc_Environment(CPDF_Document* pDoc) :
+	m_pAnnotHandlerMgr(NULL),
+	m_pActionHandler(NULL),
+	m_pJSRuntime(NULL),
+	m_pInfo(NULL),
+	m_pSDKDoc(NULL),
+	m_pPDFDoc(pDoc),
+	m_pIFormFiller(NULL)
 {
 
 	m_pSysHandler = NULL;
@@ -595,7 +600,7 @@ CFX_WideString	CPDFSDK_Document::GetPath()
 }
 
 
-CPDFSDK_PageView::CPDFSDK_PageView(CPDFSDK_Document* pSDKDoc,CPDF_Page* page):m_pSDKDoc(pSDKDoc),m_page(page)
+CPDFSDK_PageView::CPDFSDK_PageView(CPDFSDK_Document* pSDKDoc,CPDF_Page* page):m_page(page),m_pSDKDoc(pSDKDoc)
 {
 	CPDFSDK_InterForm* pInterForm = pSDKDoc->GetInterForm();
 	if(pInterForm)

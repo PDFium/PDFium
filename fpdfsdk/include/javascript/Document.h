@@ -41,7 +41,7 @@ class Field;
 
 struct IconElement
 {
-	IconElement() : IconName(L""), IconStream(NULL), NextIcon(NULL){}
+	IconElement() : IconName(L""), NextIcon(NULL), IconStream(NULL) {}
 	virtual ~IconElement()
 	{
 	}

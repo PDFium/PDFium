@@ -681,10 +681,10 @@ void CPWL_Note_Contents::EnableRead(FX_BOOL bEnabled)
 /* ---------------------------------- CPWL_NoteItem ---------------------------------- */
 
 CPWL_NoteItem::CPWL_NoteItem() :
-	m_pPrivateData(NULL),
 	m_pSubject(NULL),
 	m_pDateTime(NULL),
 	m_pContents(NULL),
+	m_pPrivateData(NULL),
 	m_sAuthor(L""),
 	m_fOldItemHeight(0.0f),
 	m_bSizeChanged(FALSE),
@@ -1205,13 +1205,13 @@ CPWL_Note::CPWL_Note(IPopup_Note* pPopupNote, IPWL_NoteNotify* pNoteNotify, IPWL
 	m_pAuthor(NULL),
 	m_pIcon(NULL),
 	m_pCloseBox(NULL),
-	m_pContentsBar(NULL),
 	m_pLBBox(NULL),
 	m_pRBBox(NULL),
+	m_pContentsBar(NULL),
 	m_pOptions(NULL),
+	m_pNoteNotify(pNoteNotify),
 	m_bResizing(FALSE),
 	m_rcCaption(0,0,0,0),
-	m_pNoteNotify(pNoteNotify),
 	m_bEnalbleNotify(TRUE),
 	m_pPopupNote(pPopupNote)
 {

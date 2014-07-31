@@ -11,10 +11,11 @@
 
 /* ---------------------------- CJS_Value ---------------------------- */
 
-CJS_Value::CJS_Value(v8::Isolate* isolate) : m_isolate(isolate),m_eType(VT_unknown)
+CJS_Value::CJS_Value(v8::Isolate* isolate) : m_eType(VT_unknown),m_isolate(isolate)
 {
 }
-CJS_Value::CJS_Value(v8::Isolate* isolate, v8::Handle<v8::Value> pValue,FXJSVALUETYPE t) :m_isolate(isolate), m_pValue(pValue) , m_eType(t)
+CJS_Value::CJS_Value(v8::Isolate* isolate, v8::Handle<v8::Value> pValue,FXJSVALUETYPE t) :
+	m_pValue(pValue), m_eType(t), m_isolate(isolate)
 {
 }
 

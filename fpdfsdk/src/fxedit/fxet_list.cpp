@@ -119,7 +119,7 @@ CFX_WideString CFX_ListItem::GetText() const
 
 /* ------------------------------------ CFX_List --------------------------------- */
 
-CFX_List::CFX_List() : m_pFontMap(NULL), m_fFontSize(0.0f), m_bMultiple(FALSE) 
+CFX_List::CFX_List() : m_fFontSize(0.0f), m_pFontMap(NULL), m_bMultiple(FALSE)
 {
 }
 
@@ -507,12 +507,12 @@ void CPLST_Select::Done()
 /* ------------------------------------ CFX_ListCtrl --------------------------------- */
 
 CFX_ListCtrl::CFX_ListCtrl() : m_pNotify(NULL),
+	m_bNotifyFlag(FALSE),
 	m_ptScrollPos(0.0f,0.0f),
 	m_nSelItem(-1),
 	m_nFootIndex(-1),
-	m_bCtrlSel(FALSE),	
-	m_nCaretIndex(-1),
-	m_bNotifyFlag(FALSE)
+	m_bCtrlSel(FALSE),
+	m_nCaretIndex(-1)
 {
 }
 
