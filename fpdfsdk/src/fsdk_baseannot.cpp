@@ -596,11 +596,6 @@ CFX_ByteString CPDFSDK_Annot::GetSubType() const
 	return "";
 }
 
-void CPDFSDK_Annot::ResetAppearance()
-{
-	ASSERT(FALSE);
-}
-
 void CPDFSDK_Annot::DrawAppearance(CFX_RenderDevice* pDevice, const CPDF_Matrix* pUser2Device,
 								   CPDF_Annot::AppearanceMode mode, const CPDF_RenderOptions* pOptions)	
 {

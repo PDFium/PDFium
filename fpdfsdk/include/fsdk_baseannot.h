@@ -160,7 +160,6 @@ public:
 	
 	void						ClearCachedAP();
 	
-	virtual void				ResetAppearance();
 	void						WriteAppearance(const CFX_ByteString& sAPType, const CPDF_Rect& rcBBox, 
 		const CPDF_Matrix& matrix, const CFX_ByteString& sContents,
 		const CFX_ByteString& sAPState = "");
