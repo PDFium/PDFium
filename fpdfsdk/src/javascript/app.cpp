@@ -120,7 +120,6 @@ IMPLEMENT_JS_CLASS(CJS_App,app)
 
 app::app(CJS_Object * pJSObject) : CJS_EmbedObj(pJSObject) ,
 	m_bCalculate(true),
-	m_pRuntime(NULL),
 	m_bRuntimeHighLight(false)
 //	m_pMenuHead(NULL)
 {

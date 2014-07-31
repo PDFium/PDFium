@@ -167,7 +167,6 @@ public:
 private:
 
 	bool						m_bCalculate;	
-	CJS_Runtime*				m_pRuntime;
 	bool						m_bRuntimeHighLight;
 
 	CFX_ArrayTemplate<CJS_Timer*>	m_aTimer;

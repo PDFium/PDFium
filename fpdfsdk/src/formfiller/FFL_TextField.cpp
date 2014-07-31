@@ -10,7 +10,7 @@
 #include "../../include/formfiller/FFL_CBA_Fontmap.h"
 //#include "../include/FFL_Notify.h"
 
-CFFL_EditUndoItem::CFFL_EditUndoItem(CPWL_Edit* pEdit) : m_pEdit(pEdit)
+CFFL_EditUndoItem::CFFL_EditUndoItem(CPWL_Edit* pEdit)
 {
 }
 

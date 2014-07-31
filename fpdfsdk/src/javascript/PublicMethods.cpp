@@ -1074,7 +1074,7 @@ FX_BOOL CJS_PublicMethods::AFNumber_Format(OBJ_METHOD_PARAMS)
 	int iDec = params[0];
 	int iSepStyle = params[1];
 	int iNegStyle = params[2];
-	int icurrStyle = params[3]; //it's no use!
+	// params[3] is iCurrStyle, it's not used.
 	std::wstring wstrCurrency(params[4].operator CFX_WideString());
 	FX_BOOL bCurrencyPrepend = params[5];
 	

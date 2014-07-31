@@ -1741,7 +1741,7 @@ FX_BOOL	CPDF_VariableText_Iterator::NextLine()
 FX_BOOL	CPDF_VariableText_Iterator::PrevLine()
 {
     ASSERT(m_pVT != NULL);
-    if (CSection * pSection = m_pVT->m_SectionArray.GetAt(m_CurPos.nSecIndex)) {
+    if (m_pVT->m_SectionArray.GetAt(m_CurPos.nSecIndex)) {
         if (m_CurPos.nLineIndex > 0) {
             m_CurPos = CPVT_WordPlace(m_CurPos.nSecIndex, m_CurPos.nLineIndex - 1, -1);
             return TRUE;
@@ -1779,7 +1779,7 @@ FX_BOOL	CPDF_VariableText_Iterator::GetWord(CPVT_Word & word) const
     ASSERT(m_pVT != NULL);
     word.WordPlace = m_CurPos;
     if (CSection * pSection = m_pVT->m_SectionArray.GetAt(m_CurPos.nSecIndex)) {
-        if (CLine * pLine = pSection->m_LineArray.GetAt(m_CurPos.nLineIndex)) {
+        if (pSection->m_LineArray.GetAt(m_CurPos.nLineIndex)) {
             if (CPVT_WordInfo * pWord = pSection->m_WordArray.GetAt(m_CurPos.nWordIndex)) {
                 word.Word = pWord->Word;
                 word.nCharset = pWord->nCharset;

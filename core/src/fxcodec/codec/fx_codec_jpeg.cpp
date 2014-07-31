@@ -73,15 +73,6 @@ extern "C" {
 #define	JPEG_MARKER_AUTHORTIME	(JPEG_APP0 + 3)
 #define	JPEG_MARKER_MAXSIZE	0xFFFF
 #define	JPEG_OVERHEAD_LEN	14
-static FX_BOOL _JpegIsIccMarker(jpeg_saved_marker_ptr marker)
-{
-    if (marker->marker == JPEG_MARKER_ICC &&
-            marker->data_length >= JPEG_OVERHEAD_LEN &&
-            (FXSYS_memcmp32(marker->data, "\x49\x43\x43\x5f\x50\x52\x4f\x46\x49\x4c\x45\x00", 12) == 0)) {
-        return TRUE;
-    }
-    return FALSE;
-}
 static	FX_BOOL _JpegEmbedIccProfile(j_compress_ptr cinfo, FX_LPCBYTE icc_buf_ptr, FX_DWORD icc_length)
 {
     if(icc_buf_ptr == NULL || icc_length == 0) {

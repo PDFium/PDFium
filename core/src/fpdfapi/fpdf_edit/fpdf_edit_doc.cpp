@@ -1053,26 +1053,6 @@ CPDF_Font* CPDF_Document::AddFont(CFX_Font* pFont, int charset, FX_BOOL bVert)
     pFontDict->SetAtReference("FontDescriptor", this, pFontDesc);
     return LoadFont(pBaseDict);
 }
-static CPDF_Stream* GetFormStream(CPDF_Document* pDoc, CPDF_Object* pResObj)
-{
-    if (pResObj->GetType() != PDFOBJ_REFERENCE) {
-        return NULL;
-    }
-    CPDF_Reference* pRef = (CPDF_Reference*)pResObj;
-    FX_BOOL bForm;
-    if (pDoc->IsFormStream(pRef->GetRefObjNum(), bForm) && !bForm) {
-        return NULL;
-    }
-    pResObj = pRef->GetDirect();
-    if (pResObj->GetType() != PDFOBJ_STREAM) {
-        return NULL;
-    }
-    CPDF_Stream* pXObject = (CPDF_Stream*)pResObj;
-    if (pXObject->GetDict()->GetString(FX_BSTRC("Subtype")) != FX_BSTRC("Form")) {
-        return NULL;
-    }
-    return pXObject;
-}
 static int InsertDeletePDFPage(CPDF_Document* pDoc, CPDF_Dictionary* pPages,
                                int nPagesToGo, CPDF_Dictionary* pPage, FX_BOOL bInsert, CFX_PtrArray& stackList)
 {

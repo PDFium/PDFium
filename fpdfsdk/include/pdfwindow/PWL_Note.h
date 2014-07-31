@@ -347,7 +347,6 @@ private:
 	CPDF_Rect							m_rcCaption;
 	FX_BOOL								m_bEnalbleNotify;
 	IPopup_Note*						m_pPopupNote;
-	IPWL_NoteHandler*					m_pNoteHandler;
 	CFX_WideString						m_sReplyString;
 };
 

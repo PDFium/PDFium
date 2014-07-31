@@ -25,9 +25,6 @@ public:
 	virtual void					Redo();
 	virtual CFX_WideString			GetDescr();
 	virtual void					Release();
-	
-private:
-	CPWL_Edit*						m_pEdit;
 };
 
 struct FFL_TextFieldState

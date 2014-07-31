@@ -15,11 +15,10 @@
 //#pragma warning(disable: 4800)
 
 CFFL_Notify::CFFL_Notify(CFFL_FormFiller * pFormFiller) : 
-	m_pFormFiller(pFormFiller),
 	m_bDoActioning(FALSE),
 	m_nNotifyFlag(0)
 {
-	ASSERT(m_pFormFiller != NULL);
+	ASSERT(pFormFiller != NULL);
 }
 
 CFFL_Notify::~CFFL_Notify()

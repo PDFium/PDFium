@@ -1213,8 +1213,7 @@ CPWL_Note::CPWL_Note(IPopup_Note* pPopupNote, IPWL_NoteNotify* pNoteNotify, IPWL
 	m_rcCaption(0,0,0,0),
 	m_pNoteNotify(pNoteNotify),
 	m_bEnalbleNotify(TRUE),
-	m_pPopupNote(pPopupNote),
-	m_pNoteHandler(pNoteHandler)
+	m_pPopupNote(pPopupNote)
 {
 }
 

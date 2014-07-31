@@ -534,15 +534,6 @@ static CFX_ByteString _FPDF_ReadStringFromFile(FXSYS_FILE* pFile, FX_DWORD size)
     buffer.ReleaseBuffer(size);
     return buffer;
 }
-static CFX_ByteString _FPDF_ReadStringFromStreamFile(IFX_FileStream* pFile, FX_DWORD size)
-{
-    CFX_ByteString buffer;
-    if (!pFile->ReadBlock(buffer.GetBuffer(size), size)) {
-        return CFX_ByteString();
-    }
-    buffer.ReleaseBuffer(size);
-    return buffer;
-}
 CFX_ByteString _FPDF_LoadTableFromTT(FXSYS_FILE* pFile, FX_LPCBYTE pTables, FX_DWORD nTables, FX_DWORD tag)
 {
     for (FX_DWORD i = 0; i < nTables; i ++) {
