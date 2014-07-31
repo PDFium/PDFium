@@ -523,7 +523,7 @@ FX_BOOL CGdiDeviceDriver::GDI_StretchDIBits(const CFX_DIBitmap* pBitmap1, int de
         return FALSE;
     }
     CFX_ByteString info = CFX_WindowsDIB::GetBitmapInfo(pBitmap);
-    if (abs(dest_width) * abs(dest_height) < pBitmap1->GetWidth() * pBitmap1->GetHeight() * 4 ||
+    if ((FX_INT64)abs(dest_width) * abs(dest_height) < (FX_INT64)pBitmap1->GetWidth() * pBitmap1->GetHeight() * 4 ||
             (flags & FXDIB_INTERPOL) || (flags & FXDIB_BICUBIC_INTERPOL)) {
         SetStretchBltMode(m_hDC, HALFTONE);
     } else {
@@ -531,7 +531,7 @@ FX_BOOL CGdiDeviceDriver::GDI_StretchDIBits(const CFX_DIBitmap* pBitmap1, int de
     }
     CFX_DIBitmap* pToStrechBitmap = pBitmap;
     bool del = false;
-    if (m_DeviceClass == FXDC_PRINTER && (pBitmap->GetWidth() * pBitmap->GetHeight() > abs(dest_width) * abs(dest_height))) {
+    if (m_DeviceClass == FXDC_PRINTER && ((FX_INT64)pBitmap->GetWidth() * pBitmap->GetHeight() > (FX_INT64)abs(dest_width) * abs(dest_height))) {
         pToStrechBitmap = pBitmap->StretchTo(dest_width, dest_height);
         del = true;
     }
