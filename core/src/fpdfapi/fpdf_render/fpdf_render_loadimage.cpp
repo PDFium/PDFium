@@ -1204,7 +1204,7 @@ void CPDF_DIBSource::DownSampleScanline(int line, FX_LPBYTE dest_scan, int dest_
         return;
     }
 
-    FX_SAFE_INT max_src_x = clip_left;
+    FX_SAFE_INT32 max_src_x = clip_left;
     max_src_x += clip_width - 1;
     max_src_x *= src_width;
     max_src_x /= dest_width;
