@@ -68,10 +68,10 @@ IPDF_LinkExtract* IPDF_LinkExtract::CreateLinkExtract()
 #define  TEXT_LINEFEED			L"\n"
 #define	 TEXT_CHARRATIO_GAPDELTA	0.070
 CPDF_TextPage::CPDF_TextPage(const CPDF_Page* pPage, int flags)
-    : m_pPreTextObj(NULL),
-      m_IsParsered(FALSE),
-      m_charList(512),
+    : m_charList(512),
       m_TempCharList(50),
+      m_pPreTextObj(NULL),
+      m_IsParsered(FALSE),
       m_TextlineDir(-1),
       m_CurlineRect(0, 0, 0, 0)
 {
@@ -81,13 +81,13 @@ CPDF_TextPage::CPDF_TextPage(const CPDF_Page* pPage, int flags)
     pPage->GetDisplayMatrix(m_DisplayMatrix, 0, 0, (int) pPage->GetPageWidth(), (int)pPage->GetPageHeight(), 0);
 }
 CPDF_TextPage::CPDF_TextPage(const CPDF_Page* pPage, CPDFText_ParseOptions ParserOptions)
-    : m_pPreTextObj(NULL)
-    , m_IsParsered(FALSE)
+    : m_ParseOptions(ParserOptions)
     , m_charList(512)
     , m_TempCharList(50)
+    , m_pPreTextObj(NULL)
+    , m_IsParsered(FALSE)
     , m_TextlineDir(-1)
     , m_CurlineRect(0, 0, 0, 0)
-    , m_ParseOptions(ParserOptions)
 {
     m_pPage = pPage;
     m_parserflag = 0;
@@ -95,10 +95,10 @@ CPDF_TextPage::CPDF_TextPage(const CPDF_Page* pPage, CPDFText_ParseOptions Parse
     pPage->GetDisplayMatrix(m_DisplayMatrix, 0, 0, (int) pPage->GetPageWidth(), (int)pPage->GetPageHeight(), 0);
 }
 CPDF_TextPage::CPDF_TextPage(const CPDF_PageObjects* pPage, int flags)
-    : m_pPreTextObj(NULL),
-      m_IsParsered(FALSE),
-      m_charList(512),
+    : m_charList(512),
       m_TempCharList(50),
+      m_pPreTextObj(NULL),
+      m_IsParsered(FALSE),
       m_TextlineDir(-1),
       m_CurlineRect(0, 0, 0, 0)
 {
@@ -1036,9 +1036,6 @@ void CPDF_TextPage::ProcessObject()
         pPageObj = m_pPage->GetNextObject(pos);
         if(pPageObj) {
             if(pPageObj->m_Type == PDFPAGE_TEXT) {
-                if (nCount == 3) {
-                    nCount = nCount;
-                }
                 CFX_AffineMatrix matrix;
                 ProcessTextObject((CPDF_TextObject*)pPageObj, matrix, pos);
                 nCount++;
@@ -2169,8 +2166,8 @@ FX_BOOL	CPDF_TextPage::IsLetter(FX_WCHAR unicode)
     return TRUE;
 }
 CPDF_TextPageFind::CPDF_TextPageFind(const IPDF_TextPage* pTextPage)
-    : m_IsFind(FALSE),
-      m_pTextPage(NULL)
+    : m_pTextPage(NULL),
+      m_IsFind(FALSE)
 {
     if (!pTextPage) {
         return;

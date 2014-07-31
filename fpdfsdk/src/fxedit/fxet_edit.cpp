@@ -871,12 +871,12 @@ CFXEU_SetSecProps::CFXEU_SetSecProps(CFX_Edit * pEdit, const CPVT_WordPlace & pl
 		const CPVT_SecProps & newsecprops, const CPVT_WordProps & newwordprops, const CPVT_WordRange & range)
 		: m_pEdit(pEdit),
 		m_wpPlace(place),
+		m_wrPlace(range),
 		m_eProps(ep),
 		m_OldSecProps(oldsecprops),
 		m_NewSecProps(newsecprops),
 		m_OldWordProps(oldwordprops),
-		m_NewWordProps(newwordprops),
-		m_wrPlace(range)
+		m_NewWordProps(newwordprops)
 {
 }
 
@@ -918,10 +918,10 @@ CFXEU_SetWordProps::CFXEU_SetWordProps(CFX_Edit * pEdit, const CPVT_WordPlace & 
 		const CPVT_WordProps & oldprops, const CPVT_WordProps & newprops, const CPVT_WordRange & range)
 		: m_pEdit(pEdit),
 		m_wpPlace(place),
+		m_wrPlace(range),
 		m_eProps(ep),
 		m_OldWordProps(oldprops),
-		m_NewWordProps(newprops),
-		m_wrPlace(range)
+		m_NewWordProps(newprops)
 {
 }
 
@@ -963,19 +963,19 @@ CFX_Edit::CFX_Edit(IPDF_VariableText * pVT) :
 	m_pVT(pVT),
 	m_pNotify(NULL),
 	m_pOprNotify(NULL),
+	m_pVTProvide(NULL),
 	m_wpCaret(-1,-1,-1),
 	m_wpOldCaret(-1,-1,-1),
+	m_SelState(),
 	m_ptScrollPos(0,0),
 	m_ptRefreshScrollPos(0,0),
 	m_bEnableScroll(FALSE),
-	m_bEnableOverflow(FALSE),
-	m_pVTProvide(NULL),
 	m_pIterator(NULL),
-	m_SelState(),
 	m_ptCaret(0.0f,0.0f),
 	m_Undo(FX_EDIT_UNDO_MAXITEM),
 	m_nAlignment(0),
 	m_bNotifyFlag(FALSE),
+	m_bEnableOverflow(FALSE),
 	m_bEnableRefresh(TRUE),
 	m_rcOldContent(0.0f,0.0f,0.0f,0.0f),
 	m_bEnableUndo(TRUE),

@@ -164,8 +164,9 @@ class CJS_Runtime;
 class CJS_Timer
 {
 public:
-	CJS_Timer(CJS_EmbedObj * pObj,CPDFDoc_Environment* pApp): m_pEmbedObj(pObj), 
+	CJS_Timer(CJS_EmbedObj * pObj,CPDFDoc_Environment* pApp):
 		m_nTimerID(0), 
+		m_pEmbedObj(pObj), 
 		m_bProcessing(FALSE),
 		m_dwStartTime(0),
 		m_dwTimeOut(0),

@@ -762,7 +762,6 @@ private:
 	CFX_Edit_Undo							m_Undo;
 	FX_INT32								m_nAlignment;
 	FX_BOOL									m_bNotifyFlag;
-	FX_BOOL									m_bTextFullFlag;
 	FX_BOOL									m_bEnableOverflow;
 	FX_BOOL									m_bEnableRefresh;
 	CPDF_Rect								m_rcOldContent;
