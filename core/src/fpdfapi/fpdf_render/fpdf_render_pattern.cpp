@@ -662,6 +662,32 @@ struct CPDF_PatchDrawer {
         }
     }
 };
+
+FX_BOOL _CheckCoonTensorPara(const CPDF_MeshStream &stream)
+{
+    FX_BOOL bCoorBits = ( stream.m_nCoordBits== 1   ||
+                          stream.m_nCoordBits == 2  ||
+                          stream.m_nCoordBits == 4  ||
+                          stream.m_nCoordBits == 8  ||
+                          stream.m_nCoordBits == 12 ||
+                          stream.m_nCoordBits == 16 ||
+                          stream.m_nCoordBits == 24 ||
+                          stream.m_nCoordBits == 32   );
+
+    FX_BOOL bCompBits = ( stream.m_nCompBits == 1  || 
+                          stream.m_nCompBits == 2  ||
+                          stream.m_nCompBits == 4  ||
+                          stream.m_nCompBits == 8  ||
+                          stream.m_nCompBits == 12 ||
+                          stream.m_nCompBits == 16   );
+
+    FX_BOOL bFlagBits = ( stream.m_nFlagBits == 2  ||
+                          stream.m_nFlagBits == 4  ||
+                          stream.m_nFlagBits == 8    );
+
+    return bCoorBits && bCompBits && bFlagBits; 
+}
+
 static void _DrawCoonPatchMeshes(FX_BOOL bTensor, CFX_DIBitmap* pBitmap, CFX_AffineMatrix* pObject2Bitmap,
                                  CPDF_Stream* pShadingStream, CPDF_Function** pFuncs, int nFuncs,
                                  CPDF_ColorSpace* pCS, int fill_mode, int alpha)
@@ -676,6 +702,11 @@ static void _DrawCoonPatchMeshes(FX_BOOL bTensor, CFX_DIBitmap* pBitmap, CFX_Aff
     if (!stream.Load(pShadingStream, pFuncs, nFuncs, pCS)) {
         return;
     }
+
+    if (!_CheckCoonTensorPara(stream)) {
+        return;
+    }
+ 
     CPDF_PatchDrawer patch;
     patch.alpha = alpha;
     patch.pDevice = &device;
@@ -687,20 +718,19 @@ static void _DrawCoonPatchMeshes(FX_BOOL bTensor, CFX_DIBitmap* pBitmap, CFX_Aff
         pPoints[i].m_Flag = FXPT_BEZIERTO;
     }
     CFX_FloatPoint coords[16];
-    for (int i = 0; i < 16; i ++)
-    {
+    for (int i = 0; i < 16; i ++) {
         coords[i].Set(0.0f, 0.0f);
     }
 
     int point_count = bTensor ? 16 : 12;
     while (!stream.m_BitStream.IsEOF()) {
         FX_DWORD flag = stream.GetFlag();
-        int iStartPoint = 0, iStartColor = 0, i;
+        int iStartPoint = 0, iStartColor = 0, i = 0;
         if (flag) {
             iStartPoint = 4;
             iStartColor = 2;
             CFX_FloatPoint tempCoords[4];
-            for (int i = 0; i < 4; i ++) {
+            for (i = 0; i < 4; i ++) {
                 tempCoords[i] = coords[(flag * 3 + i) % 12];
             }
             FXSYS_memcpy32(coords, tempCoords, sizeof(CFX_FloatPoint) * 4);
