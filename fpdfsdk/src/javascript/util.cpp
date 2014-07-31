@@ -322,12 +322,12 @@ FX_BOOL util::printd(OBJ_METHOD_PARAMS)
 		};
 
 		stru_TbConvertAd cTableAd[] ={
-			(FX_LPCWSTR)L"m", iMonth+1,
-				(FX_LPCWSTR)L"d", iDay,
-				(FX_LPCWSTR)L"H", iHour,
-				(FX_LPCWSTR)L"h", iHour>12?iHour-12:iHour,
-				(FX_LPCWSTR)L"M", iMin,
-				(FX_LPCWSTR)L"s", iSec
+			{ (FX_LPCWSTR)L"m", iMonth+1 },
+			{ (FX_LPCWSTR)L"d", iDay },
+			{ (FX_LPCWSTR)L"H", iHour },
+			{ (FX_LPCWSTR)L"h", iHour>12?iHour-12:iHour },
+			{ (FX_LPCWSTR)L"M", iMin },
+			{ (FX_LPCWSTR)L"s", iSec },
 		};
 
 		//cFormat = strFormat.GetBuffer(strFormat.GetLength()+1);
@@ -418,12 +418,12 @@ void util::printd(const std::wstring &cFormat2, CJS_Date jsDate, bool bXFAPictur
 	};
 
 	stru_TbConvertAd cTableAd[] ={
-		(FX_LPCWSTR)L"m", iMonth+1,
-			(FX_LPCWSTR)L"d", iDay,
-			(FX_LPCWSTR)L"H", iHour,
-			(FX_LPCWSTR)L"h", iHour>12?iHour-12:iHour,
-			(FX_LPCWSTR)L"M", iMin,
-			(FX_LPCWSTR)L"s", iSec
+		{ (FX_LPCWSTR)L"m", iMonth+1 },
+		{ (FX_LPCWSTR)L"d", iDay },
+		{ (FX_LPCWSTR)L"H", iHour },
+		{ (FX_LPCWSTR)L"h", iHour>12?iHour-12:iHour },
+		{ (FX_LPCWSTR)L"M", iMin },
+		{ (FX_LPCWSTR)L"s", iSec },
 	};
 
 	//cFormat = strFormat.GetBuffer(strFormat.GetLength()+1);
