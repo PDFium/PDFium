@@ -919,52 +919,62 @@ FX_DWORD CPDF_DIBSource::GetValidBpc() const
             }
         }
     }
+    if (bpc != 1 && bpc != 2 && bpc != 4 && bpc != 8 && bpc != 12 && bpc != 16) {
+        bpc = 0;
+    }
+
     return bpc;
 }
 #define NORMALCOLOR_MAX(color, max) (color) > (max) ? (max) : (color) < 0 ? 0 : (color);
 void CPDF_DIBSource::TranslateScanline24bpp(FX_LPBYTE dest_scan, FX_LPCBYTE src_scan) const
 {
-    int max_data = (1 << m_bpc) - 1;
+    FX_DWORD bpc = GetValidBpc();
+    if (bpc == 0) {
+        return;
+    }
+    int max_data = (1 << bpc) - 1;
     if (m_bDefaultDecode) {
         if (m_Family == PDFCS_DEVICERGB || m_Family == PDFCS_CALRGB) {
-            if (m_bpc == 16) {
-                FX_LPCBYTE src_pos = src_scan;
-                for (int col = 0; col < m_Width; col ++) {
-                    *dest_scan++ = src_pos[4];
-                    *dest_scan++ = src_pos[2];
-                    *dest_scan++ = *src_pos;
-                    src_pos += 6;
-                }
-            } else if (m_bpc == 8) {
-                FX_LPCBYTE src_pos = src_scan;
-                for (int column = 0; column < m_Width; column ++) {
-                    *dest_scan++ = src_pos[2];
-                    *dest_scan++ = src_pos[1];
-                    *dest_scan++ = *src_pos;
-                    src_pos += 3;
-                }
-            } else {
-                int src_bit_pos = 0;
-                int dest_byte_pos = 0;
-                FX_DWORD bpc = GetValidBpc();
-                for (int column = 0; column < m_Width; column ++) {
-                    int R = _GetBits8(src_scan, src_bit_pos, bpc);
-                    src_bit_pos += bpc;
-                    int G = _GetBits8(src_scan, src_bit_pos, bpc);
-                    src_bit_pos += bpc;
-                    int B = _GetBits8(src_scan, src_bit_pos, bpc);
-                    src_bit_pos += bpc;
-                    R = NORMALCOLOR_MAX(R, max_data);
-                    G = NORMALCOLOR_MAX(G, max_data);
-                    B = NORMALCOLOR_MAX(B, max_data);
-                    dest_scan[dest_byte_pos] = B * 255 / max_data;
-                    dest_scan[dest_byte_pos + 1] = G * 255 / max_data;
-                    dest_scan[dest_byte_pos + 2] = R * 255 / max_data;
-                    dest_byte_pos += 3;
-                }
+            FX_LPCBYTE src_pos = src_scan;
+            switch (bpc) {
+                case 16:
+                    for (int col = 0; col < m_Width; col ++) {
+                        *dest_scan++ = src_pos[4];
+                        *dest_scan++ = src_pos[2];
+                        *dest_scan++ = *src_pos;
+                        src_pos += 6;
+                    }
+                    break;
+                case 8:
+                    for (int column = 0; column < m_Width; column ++) {
+                        *dest_scan++ = src_pos[2];
+                        *dest_scan++ = src_pos[1];
+                        *dest_scan++ = *src_pos;
+                        src_pos += 3;
+                    }
+                    break;
+                default:
+                    int src_bit_pos = 0;
+                    int dest_byte_pos = 0;
+                    for (int column = 0; column < m_Width; column ++) {
+                        int R = _GetBits8(src_scan, src_bit_pos, bpc);
+                        src_bit_pos += bpc;
+                        int G = _GetBits8(src_scan, src_bit_pos, bpc);
+                        src_bit_pos += bpc;
+                        int B = _GetBits8(src_scan, src_bit_pos, bpc);
+                        src_bit_pos += bpc;
+                        R = NORMALCOLOR_MAX(R, max_data);
+                        G = NORMALCOLOR_MAX(G, max_data);
+                        B = NORMALCOLOR_MAX(B, max_data);
+                        dest_scan[dest_byte_pos] = B * 255 / max_data;
+                        dest_scan[dest_byte_pos + 1] = G * 255 / max_data;
+                        dest_scan[dest_byte_pos + 2] = R * 255 / max_data;
+                        dest_byte_pos += 3;
+                    }
+                    break;
             }
             return;
-        } else if (m_bpc == 8) {
+        } else if (bpc == 8) {
             if (m_nComponents == m_pColorSpace->CountComponents())
                 m_pColorSpace->TranslateImageLine(dest_scan, src_scan, m_Width, m_Width, m_Height,
                                                   m_bLoadMask && m_GroupFamily == PDFCS_DEVICECMYK && m_Family == PDFCS_DEVICECMYK);
@@ -974,7 +984,7 @@ void CPDF_DIBSource::TranslateScanline24bpp(FX_LPBYTE dest_scan, FX_LPCBYTE src_
     CFX_FixedBufGrow<FX_FLOAT, 16> color_values1(m_nComponents);
     FX_FLOAT* color_values = color_values1;
     FX_FLOAT R = 0.0f, G = 0.0f, B = 0.0f;
-    if (m_bpc == 8) {
+    if (bpc == 8) {
         int src_byte_pos = 0;
         int dest_byte_pos = 0;
         for (int column = 0; column < m_Width; column ++) {
