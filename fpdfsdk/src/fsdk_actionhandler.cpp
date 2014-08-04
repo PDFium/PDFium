@@ -12,7 +12,6 @@
 /* -------------------------- CBA_ActionHandler -------------------------- */
 
 CPDFSDK_ActionHandler::CPDFSDK_ActionHandler(CPDFDoc_Environment* pEvi) : 
-	m_pEvi(pEvi),
 	m_pFormActionHandler(NULL),
 	m_pMediaActionHandler(NULL)
 {
@@ -269,7 +268,6 @@ FX_BOOL	CPDFSDK_ActionHandler::ExecuteDocumentPageAction(const CPDF_Action& acti
 
 FX_BOOL	CPDFSDK_ActionHandler::IsValidField(CPDFSDK_Document* pDocument, CPDF_Dictionary* pFieldDict)
 {
-	ASSERT(m_pEvi != NULL);
 	ASSERT(pDocument != NULL);
 	ASSERT(pFieldDict != NULL);
 

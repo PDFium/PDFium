@@ -73,7 +73,6 @@ private:
 	void				DoAction_SetOCGState(CPDFSDK_Document* pDocument, /*CReader_DocView* pDocView,*/ const CPDF_Action& action);
 	
 private:
-	CPDFDoc_Environment*			m_pEvi;
 	CPDFSDK_FormActionHandler*		m_pFormActionHandler;
 	CPDFSDK_MediaActionHandler*		m_pMediaActionHandler;
 };
