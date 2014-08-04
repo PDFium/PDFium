@@ -3234,10 +3234,9 @@ void CPDF_DataAvail::ResetFirstCheck(int iPage)
 }
 FX_BOOL CPDF_DataAvail::CheckPage(IFX_DownloadHints* pHints)
 {
-    FX_DWORD i = 0;
-    FX_DWORD iLen = m_PageObjList.GetSize();
+    FX_DWORD iPageObjs = m_PageObjList.GetSize();
     CFX_DWordArray UnavailObjList;
-    for (; i < iLen; ++i) {
+    for (FX_DWORD i = 0; i < iPageObjs; ++i) {
         FX_DWORD dwPageObjNum = m_PageObjList.GetAt(i);
         FX_BOOL bExist = FALSE;
         CPDF_Object *pObj = GetObject(dwPageObjNum, pHints, &bExist);
@@ -3276,16 +3275,15 @@ FX_BOOL CPDF_DataAvail::CheckPage(IFX_DownloadHints* pHints)
         m_PageObjList.Append(UnavailObjList);
         return FALSE;
     }
-    i = 0;
-    iLen = m_PagesArray.GetSize();
-    for (; i < iLen; ++i) {
+    FX_DWORD iPages = m_PagesArray.GetSize();
+    for (FX_DWORD i = 0; i < iPages; i++) {
         CPDF_Object *pPages = (CPDF_Object *)m_PagesArray.GetAt(i);
         if (!pPages) {
             continue;
         }
         if (!GetPageKids(m_pCurrentParser, pPages)) {
             pPages->Release();
-            while (i++ < iLen) {
+            while (++i < iPages) {
                 pPages = (CPDF_Object *)m_PagesArray.GetAt(i);
                 pPages->Release();
             }
@@ -3298,7 +3296,6 @@ FX_BOOL CPDF_DataAvail::CheckPage(IFX_DownloadHints* pHints)
     m_PagesArray.RemoveAll();
     if (!m_PageObjList.GetSize()) {
         m_docStatus = PDF_DATAAVAIL_DONE;
-        return TRUE;
     }
     return TRUE;
 }
