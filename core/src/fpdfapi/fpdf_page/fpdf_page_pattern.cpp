@@ -6,6 +6,22 @@
 
 #include "../../../include/fpdfapi/fpdf_page.h"
 #include "pageint.h"
+
+CPDF_Pattern::CPDF_Pattern(const CFX_AffineMatrix* pParentMatrix) :
+    m_pPatternObj(NULL), m_PatternType(PATTERN_TILING), m_pDocument(NULL), m_pColor(NULL)
+{
+    if (pParentMatrix) {
+        m_ParentMatrix = *pParentMatrix;
+    }
+}
+
+CPDF_Pattern::~CPDF_Pattern()
+{
+    if (m_pColor) {
+        m_pColor->SetValue(NULL, NULL, 0);
+        m_pColor = NULL;
+    }
+}
 CPDF_TilingPattern::CPDF_TilingPattern(CPDF_Document* pDoc, CPDF_Object* pPatternObj, const CFX_AffineMatrix* parentMatrix) :
     CPDF_Pattern(parentMatrix)
 {
@@ -25,6 +41,7 @@ CPDF_TilingPattern::~CPDF_TilingPattern()
 {
     if (m_pForm) {
         delete m_pForm;
+        m_pForm = NULL;
     }
 }
 FX_BOOL CPDF_TilingPattern::Load()

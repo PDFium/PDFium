@@ -730,27 +730,25 @@ protected:
 class CPDF_Pattern : public CFX_Object
 {
 public:
+   
+    virtual ~CPDF_Pattern();
+    void SaveColor(CPDF_Color* pColor) {m_pColor = pColor;}
 
-    virtual ~CPDF_Pattern() {}
+    CPDF_Object*                m_pPatternObj;
 
-    CPDF_Object*			m_pPatternObj;
+    int                         m_PatternType;
 
-    int						m_PatternType;
+    CFX_AffineMatrix            m_Pattern2Form;
+    CFX_AffineMatrix            m_ParentMatrix;
 
-    CFX_AffineMatrix		m_Pattern2Form;
-    CFX_AffineMatrix		m_ParentMatrix;
-
-    CPDF_Document*			m_pDocument;
+    CPDF_Document*              m_pDocument;
+    CPDF_Color*                 m_pColor;
 
 protected:
-
-    CPDF_Pattern(const CFX_AffineMatrix* pParentMatrix)
-    {
-        if (pParentMatrix) {
-            m_ParentMatrix = *pParentMatrix;
-        }
-    }
+    
+    CPDF_Pattern(const CFX_AffineMatrix* pParentMatrix);
 };
+
 class CPDF_TilingPattern : public CPDF_Pattern
 {
 public:

@@ -1269,6 +1269,7 @@ void CPDF_Color::ReleaseBuffer()
         PatternValue* pvalue = (PatternValue*)m_pBuffer;
         CPDF_Pattern* pPattern = pvalue->m_pPattern;
         if (pPattern && pPattern->m_pDocument) {
+            pPattern->SaveColor(NULL);
             pPattern->m_pDocument->GetPageData()->ReleasePattern(pPattern->m_pPatternObj);
         }
     }
@@ -1329,6 +1330,9 @@ void CPDF_Color::SetValue(CPDF_Pattern* pPattern, FX_FLOAT* comps, int ncomps)
     }
     pvalue->m_nComps = ncomps;
     pvalue->m_pPattern = pPattern;
+    if (pPattern) {
+        pPattern->SaveColor(this);
+    }
     if (ncomps) {
         FXSYS_memcpy32(pvalue->m_Comps, comps, ncomps * sizeof(FX_FLOAT));
     }
