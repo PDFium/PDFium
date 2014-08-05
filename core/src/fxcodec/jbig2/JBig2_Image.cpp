@@ -776,9 +776,14 @@ void CJBig2_Image::expand(FX_INT32 h, FX_BOOL v)
 }
 FX_BOOL CJBig2_Image::composeTo_opt2(CJBig2_Image *pDst, FX_INT32 x, FX_INT32 y, JBig2ComposeOp op)
 {
-    FX_INT32 xs0, ys0, xs1, ys1, xd0, yd0, xd1, yd1, xx, yy, w, h, middleDwords, lineLeft;
-    FX_DWORD s1, d1, d2, shift, shift1, shift2, tmp, tmp1, tmp2, maskL, maskR, maskM;
-    FX_BYTE *lineSrc, *lineDst, *sp, *dp;
+    FX_INT32 xs0 = 0, ys0  = 0, xs1  = 0, ys1   = 0, xd0    = 0, yd0          = 0, xd1      = 0, 
+             yd1 = 0, xx   = 0, yy   = 0, w     = 0, h      = 0, middleDwords = 0, lineLeft = 0;
+
+    FX_DWORD s1  = 0, d1   = 0, d2   = 0, shift = 0, shift1 = 0, shift2       = 0, 
+             tmp = 0, tmp1 = 0, tmp2 = 0, maskL = 0, maskR  = 0, maskM        = 0;
+
+    FX_BYTE *lineSrc = NULL, *lineDst = NULL, *sp = NULL, *dp = NULL;
+
     if (!m_pData) {
         return FALSE;
     }
@@ -787,8 +792,6 @@ FX_BOOL CJBig2_Image::composeTo_opt2(CJBig2_Image *pDst, FX_INT32 x, FX_INT32 y,
     }
     if(y < 0) {
         ys0 = -y;
-    } else {
-        ys0 = 0;
     }
     if(y + m_nHeight > pDst->m_nHeight) {
         ys1 = pDst->m_nHeight - y;
@@ -797,8 +800,6 @@ FX_BOOL CJBig2_Image::composeTo_opt2(CJBig2_Image *pDst, FX_INT32 x, FX_INT32 y,
     }
     if(x < 0) {
         xs0 = -x;
-    } else {
-        xs0 = 0;
     }
     if(x + m_nWidth > pDst->m_nWidth) {
         xs1 = pDst->m_nWidth - x;
@@ -810,14 +811,10 @@ FX_BOOL CJBig2_Image::composeTo_opt2(CJBig2_Image *pDst, FX_INT32 x, FX_INT32 y,
     }
     w = xs1 - xs0;
     h = ys1 - ys0;
-    if(y < 0) {
-        yd0 = 0;
-    } else {
+    if(y >= 0) {
         yd0 = y;
-    }
-    if(x < 0) {
-        xd0 = 0;
-    } else {
+    } 
+    if(x >= 0) {
         xd0 = x;
     }
     xd1 = xd0 + w;
