@@ -192,8 +192,11 @@ FX_BOOL CPDF_StructTreeImpl::AddTopLevelNode(CPDF_Dictionary* pDict, CPDF_Struct
         FX_DWORD i;
         FX_BOOL bSave = FALSE;
         for (i = 0; i < pTopKids->GetCount(); i ++) {
-            CPDF_Reference* pKidRef = (CPDF_Reference*)pTopKids->GetElement(i);
-            if (pKidRef->GetType() != PDFOBJ_REFERENCE || pKidRef->GetRefObjNum() != pDict->GetObjNum()) {
+            CPDF_Object* pKidRef = pTopKids->GetElement(i);
+            if (pKidRef == NULL || pKidRef->GetType() != PDFOBJ_REFERENCE) {
+                continue;
+            }
+            if (((CPDF_Reference*) pKidRef)->GetRefObjNum() != pDict->GetObjNum()) {
                 continue;
             }
             if (m_Kids[i]) {

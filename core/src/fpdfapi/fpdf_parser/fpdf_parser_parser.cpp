@@ -1126,19 +1126,19 @@ CPDF_Array* CPDF_Parser::GetIDArray()
 }
 FX_DWORD CPDF_Parser::GetRootObjNum()
 {
-    CPDF_Reference* pRef = m_pTrailer ? (CPDF_Reference*)m_pTrailer->GetElement(FX_BSTRC("Root")) : NULL;
+    CPDF_Object* pRef = m_pTrailer ? m_pTrailer->GetElement(FX_BSTRC("Root")) : NULL;
     if (pRef == NULL || pRef->GetType() != PDFOBJ_REFERENCE) {
         return 0;
     }
-    return pRef->GetRefObjNum();
+    return ((CPDF_Reference*) pRef)->GetRefObjNum();
 }
 FX_DWORD CPDF_Parser::GetInfoObjNum()
 {
-    CPDF_Reference* pRef = m_pTrailer ? (CPDF_Reference*)m_pTrailer->GetElement(FX_BSTRC("Info")) : NULL;
+    CPDF_Object* pRef = m_pTrailer ? m_pTrailer->GetElement(FX_BSTRC("Info")) : NULL;
     if (pRef == NULL || pRef->GetType() != PDFOBJ_REFERENCE) {
         return 0;
     }
-    return pRef->GetRefObjNum();
+    return ((CPDF_Reference*) pRef)->GetRefObjNum();
 }
 FX_BOOL CPDF_Parser::IsFormStream(FX_DWORD objnum, FX_BOOL& bForm)
 {
@@ -1592,9 +1592,9 @@ FX_DWORD CPDF_Parser::StartAsynParse(IFX_FileRead* pFileAccess, FX_BOOL bReParse
         }
     }
     if (m_pSecurityHandler && m_pSecurityHandler->IsMetadataEncrypted()) {
-        CPDF_Reference* pMetadata = (CPDF_Reference*)m_pDocument->GetRoot()->GetElement(FX_BSTRC("Metadata"));
+        CPDF_Object* pMetadata = m_pDocument->GetRoot()->GetElement(FX_BSTRC("Metadata"));
         if (pMetadata && pMetadata->GetType() == PDFOBJ_REFERENCE) {
-            m_Syntax.m_MetadataObjnum = pMetadata->GetRefObjNum();
+            m_Syntax.m_MetadataObjnum = ((CPDF_Reference*) pMetadata)->GetRefObjNum();
         }
     }
     return PDFPARSE_ERROR_SUCCESS;
@@ -3319,8 +3319,10 @@ FX_BOOL CPDF_DataAvail::GetPageKids(CPDF_Parser *pParser, CPDF_Object *pPages)
         case PDFOBJ_ARRAY: {
                 CPDF_Array *pKidsArray = (CPDF_Array *)pKids;
                 for (FX_DWORD i = 0; i < pKidsArray->GetCount(); ++i) {
-                    CPDF_Reference *pKid = (CPDF_Reference *)pKidsArray->GetElement(i);
-                    m_PageObjList.Add(pKid->GetRefObjNum());
+                    CPDF_Object *pKid = (CPDF_Object *)pKidsArray->GetElement(i);
+                    if (pKid && pKid->GetType() == PDFOBJ_REFERENCE) {
+                        m_PageObjList.Add(((CPDF_Reference *)pKid)->GetRefObjNum());
+                    }
                 }
             }
             break;

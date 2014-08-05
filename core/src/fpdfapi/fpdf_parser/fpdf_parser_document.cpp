@@ -192,9 +192,9 @@ int CPDF_Document::_FindPageIndex(CPDF_Dictionary* pNode, FX_DWORD& skip_count, 
         }
         if (count && count == pKidList->GetCount()) {
             for (FX_DWORD i = 0; i < count; i ++) {
-                CPDF_Reference* pKid = (CPDF_Reference*)pKidList->GetElement(i);
+                CPDF_Object* pKid = pKidList->GetElement(i);
                 if (pKid && pKid->GetType() == PDFOBJ_REFERENCE) {
-                    if (pKid->GetRefObjNum() == objnum) {
+                    if (((CPDF_Reference*) pKid)->GetRefObjNum() == objnum) {
                         m_PageList.SetAt(index + i, objnum);
                         return index + i;
                     }
@@ -345,8 +345,11 @@ FX_BOOL CPDF_Document::IsContentUsedElsewhere(FX_DWORD objnum, CPDF_Dictionary* 
         if (pContents->GetDirectType() == PDFOBJ_ARRAY) {
             CPDF_Array* pArray = (CPDF_Array*)pContents->GetDirect();
             for (FX_DWORD j = 0; j < pArray->GetCount(); j ++) {
-                CPDF_Reference* pRef = (CPDF_Reference*)pArray->GetElement(j);
-                if (pRef->GetRefObjNum() == objnum) {
+                CPDF_Object* pRef = pArray->GetElement(j);
+                if (pRef == NULL || pRef->GetType() != PDFOBJ_REFERENCE) {
+                    continue;
+                }
+                if (((CPDF_Reference*) pRef)->GetRefObjNum() == objnum) {
                     return TRUE;
                 }
             }
