@@ -268,21 +268,16 @@ FX_BOOL	CPDFSDK_ActionHandler::ExecuteDocumentPageAction(const CPDF_Action& acti
 
 FX_BOOL	CPDFSDK_ActionHandler::IsValidField(CPDFSDK_Document* pDocument, CPDF_Dictionary* pFieldDict)
 {
-	ASSERT(pDocument != NULL);
-	ASSERT(pFieldDict != NULL);
+  ASSERT(pDocument != NULL);
+  ASSERT(pFieldDict != NULL);
 
-	if (1/*m_pApp->IsValidDocument(pDocument)*/)
-	{
-		CPDFSDK_InterForm* pInterForm = pDocument->GetInterForm();
-		ASSERT(pInterForm != NULL);
+  CPDFSDK_InterForm* pInterForm = pDocument->GetInterForm();
+  ASSERT(pInterForm != NULL);
 
-		CPDF_InterForm* pPDFInterForm = pInterForm->GetInterForm();
-		ASSERT(pPDFInterForm != NULL);
+  CPDF_InterForm* pPDFInterForm = pInterForm->GetInterForm();
+  ASSERT(pPDFInterForm != NULL);
 
-		return pPDFInterForm->GetFieldByDict(pFieldDict) != NULL;
-	}
-
-	return FALSE;
+  return pPDFInterForm->GetFieldByDict(pFieldDict) != NULL;
 }
 
 FX_BOOL	CPDFSDK_ActionHandler::ExecuteFieldAction(const CPDF_Action& action, CPDF_AAction::AActionType type, 
