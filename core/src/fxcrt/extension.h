@@ -73,7 +73,7 @@ public:
         FX_SAFE_FILESIZE pos = size;
         pos += offset;
 
-        if (!pos.IsValid() || pos.ValueOrDie() >= m_pFile->GetSize()) {
+        if (!pos.IsValid() || pos.ValueOrDie() > m_pFile->GetSize()) {
             return FALSE;
         }
 
@@ -95,7 +95,7 @@ public:
 
         if (m_bUseRange) {
             pos += m_nOffset;
-            if (!pos.IsValid() || pos.ValueOrDie() >= (size_t)GetSize()) {
+            if (!pos.IsValid() || pos.ValueOrDie() > (size_t)GetSize()) {
                 return FALSE;
             }
         }
@@ -200,7 +200,7 @@ public:
         }
         FX_SAFE_FILESIZE range = size;
         range += offset;
-        if (!range.IsValid() || range.ValueOrDie() >= m_nCurSize) {
+        if (!range.IsValid() || range.ValueOrDie() > m_nCurSize) {
             return FALSE;
         }
         
@@ -232,7 +232,7 @@ public:
 
         FX_SAFE_SIZE_T newPos = size;
         newPos += offset;
-        if (!newPos.IsValid() || newPos.ValueOrDefault(0) == 0 || newPos.ValueOrDie() >= m_nCurSize) {
+        if (!newPos.IsValid() || newPos.ValueOrDefault(0) == 0 || newPos.ValueOrDie() > m_nCurSize) {
             return FALSE;
         }
 

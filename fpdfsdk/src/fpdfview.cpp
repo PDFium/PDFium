@@ -299,14 +299,16 @@ public:
 	virtual FX_FILESIZE		GetSize() {return m_size;}
 	virtual FX_BOOL			ReadBlock(void* buffer, FX_FILESIZE offset, size_t size) 
 	{
-        if (offset < 0) {
-            return FALSE;
-        }
-        FX_SAFE_FILESIZE newPos = base::checked_cast<FX_FILESIZE, size_t>(size);
-        newPos += offset;
-        if (!newPos.IsValid() || newPos.ValueOrDie() > (FX_DWORD)m_size) return FALSE;
-		FXSYS_memcpy(buffer, m_pBuf+offset, size);
-		return TRUE;
+            if (offset < 0) {
+                return FALSE;
+            }
+            FX_SAFE_FILESIZE newPos = base::checked_cast<FX_FILESIZE, size_t>(size);
+            newPos += offset;
+            if (!newPos.IsValid() || newPos.ValueOrDie() > (FX_DWORD)m_size) {
+                return FALSE;
+            }
+	    FXSYS_memcpy(buffer, m_pBuf+offset, size);
+	    return TRUE;
 	}
 private:
 	FX_BYTE* m_pBuf;
