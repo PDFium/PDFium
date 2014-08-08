@@ -156,7 +156,9 @@ public:
     void		Normalize()
     {
         FX_FLOAT fLen = FXSYS_sqrt(FXT_PSV::x * FXT_PSV::x + FXT_PSV::y * FXT_PSV::y);
-        FXSYS_assert(fLen >= 0.0001f);
+        if (fLen < 0.0001f) {
+            return;
+        }
         FXT_PSV::x = ((baseType)FXT_PSV::x) / fLen;
         FXT_PSV::y = ((baseType)FXT_PSV::y) / fLen;
     }
