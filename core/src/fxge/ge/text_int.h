@@ -4,6 +4,9 @@
  
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
+#ifndef _TEXT_INT_H_
+#define _TEXT_INT_H_
+
 struct _CFX_UniqueKeyGen {
     void		Generate(int count, ...);
     FX_CHAR		m_Key[128];
@@ -98,3 +101,5 @@ public:
     int					m_PitchFamily;
     CFX_ByteString		m_FontTables;
 };
+
+#endif  // _TEXT_INT_H_

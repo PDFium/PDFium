@@ -4,7 +4,9 @@
  
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
+#ifndef _FPDF_AP_H_
 #define _FPDF_AP_H_
+
 #include "../fxcrt/fx_basic.h"
 #include "../fpdfapi/fpdf_parser.h"
 #include "fpdf_vt.h"
@@ -90,3 +92,5 @@ public:
 
     static CFX_ByteString					GenerateColorAP(const CPVT_Color & color, const FX_BOOL & bFillOrStroke);
 };
+
+#endif  // _FPDF_AP_H_

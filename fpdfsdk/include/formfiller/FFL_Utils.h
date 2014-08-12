@@ -4,6 +4,9 @@
  
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
+#ifndef _FFL_UTILS_H_
+#define _FFL_UTILS_H_
+
 #define FFL_BASE_USERUNIT			1.0f / 72.0f
 
 template<class T> T FFL_MIN (const T & i, const T & j) { return ((i < j) ? i : j); }
@@ -18,3 +21,4 @@ public:
 	static FX_BOOL					TraceObject(CPDF_Object* pObj);
 };
 
+#endif  // _FFL_UTILS_H_

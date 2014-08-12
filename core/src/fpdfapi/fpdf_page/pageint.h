@@ -4,6 +4,9 @@
  
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
+#ifndef _PAGEINT_H_
+#define _PAGEINT_H_
+
 #include "../../../include/fpdfapi/fpdf_pageobj.h"
 #define PARSE_STEP_LIMIT		100
 #define STREAM_PARSE_BUFSIZE	20480
@@ -503,3 +506,5 @@ public:
 protected:
     CFX_MapByteStringToPtr	m_NamingCache;
 };
+
+#endif  // _PAGEINT_H_

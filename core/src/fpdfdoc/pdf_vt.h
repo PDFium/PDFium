@@ -4,7 +4,9 @@
  
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
+#ifndef _PDF_VT_H_
 #define _PDF_VT_H_
+
 class CPVT_Size;
 class CPVT_FloatRect;
 struct CPVT_SectionInfo;
@@ -637,3 +639,5 @@ private:
     CPVT_WordPlace							m_CurPos;
     CPDF_VariableText *						m_pVT;
 };
+
+#endif  // _PDF_VT_H_
