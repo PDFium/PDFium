@@ -107,19 +107,9 @@ typedef CFX_WideString	JS_ErrorString;
 	ASSERT(pObj != NULL);\
 	JS_ErrorString sError;\
 	FX_BOOL bRet = FALSE;\
-	try\
-	{\
-		MEMLEAKCHECK_1();\
-		bRet = pObj->prop_name(cc, value, sError);\
-		MEMLEAKCHECK_2(class_name, prop_name);\
-	}\
-	catch (...)\
-	{\
-		CFX_ByteString cbName;\
-		cbName.Format("%s.%s", #class_name, #prop_name);\
-		JS_Error(NULL,CFX_WideString::FromLocal(cbName), L"Unknown error is catched!");\
-		return ;\
-	}\
+	MEMLEAKCHECK_1();\
+	bRet = pObj->prop_name(cc, value, sError);\
+	MEMLEAKCHECK_2(class_name, prop_name);\
 	if (bRet)\
 	{\
 		info.GetReturnValue().Set((v8::Handle<v8::Value>)value);\
@@ -153,19 +143,9 @@ typedef CFX_WideString	JS_ErrorString;
 	ASSERT(pObj != NULL);\
 	JS_ErrorString sError;\
 	FX_BOOL bRet = FALSE;\
-	try\
-	{\
-		MEMLEAKCHECK_1();\
-		bRet = pObj->prop_name(cc, propValue, sError);\
-		MEMLEAKCHECK_2(class_name, prop_name);\
-	}\
-	catch (...)\
-	{\
-		CFX_ByteString cbName;\
-		cbName.Format("%s.%s", #class_name, #prop_name);\
-		JS_Error(NULL,CFX_WideString::FromLocal(cbName), L"Unknown error is catched!");\
-		return ;\
-	}\
+	MEMLEAKCHECK_1();\
+	bRet = pObj->prop_name(cc, propValue, sError);\
+	MEMLEAKCHECK_2(class_name, prop_name);\
 	if (bRet)\
 	{\
 		return ;\
@@ -208,19 +188,9 @@ JS_STATIC_PROP_SET(prop_name, class_name)
 	ASSERT(pObj != NULL);\
 	JS_ErrorString sError;\
 	FX_BOOL bRet = FALSE;\
-	try\
-	{\
-		MEMLEAKCHECK_1();\
-		bRet = pObj->method_name(cc, parameters, valueRes, sError);\
-		MEMLEAKCHECK_2(class_name, method_name);\
-	}\
-	catch (...)\
-	{\
-		CFX_ByteString cbName;\
-		cbName.Format("%s.%s", #class_name, #method_name);\
-		JS_Error(NULL, CFX_WideString::FromLocal(cbName), L"Unknown error is catched!");\
-		return ;\
-	}\
+	MEMLEAKCHECK_1();\
+	bRet = pObj->method_name(cc, parameters, valueRes, sError);\
+	MEMLEAKCHECK_2(class_name, method_name);\
 	if (bRet)\
 	{\
 		info.GetReturnValue().Set(valueRes.ToJSValue());\
@@ -370,16 +340,9 @@ const wchar_t * js_class_name::m_pClassName = JS_WIDESTRING(class_name);\
 	class_alternate* pObj = (class_alternate*)pJSObj->GetEmbedObject();\
 	ASSERT(pObj != NULL);\
 	FX_BOOL bRet = FALSE;\
-	try\
-	{\
-		MEMLEAKCHECK_1();\
-		bRet = pObj->QueryProperty((FX_LPCWSTR)propname);\
-		MEMLEAKCHECK_2(class_name, (FX_LPCWSTR)prop_name);\
-	}\
-	catch (...)\
-	{\
-		return ;\
-	}\
+	MEMLEAKCHECK_1();\
+	bRet = pObj->QueryProperty((FX_LPCWSTR)propname);\
+	MEMLEAKCHECK_2(class_name, (FX_LPCWSTR)prop_name);\
 	if (bRet)\
 	{\
 		info.GetReturnValue().Set(0x004);\
@@ -412,19 +375,9 @@ const wchar_t * js_class_name::m_pClassName = JS_WIDESTRING(class_name);\
 	ASSERT(pObj != NULL);\
 	JS_ErrorString sError;\
 	FX_BOOL bRet = FALSE;\
-	try\
-	{\
-		MEMLEAKCHECK_1();\
-		bRet = pObj->DoProperty(cc, (FX_LPCWSTR)propname, value, sError);\
-		MEMLEAKCHECK_2(class_name, L"GetProperty");\
-	}\
-	catch (...)\
-	{\
-		CFX_ByteString cbName;\
-		cbName.Format("%s.%s", #class_name, L"GetProperty");\
-		JS_Error(NULL,CFX_WideString::FromLocal(cbName), L"Unknown error is catched!");\
-		return ;\
-	}\
+	MEMLEAKCHECK_1();\
+	bRet = pObj->DoProperty(cc, (FX_LPCWSTR)propname, value, sError);\
+	MEMLEAKCHECK_2(class_name, L"GetProperty");\
 	if (bRet)\
 	{\
 		info.GetReturnValue().Set((v8::Handle<v8::Value>)value);\
@@ -460,19 +413,9 @@ const wchar_t * js_class_name::m_pClassName = JS_WIDESTRING(class_name);\
 	ASSERT(pObj != NULL);\
 	JS_ErrorString sError;\
 	FX_BOOL bRet = FALSE;\
-	try\
-	{\
-		MEMLEAKCHECK_1();\
-		bRet = pObj->DoProperty(cc, (FX_LPCWSTR)propname, PropValue, sError);\
-		MEMLEAKCHECK_2(class_name,L"PutProperty");\
-	}\
-	catch (...)\
-	{\
-		CFX_ByteString cbName;\
-		cbName.Format("%s.%s", #class_name, "PutProperty");\
-		JS_Error(NULL,CFX_WideString::FromLocal(cbName), L"Unknown error is catched!");\
-		return ;\
-	}\
+	MEMLEAKCHECK_1();\
+	bRet = pObj->DoProperty(cc, (FX_LPCWSTR)propname, PropValue, sError);\
+	MEMLEAKCHECK_2(class_name,L"PutProperty");\
 	if (bRet)\
 	{\
 		return ;\
@@ -505,18 +448,9 @@ const wchar_t * js_class_name::m_pClassName = JS_WIDESTRING(class_name);\
 	ASSERT(pObj != NULL);\
 	JS_ErrorString sError;\
 	FX_BOOL bRet = FALSE;\
-	try\
-	{\
-		MEMLEAKCHECK_1();\
-		bRet = pObj->DelProperty(cc, (FX_LPCWSTR)propname, sError);\
-		MEMLEAKCHECK_2(class_name,L"DelProperty");\
-	}\
-	catch (...)\
-	{\
-		CFX_ByteString cbName;\
-		cbName.Format("%s.%s", #class_name, "DelProperty");\
-		return ;\
-	}\
+	MEMLEAKCHECK_1();\
+	bRet = pObj->DelProperty(cc, (FX_LPCWSTR)propname, sError);\
+	MEMLEAKCHECK_2(class_name,L"DelProperty");\
 	if (bRet)\
 	{\
 		return ;\
@@ -609,19 +543,9 @@ void js_class_name::GetMethods(JSMethodSpec*& pMethods, int& nSize)\
 	ASSERT(pObj != NULL);\
 	JS_ErrorString sError;\
 	FX_BOOL bRet = FALSE;\
-	try\
-	{\
-		MEMLEAKCHECK_1();\
-		bRet = pObj->method_name(cc, parameters, valueRes, sError);\
-		MEMLEAKCHECK_2(class_name, method_name);\
-	}\
-	catch (...)\
-	{\
-		CFX_ByteString cbName;\
-		cbName.Format("%s.%s", #class_name, #method_name);\
-		JS_Error(NULL, CFX_WideString::FromLocal(cbName), L"Unknown error is catched!");\
-		return ;\
-	}\
+	MEMLEAKCHECK_1();\
+	bRet = pObj->method_name(cc, parameters, valueRes, sError);\
+	MEMLEAKCHECK_2(class_name, method_name);\
 	if (bRet)\
 	{\
 		info.GetReturnValue().Set(valueRes.ToJSValue());\

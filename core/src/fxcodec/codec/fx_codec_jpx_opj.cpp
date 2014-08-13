@@ -582,83 +582,79 @@ CJPX_Decoder::~CJPX_Decoder()
 FX_BOOL CJPX_Decoder::Init(const unsigned char* src_data, int src_size)
 {
     opj_dparameters_t parameters;
-    try {
+    image = NULL;
+    m_SrcData = src_data;
+    m_SrcSize = src_size;
+    decodeData srcData;
+    srcData.offset  = 0;
+    srcData.src_size = src_size;
+    srcData.src_data = src_data;
+    l_stream = fx_opj_stream_create_memory_stream(&srcData, OPJ_J2K_STREAM_CHUNK_SIZE, 1);
+    if (l_stream == NULL) {
+        return FALSE;
+    }
+    opj_set_default_decoder_parameters(&parameters);
+    parameters.decod_format = 0;
+    parameters.cod_format = 3;
+    if(FXSYS_memcmp32(m_SrcData, "\x00\x00\x00\x0c\x6a\x50\x20\x20\x0d\x0a\x87\x0a", 12) == 0) {
+        l_codec = opj_create_decompress(OPJ_CODEC_JP2);
+        parameters.decod_format = 1;
+    } else {
+        l_codec = opj_create_decompress(OPJ_CODEC_J2K);
+    }
+    if(!l_codec) {
+        return FALSE;
+    }
+    opj_set_info_handler(l_codec, fx_info_callback, 00);
+    opj_set_warning_handler(l_codec, fx_warning_callback, 00);
+    opj_set_error_handler(l_codec, fx_error_callback, 00);
+    if ( !opj_setup_decoder(l_codec, &parameters) ) {
+        return FALSE;
+    }
+    if(! opj_read_header(l_stream, l_codec, &image)) {
         image = NULL;
-        m_SrcData = src_data;
-        m_SrcSize = src_size;
-        decodeData srcData;
-        srcData.offset  = 0;
-        srcData.src_size = src_size;
-        srcData.src_data = src_data;
-        l_stream = fx_opj_stream_create_memory_stream(&srcData, OPJ_J2K_STREAM_CHUNK_SIZE, 1);
-        if (l_stream == NULL) {
-            return FALSE;
-        }
-        opj_set_default_decoder_parameters(&parameters);
-        parameters.decod_format = 0;
-        parameters.cod_format = 3;
-        if(FXSYS_memcmp32(m_SrcData, "\x00\x00\x00\x0c\x6a\x50\x20\x20\x0d\x0a\x87\x0a", 12) == 0) {
-            l_codec = opj_create_decompress(OPJ_CODEC_JP2);
-            parameters.decod_format = 1;
-        } else {
-            l_codec = opj_create_decompress(OPJ_CODEC_J2K);
-        }
-        if(!l_codec) {
-            return FALSE;
-        }
-        opj_set_info_handler(l_codec, fx_info_callback, 00);
-        opj_set_warning_handler(l_codec, fx_warning_callback, 00);
-        opj_set_error_handler(l_codec, fx_error_callback, 00);
-        if ( !opj_setup_decoder(l_codec, &parameters) ) {
-            return FALSE;
-        }
-        if(! opj_read_header(l_stream, l_codec, &image)) {
+        return FALSE;
+    }
+    if(this->m_useColorSpace) {
+        image->useColorSpace = 1;
+    } else {
+        image->useColorSpace = 0;
+    }
+    if (!parameters.nb_tile_to_decode) {
+        if (!opj_set_decode_area(l_codec, image, parameters.DA_x0,
+                                    parameters.DA_y0, parameters.DA_x1, parameters.DA_y1)) {
+            opj_image_destroy(image);
             image = NULL;
             return FALSE;
         }
-        if(this->m_useColorSpace) {
-            image->useColorSpace = 1;
-        } else {
-            image->useColorSpace = 0;
-        }
-        if (!parameters.nb_tile_to_decode) {
-            if (!opj_set_decode_area(l_codec, image, parameters.DA_x0,
-                                     parameters.DA_y0, parameters.DA_x1, parameters.DA_y1)) {
-                opj_image_destroy(image);
-                image = NULL;
-                return FALSE;
-            }
-            if (!(opj_decode(l_codec, l_stream, image) && opj_end_decompress(l_codec,	l_stream))) {
-                opj_image_destroy(image);
-                image = NULL;
-                return FALSE;
-            }
-        } else {
-            if (!opj_get_decoded_tile(l_codec, l_stream, image, parameters.tile_index)) {
-                return FALSE;
-            }
-        }
-        opj_stream_destroy(l_stream);
-        l_stream = NULL;
-        if( image->color_space != OPJ_CLRSPC_SYCC
-                && image->numcomps == 3 && image->comps[0].dx == image->comps[0].dy
-                && image->comps[1].dx != 1 ) {
-            image->color_space = OPJ_CLRSPC_SYCC;
-        } else if (image->numcomps <= 2) {
-            image->color_space = OPJ_CLRSPC_GRAY;
-        }
-        if(image->color_space == OPJ_CLRSPC_SYCC) {
-            color_sycc_to_rgb(image);
-        }
-        if(image->icc_profile_buf && !image->useColorSpace) {
-            FX_Free(image->icc_profile_buf);
-            image->icc_profile_buf = NULL;
-            image->icc_profile_len = 0;
-        }
-        if(!image) {
+        if (!(opj_decode(l_codec, l_stream, image) && opj_end_decompress(l_codec,	l_stream))) {
+            opj_image_destroy(image);
+            image = NULL;
             return FALSE;
         }
-    } catch (...) {
+    } else {
+        if (!opj_get_decoded_tile(l_codec, l_stream, image, parameters.tile_index)) {
+            return FALSE;
+        }
+    }
+    opj_stream_destroy(l_stream);
+    l_stream = NULL;
+    if( image->color_space != OPJ_CLRSPC_SYCC
+            && image->numcomps == 3 && image->comps[0].dx == image->comps[0].dy
+            && image->comps[1].dx != 1 ) {
+        image->color_space = OPJ_CLRSPC_SYCC;
+    } else if (image->numcomps <= 2) {
+        image->color_space = OPJ_CLRSPC_GRAY;
+    }
+    if(image->color_space == OPJ_CLRSPC_SYCC) {
+        color_sycc_to_rgb(image);
+    }
+    if(image->icc_profile_buf && !image->useColorSpace) {
+        FX_Free(image->icc_profile_buf);
+        image->icc_profile_buf = NULL;
+        image->icc_profile_len = 0;
+    }
+    if(!image) {
         return FALSE;
     }
     return TRUE;
@@ -676,86 +672,80 @@ FX_BOOL CJPX_Decoder::Decode(FX_LPBYTE dest_buf, int pitch, FX_BOOL bTranslateCo
     int i, wid, hei, row, col, channel, src;
     FX_BOOL flag;
     FX_LPBYTE pChannel, pScanline, pPixel;
-    try {
-        if(image->comps[0].w != image->x1 || image->comps[0].h != image->y1) {
-            return FALSE;
-        }
-        if(pitch < (int)(image->comps[0].w * 8 * image->numcomps + 31) >> 5 << 2) {
-            return FALSE;
-        }
-        FXSYS_memset8(dest_buf, 0xff, image->y1 * pitch);
-        channel_bufs = FX_Alloc(FX_BYTE*, image->numcomps);
-        if (channel_bufs == NULL) {
-            return FALSE;
-        }
-        adjust_comps = FX_Alloc(int, image->numcomps);
-        if (adjust_comps == NULL) {
-            FX_Free(channel_bufs);
-            return FALSE;
-        }
-        flag = TRUE;
-        for (i = 0; i < (int)image->numcomps; i ++) {
-            channel_bufs[i] = dest_buf + offsets[i];
-            adjust_comps[i] = image->comps[i].prec - 8;
-            if(i > 0) {
-                if(image->comps[i].dx != image->comps[i - 1].dx
-                        || image->comps[i].dy != image->comps[i - 1].dy
-                        || image->comps[i].prec != image->comps[i - 1].prec) {
-                    flag = FALSE;
-                    goto failed;
-                }
-            }
-        }
-        wid = image->comps[0].w;
-        hei = image->comps[0].h;
-        for (channel = 0; channel < (int)image->numcomps; channel++) {
-            pChannel = channel_bufs[channel];
-            if(adjust_comps[channel] < 0) {
-                for(row = 0; row < hei; row++) {
-                    pScanline = pChannel + row * pitch;
-                    for (col = 0; col < wid; col++) {
-                        pPixel = pScanline + col * image->numcomps;
-                        src = image->comps[channel].data[row * wid + col];
-                        src += image->comps[channel].sgnd ? 1 << (image->comps[channel].prec - 1) : 0;
-                        if (adjust_comps[channel] > 0) {
-                            *pPixel = 0;
-                        } else {
-                            *pPixel = (FX_BYTE)(src << -adjust_comps[channel]);
-                        }
-                    }
-                }
-            } else {
-                for(row = 0; row < hei; row++) {
-                    pScanline = pChannel + row * pitch;
-                    for (col = 0; col < wid; col++) {
-                        pPixel = pScanline + col * image->numcomps;
-                        if (!image->comps[channel].data) {
-                            continue;
-                        }
-                        src = image->comps[channel].data[row * wid + col];
-                        src += image->comps[channel].sgnd ? 1 << (image->comps[channel].prec - 1) : 0;
-                        if (adjust_comps[channel] - 1 < 0) {
-                            *pPixel = (FX_BYTE)((src >> adjust_comps[channel]));
-                        } else {
-                            int tmpPixel = (src >> adjust_comps[channel]) + ((src >> (adjust_comps[channel] - 1)) % 2);
-                            if (tmpPixel > 255) {
-                                tmpPixel = 255;
-                            } else if (tmpPixel < 0) {
-                                tmpPixel = 0;
-                            }
-                            *pPixel = (FX_BYTE)tmpPixel;
-                        }
-                    }
-                }
-            }
-        }
-    } catch (...) {
-        if (channel_bufs) {
-            FX_Free(channel_bufs);
-        }
-        FX_Free(adjust_comps);
+
+    if(image->comps[0].w != image->x1 || image->comps[0].h != image->y1) {
         return FALSE;
     }
+    if(pitch < (int)(image->comps[0].w * 8 * image->numcomps + 31) >> 5 << 2) {
+        return FALSE;
+    }
+    FXSYS_memset8(dest_buf, 0xff, image->y1 * pitch);
+    channel_bufs = FX_Alloc(FX_BYTE*, image->numcomps);
+    if (channel_bufs == NULL) {
+        return FALSE;
+    }
+    adjust_comps = FX_Alloc(int, image->numcomps);
+    if (adjust_comps == NULL) {
+        FX_Free(channel_bufs);
+        return FALSE;
+    }
+    flag = TRUE;
+    for (i = 0; i < (int)image->numcomps; i ++) {
+        channel_bufs[i] = dest_buf + offsets[i];
+        adjust_comps[i] = image->comps[i].prec - 8;
+        if(i > 0) {
+            if(image->comps[i].dx != image->comps[i - 1].dx
+                    || image->comps[i].dy != image->comps[i - 1].dy
+                    || image->comps[i].prec != image->comps[i - 1].prec) {
+                flag = FALSE;
+                goto failed;
+            }
+        }
+    }
+    wid = image->comps[0].w;
+    hei = image->comps[0].h;
+    for (channel = 0; channel < (int)image->numcomps; channel++) {
+        pChannel = channel_bufs[channel];
+        if(adjust_comps[channel] < 0) {
+            for(row = 0; row < hei; row++) {
+                pScanline = pChannel + row * pitch;
+                for (col = 0; col < wid; col++) {
+                    pPixel = pScanline + col * image->numcomps;
+                    src = image->comps[channel].data[row * wid + col];
+                    src += image->comps[channel].sgnd ? 1 << (image->comps[channel].prec - 1) : 0;
+                    if (adjust_comps[channel] > 0) {
+                        *pPixel = 0;
+                    } else {
+                        *pPixel = (FX_BYTE)(src << -adjust_comps[channel]);
+                    }
+                }
+            }
+        } else {
+            for(row = 0; row < hei; row++) {
+                pScanline = pChannel + row * pitch;
+                for (col = 0; col < wid; col++) {
+                    pPixel = pScanline + col * image->numcomps;
+                    if (!image->comps[channel].data) {
+                        continue;
+                    }
+                    src = image->comps[channel].data[row * wid + col];
+                    src += image->comps[channel].sgnd ? 1 << (image->comps[channel].prec - 1) : 0;
+                    if (adjust_comps[channel] - 1 < 0) {
+                        *pPixel = (FX_BYTE)((src >> adjust_comps[channel]));
+                    } else {
+                        int tmpPixel = (src >> adjust_comps[channel]) + ((src >> (adjust_comps[channel] - 1)) % 2);
+                        if (tmpPixel > 255) {
+                            tmpPixel = 255;
+                        } else if (tmpPixel < 0) {
+                            tmpPixel = 0;
+                        }
+                        *pPixel = (FX_BYTE)tmpPixel;
+                    }
+                }
+            }
+        }
+    }
+
     FX_Free(channel_bufs);
     FX_Free(adjust_comps);
     return TRUE;

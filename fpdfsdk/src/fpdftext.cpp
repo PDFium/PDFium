@@ -18,18 +18,9 @@ DLLEXPORT FPDF_TEXTPAGE STDCALL FPDFText_LoadPage(FPDF_PAGE page)
 {
 	if (!page) return NULL;
 	IPDF_TextPage* textpage=NULL;
-	try
-	{
-		CPDF_ViewerPreferences viewRef(((CPDF_Page*)page)->m_pDocument);
-		textpage=IPDF_TextPage::CreateTextPage((CPDF_Page*)page,viewRef.IsDirectionR2L());
-		textpage->ParseTextPage();
-	}
-	catch (...)
-	{
-		if (textpage)
-			delete textpage;
-		return NULL;
-	}
+	CPDF_ViewerPreferences viewRef(((CPDF_Page*)page)->m_pDocument);
+	textpage=IPDF_TextPage::CreateTextPage((CPDF_Page*)page,viewRef.IsDirectionR2L());
+	textpage->ParseTextPage();
 	return textpage;
 }
 DLLEXPORT void STDCALL FPDFText_ClosePage(FPDF_TEXTPAGE text_page)
@@ -159,18 +150,9 @@ DLLEXPORT FPDF_SCHHANDLE STDCALL FPDFText_FindStart(FPDF_TEXTPAGE text_page,FPDF
 {
 	if (!text_page) return NULL;
 	IPDF_TextPageFind* textpageFind=NULL;
-	try
-	{
-		textpageFind=IPDF_TextPageFind::CreatePageFind((IPDF_TextPage*)text_page);
-		FX_STRSIZE len = CFX_WideString::WStringLength(findwhat);
-		textpageFind->FindFirst(CFX_WideString::FromUTF16LE(findwhat, len),flags,start_index);
-	}
-	catch (...)
-	{
-		if (textpageFind)
-			delete textpageFind;
-		return NULL;		
-	}
+	textpageFind=IPDF_TextPageFind::CreatePageFind((IPDF_TextPage*)text_page);
+	FX_STRSIZE len = CFX_WideString::WStringLength(findwhat);
+	textpageFind->FindFirst(CFX_WideString::FromUTF16LE(findwhat, len),flags,start_index);
 	return textpageFind;
 }
 DLLEXPORT FPDF_BOOL	STDCALL FPDFText_FindNext(FPDF_SCHHANDLE handle)
@@ -210,17 +192,8 @@ DLLEXPORT FPDF_PAGELINK STDCALL FPDFLink_LoadWebLinks(FPDF_TEXTPAGE text_page)
 {
 	if (!text_page) return NULL;
 	IPDF_LinkExtract* pageLink=NULL;
-	try
-	{
-		pageLink=IPDF_LinkExtract::CreateLinkExtract();
-		pageLink->ExtractLinks((IPDF_TextPage*)text_page);
-	}
-	catch (...)
-	{
-		if (pageLink)
-			delete pageLink;
-		return NULL;
-	}
+	pageLink=IPDF_LinkExtract::CreateLinkExtract();
+	pageLink->ExtractLinks((IPDF_TextPage*)text_page);
 	return pageLink;
 }
 DLLEXPORT int STDCALL FPDFLink_CountWebLinks(FPDF_PAGELINK link_page)

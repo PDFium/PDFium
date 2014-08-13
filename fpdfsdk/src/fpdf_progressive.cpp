@@ -49,14 +49,7 @@ DLLEXPORT int STDCALL FPDF_RenderPageBitmap_Start( FPDF_BITMAP bitmap, FPDF_PAGE
 #endif
 	IFSDK_PAUSE_Adapter IPauseAdapter(pause);
 	
-	if (flags & FPDF_NO_CATCH)
-		Func_RenderPage(pContext, page, start_x, start_y, size_x, size_y, rotate, flags,FALSE, &IPauseAdapter);
-	else {
-		try {
-			Func_RenderPage(pContext, page, start_x, start_y, size_x, size_y, rotate, flags,FALSE, &IPauseAdapter);
-			}
-		catch (...){}
-	}
+	Func_RenderPage(pContext, page, start_x, start_y, size_x, size_y, rotate, flags,FALSE, &IPauseAdapter);
 
 	if ( pContext->m_pRenderer )
 	{

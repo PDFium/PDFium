@@ -68,41 +68,32 @@ FX_BOOL CJS_Context::DoJob(int nMode, const CFX_WideString& script, CFX_WideStri
 	FXJSErr error ={NULL,NULL, 0};
 	int nRet = 0;	
 
-	try
-	{	
-		if (script.GetLength() > 0)
+	if (script.GetLength() > 0)
+	{
+		if (nMode == 0)
 		{
-			if (nMode == 0)
-			{		
-				nRet = JS_Execute(*m_pRuntime, this, script, script.GetLength(), &error);
-			}
-			else
-			{
-				nRet = JS_Parse(*m_pRuntime, this, script, script.GetLength(), &error);
-			}
+			nRet = JS_Execute(*m_pRuntime, this, script, script.GetLength(), &error);
 		}
-
-		if (nRet < 0)
+		else
 		{
-			CFX_WideString sLine;
-			sLine.Format((FX_LPCWSTR)L"[ Line: %05d { %s } ] : %s",error.linnum-1,error.srcline,error.message);
+			nRet = JS_Parse(*m_pRuntime, this, script, script.GetLength(), &error);
+		}
+	}
+
+	if (nRet < 0)
+	{
+		CFX_WideString sLine;
+		sLine.Format((FX_LPCWSTR)L"[ Line: %05d { %s } ] : %s",error.linnum-1,error.srcline,error.message);
 
 //			TRACE(L"/* -------------- JS Error -------------- */\n");
 //			TRACE(sLine);
 //			TRACE(L"\n");
-			//CFX_ByteString sTemp = CFX_ByteString::FromUnicode(error.message);
-			info += sLine;
-		}
-		else
-		{
-			info = JSGetStringFromID(this, IDS_STRING_RUN);
-		}		
-
+		//CFX_ByteString sTemp = CFX_ByteString::FromUnicode(error.message);
+		info += sLine;
 	}
-	catch (...)
+	else
 	{
-		info = JSGetStringFromID(this, IDS_STRING_UNHANDLED);
-		nRet = -1;
+		info = JSGetStringFromID(this, IDS_STRING_RUN);
 	}
 
 	m_pRuntime->RemoveEventInLoop(m_pEventHandler->TargetName(), m_pEventHandler->EventType());

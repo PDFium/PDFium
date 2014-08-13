@@ -272,17 +272,11 @@ DLLEXPORT FPDF_DOCUMENT STDCALL FPDF_LoadDocument(FPDF_STRING file_path, FPDF_BY
 {
 	CPDF_Parser* pParser = FX_NEW CPDF_Parser;
 	pParser->SetPassword(password);
-	try {
-		FX_DWORD err_code = pParser->StartParse((FX_LPCSTR)file_path);
-		if (err_code) {
-			delete pParser;
-			ProcessParseError(err_code);
-			return NULL;
-		}
-	}
-	catch (...) {
+
+	FX_DWORD err_code = pParser->StartParse((FX_LPCSTR)file_path);
+	if (err_code) {
 		delete pParser;
-		SetLastError(FPDF_ERR_UNKNOWN);
+		ProcessParseError(err_code);
 		return NULL;
 	}
 	return pParser->GetDocument();
@@ -318,23 +312,16 @@ DLLEXPORT FPDF_DOCUMENT STDCALL FPDF_LoadMemDocument(const void* data_buf, int s
 {
 	CPDF_Parser* pParser = FX_NEW CPDF_Parser;
 	pParser->SetPassword(password);
-	try {
-		CMemFile* pMemFile = FX_NEW CMemFile((FX_BYTE*)data_buf, size);
-		FX_DWORD err_code = pParser->StartParse(pMemFile);
-		if (err_code) {
-			delete pParser;
-			ProcessParseError(err_code);
-			return NULL;
-		}
-		CPDF_Document * pDoc = NULL;
-		pDoc = pParser?pParser->GetDocument():NULL;
-		CheckUnSupportError(pDoc, err_code);
-	}
-	catch (...) {
+	CMemFile* pMemFile = FX_NEW CMemFile((FX_BYTE*)data_buf, size);
+	FX_DWORD err_code = pParser->StartParse(pMemFile);
+	if (err_code) {
 		delete pParser;
-		SetLastError(FPDF_ERR_UNKNOWN);
+		ProcessParseError(err_code);
 		return NULL;
 	}
+	CPDF_Document * pDoc = NULL;
+	pDoc = pParser?pParser->GetDocument():NULL;
+	CheckUnSupportError(pDoc, err_code);
 	return pParser->GetDocument();
 }
 
@@ -343,22 +330,15 @@ DLLEXPORT FPDF_DOCUMENT STDCALL FPDF_LoadCustomDocument(FPDF_FILEACCESS* pFileAc
 	CPDF_Parser* pParser = FX_NEW CPDF_Parser;
 	pParser->SetPassword(password);
 	CPDF_CustomAccess* pFile = FX_NEW CPDF_CustomAccess(pFileAccess);
-	try {
-		FX_DWORD err_code = pParser->StartParse(pFile);
-		if (err_code) {
-			delete pParser;
-			ProcessParseError(err_code);
-			return NULL;
-		}
-		CPDF_Document * pDoc = NULL;
-		pDoc = pParser?pParser->GetDocument():NULL;
-		CheckUnSupportError(pDoc, err_code);
-	}
-	catch (...) {
+	FX_DWORD err_code = pParser->StartParse(pFile);
+	if (err_code) {
 		delete pParser;
-		SetLastError(FPDF_ERR_UNKNOWN);
+		ProcessParseError(err_code);
 		return NULL;
 	}
+	CPDF_Document * pDoc = NULL;
+	pDoc = pParser?pParser->GetDocument():NULL;
+	CheckUnSupportError(pDoc, err_code);
 	return pParser->GetDocument();
 }
 
@@ -403,13 +383,7 @@ DLLEXPORT FPDF_PAGE STDCALL FPDF_LoadPage(FPDF_DOCUMENT document, int page_index
 	if (pDict == NULL) return NULL;
 	CPDF_Page* pPage = FX_NEW CPDF_Page;
 	pPage->Load(pDoc, pDict);
-	try {
-		pPage->ParseContent();
-	}
-	catch (...) {
-		delete pPage;
-		return NULL;
-	}
+	pPage->ParseContent();
 	
 //	CheckUnSupportError(pDoc, 0);
 
@@ -473,14 +447,9 @@ DLLEXPORT void STDCALL FPDF_RenderPage(HDC dc, FPDF_PAGE page, int start_x, int 
 	}
 	else
 	    pContext->m_pDevice = FX_NEW CFX_WindowsDevice(dc);
-	if (flags & FPDF_NO_CATCH)
-		Func_RenderPage(pContext, page, start_x, start_y, size_x, size_y, rotate, flags,TRUE,NULL);
-	else {
-		try {
-			Func_RenderPage(pContext, page, start_x, start_y, size_x, size_y, rotate, flags,TRUE,NULL);
-		} catch (...) {
-		}
-	}
+
+	Func_RenderPage(pContext, page, start_x, start_y, size_x, size_y, rotate, flags,TRUE,NULL);
+
 	if (bBackgroundAlphaNeeded) 
 	{
 		if (pBitmap)
@@ -559,14 +528,7 @@ DLLEXPORT void STDCALL FPDF_RenderPage(HDC dc, FPDF_PAGE page, int start_x, int 
 #endif
 
 	// output to bitmap device
-	if (flags & FPDF_NO_CATCH)
-		Func_RenderPage(pContext, page, start_x - rect.left, start_y - rect.top, size_x, size_y, rotate, flags);
-	else {
-		try {
-			Func_RenderPage(pContext, page, start_x - rect.left, start_y - rect.top, size_x, size_y, rotate, flags);
-		} catch (...) {
-		}
-	}
+	Func_RenderPage(pContext, page, start_x - rect.left, start_y - rect.top, size_x, size_y, rotate, flags);
 
 #ifdef DEBUG_TRACE
 	CPDF_ModuleMgr::Get()->ReportError(999, "Finished PDF rendering");
@@ -634,14 +596,8 @@ DLLEXPORT void STDCALL FPDF_RenderPageBitmap(FPDF_BITMAP bitmap, FPDF_PAGE page,
 	else
 		((CFX_FxgeDevice*)pContext->m_pDevice)->Attach((CFX_DIBitmap*)bitmap);
 #endif
-	if (flags & FPDF_NO_CATCH)
-		Func_RenderPage(pContext, page, start_x, start_y, size_x, size_y, rotate, flags,TRUE,NULL);
-	else {
-		try {
-			Func_RenderPage(pContext, page, start_x, start_y, size_x, size_y, rotate, flags,TRUE,NULL);
-		} catch (...) {
-		}
-	}
+
+	Func_RenderPage(pContext, page, start_x, start_y, size_x, size_y, rotate, flags,TRUE,NULL);
 
 	delete pContext;
 	pPage->RemovePrivateData((void*)1);
