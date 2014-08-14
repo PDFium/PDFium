@@ -107,18 +107,14 @@ public:
 	CPDF_CustomAccess(FPDF_FILEACCESS* pFileAccess);
 	~CPDF_CustomAccess() {}
 
-	virtual CFX_ByteString GetFullPath() { return ""; }
-	virtual FX_FILESIZE	GetSize() { return m_FileAccess.m_FileLen; }
+	virtual FX_FILESIZE	GetSize() FX_OVERRIDE { return m_FileAccess.m_FileLen; }
 
-	virtual FX_BOOL		GetByte(FX_DWORD pos, FX_BYTE& ch);
-	virtual FX_BOOL		GetBlock(FX_DWORD pos, FX_LPBYTE pBuf, FX_DWORD size);
-	virtual void		Release() { delete this; }
+	virtual void		Release() FX_OVERRIDE { delete this; }
 
-	virtual FX_BOOL		ReadBlock(void* buffer, FX_FILESIZE offset, size_t size);
+	virtual FX_BOOL		ReadBlock(void* buffer, FX_FILESIZE offset, size_t size) FX_OVERRIDE;
 
+private:
 	FPDF_FILEACCESS		m_FileAccess;
-	FX_BYTE				m_Buffer[512];
-	FX_DWORD			m_BufferOffset;
 };
 
 void		FSDK_SetSandBoxPolicy(FPDF_DWORD policy, FPDF_BOOL enable);

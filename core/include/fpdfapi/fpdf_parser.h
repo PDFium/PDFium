@@ -413,9 +413,9 @@ public:
 
     void				CloseParser(FX_BOOL bReParse = FALSE);
 
-    virtual FX_DWORD	GetPermissions(FX_BOOL bCheckRevision = FALSE);
+    virtual FX_DWORD	GetPermissions(FX_BOOL bCheckRevision = FALSE) FX_OVERRIDE;
 
-    virtual FX_BOOL		IsOwner();
+    virtual FX_BOOL		IsOwner() FX_OVERRIDE;
 
     void				SetPassword(const FX_CHAR* password)
     {
@@ -463,16 +463,16 @@ public:
         return &m_Trailers;
     }
 
-    virtual FX_DWORD	GetRootObjNum();
-    virtual FX_DWORD	GetInfoObjNum();
-    virtual CPDF_Array*	GetIDArray();
-    virtual CPDF_Dictionary*	GetEncryptDict()
+    virtual FX_DWORD	GetRootObjNum() FX_OVERRIDE;
+    virtual FX_DWORD	GetInfoObjNum()  FX_OVERRIDE;
+    virtual CPDF_Array*	GetIDArray()  FX_OVERRIDE;
+    virtual CPDF_Dictionary*	GetEncryptDict()  FX_OVERRIDE
     {
         return m_pEncryptDict;
     }
-    virtual CPDF_Object*		ParseIndirectObject(CPDF_IndirectObjects* pObjList, FX_DWORD objnum, PARSE_CONTEXT* pContext = NULL);
-    virtual FX_DWORD	GetLastObjNum();
-    virtual FX_BOOL		IsFormStream(FX_DWORD objnum, FX_BOOL& bForm);
+    virtual CPDF_Object*		ParseIndirectObject(CPDF_IndirectObjects* pObjList, FX_DWORD objnum, PARSE_CONTEXT* pContext = NULL)  FX_OVERRIDE;
+    virtual FX_DWORD	GetLastObjNum() FX_OVERRIDE;
+    virtual FX_BOOL		IsFormStream(FX_DWORD objnum, FX_BOOL& bForm)  FX_OVERRIDE;
 
     FX_FILESIZE			GetObjectOffset(FX_DWORD objnum);
 
@@ -952,24 +952,24 @@ public:
     CPDF_DataAvail(IFX_FileAvail* pFileAvail, IFX_FileRead* pFileRead);
     ~CPDF_DataAvail();
 
-    virtual FX_BOOL				IsDocAvail(IFX_DownloadHints* pHints);
+    virtual FX_BOOL				IsDocAvail(IFX_DownloadHints* pHints)  FX_OVERRIDE;
 
 
-    virtual void				SetDocument(CPDF_Document* pDoc);
+    virtual void				SetDocument(CPDF_Document* pDoc)  FX_OVERRIDE;
 
 
-    virtual FX_BOOL				IsPageAvail(int iPage, IFX_DownloadHints* pHints);
+    virtual FX_BOOL				IsPageAvail(int iPage, IFX_DownloadHints* pHints)  FX_OVERRIDE;
 
-    virtual FX_INT32			IsFormAvail(IFX_DownloadHints *pHints);
+    virtual FX_INT32			IsFormAvail(IFX_DownloadHints *pHints)  FX_OVERRIDE;
 
-    virtual FX_INT32			IsLinearizedPDF();
+    virtual FX_INT32			IsLinearizedPDF()  FX_OVERRIDE;
 
-    virtual FX_BOOL				IsLinearized()
+    virtual FX_BOOL				IsLinearized()  FX_OVERRIDE
     {
         return m_bLinearized;
     }
 
-    virtual void				GetLinearizedMainXRefInfo(FX_FILESIZE *pPos, FX_DWORD *pSize);
+    virtual void				GetLinearizedMainXRefInfo(FX_FILESIZE *pPos, FX_DWORD *pSize)  FX_OVERRIDE;
     IFX_FileRead*				GetFileRead() const
     {
         return m_pFileRead;

@@ -188,25 +188,25 @@ protected:
 class CFX_FontProvider FX_FINAL : public IFX_FileRead
 {
 public:
-    virtual void			Release()
+    virtual void			Release() FX_OVERRIDE
     {
         delete this;
     }
-    virtual FX_FILESIZE		GetSize()
+    virtual FX_FILESIZE		GetSize() FX_OVERRIDE
     {
         return (FX_FILESIZE)_totalSize;
     }
-    virtual FX_BOOL			ReadBlock(void* buffer, FX_FILESIZE offset, size_t size);
+    virtual FX_BOOL			ReadBlock(void* buffer, FX_FILESIZE offset, size_t size) FX_OVERRIDE;
 
-    virtual FX_BOOL			IsEOF()
+    virtual FX_BOOL			IsEOF() FX_OVERRIDE
     {
         return _offSet == _totalSize;
     }
-    virtual FX_FILESIZE		GetPosition()
+    virtual FX_FILESIZE		GetPosition() FX_OVERRIDE
     {
         return (FX_FILESIZE)_offSet;
     }
-    virtual size_t			ReadBlock(void* buffer, size_t size);
+    virtual size_t			ReadBlock(void* buffer, size_t size) FX_OVERRIDE;
 public:
     CFX_FontProvider(CGFontRef cgFont);
     ~CFX_FontProvider();

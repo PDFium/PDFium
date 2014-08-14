@@ -19,8 +19,8 @@ class CFX_IFileWrite FX_FINAL : public IFX_StreamWrite
 public:
 	CFX_IFileWrite();
 	FX_BOOL				Init( FPDF_FILEWRITE * pFileWriteStruct );
-	virtual	FX_BOOL		WriteBlock(const void* pData, size_t size);
-	virtual void		Release(){};
+	virtual	FX_BOOL		WriteBlock(const void* pData, size_t size) FX_OVERRIDE;
+	virtual void		Release() FX_OVERRIDE {}
 	
 protected:
 	FPDF_FILEWRITE*		m_pFileWriteStruct;

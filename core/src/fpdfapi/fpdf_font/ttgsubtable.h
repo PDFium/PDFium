@@ -409,11 +409,11 @@ private:
 class CFX_GSUBTable FX_FINAL : public IFX_GSUBTable, public CFX_Object
 {
 public:
-    virtual void	Release()
+    virtual void	Release() FX_OVERRIDE
     {
         delete this;
     }
-    virtual FX_BOOL GetVerticalGlyph(FX_DWORD glyphnum, FX_DWORD* vglyphnum);
+    virtual FX_BOOL GetVerticalGlyph(FX_DWORD glyphnum, FX_DWORD* vglyphnum) FX_OVERRIDE;
     CFX_CTTGSUBTable m_GsubImp;
 };
 #endif

@@ -280,13 +280,17 @@ int			FXSYS_round(FX_FLOAT f);
 typedef base::CheckedNumeric<FX_DWORD> FX_SAFE_DWORD;
 typedef base::CheckedNumeric<FX_INT32> FX_SAFE_INT32;
 typedef base::CheckedNumeric<size_t>   FX_SAFE_SIZE_T;
+
 #if defined(__clang__) || _MSC_VER >= 1700
 #define FX_FINAL final
+#define FX_OVERRIDE override
 #elif defined(__GNUC__) && __cplusplus >= 201103 && \
       (__GNUC__ * 10000 + __GNUC_MINOR__ * 100) >= 40700
 #define FX_FINAL final
+#define FX_OVERRIDE override
 #else
 #define FX_FINAL
+#define FX_OVERRIDE
 #endif
 #endif
 #endif

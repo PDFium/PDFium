@@ -10,18 +10,18 @@ class CFX_BidiChar FX_FINAL : public IFX_BidiChar, public CFX_Object
 {
 public:
     CFX_BidiChar();
-    virtual void		Release()
+    virtual void		Release() FX_OVERRIDE
     {
         delete this;
     }
-    virtual void		SetPolicy(FX_BOOL bSeparateNeutral = TRUE)
+    virtual void		SetPolicy(FX_BOOL bSeparateNeutral = TRUE) FX_OVERRIDE
     {
         m_bSeparateNeutral = bSeparateNeutral;
     }
-    virtual FX_BOOL		AppendChar(FX_WCHAR wch);
-    virtual FX_BOOL		EndChar();
-    virtual FX_INT32	GetBidiInfo(FX_INT32 &iStart, FX_INT32 &iCount);
-    virtual void		Reset();
+    virtual FX_BOOL		AppendChar(FX_WCHAR wch) FX_OVERRIDE;
+    virtual FX_BOOL		EndChar() FX_OVERRIDE;
+    virtual FX_INT32	GetBidiInfo(FX_INT32 &iStart, FX_INT32 &iCount) FX_OVERRIDE;
+    virtual void		Reset() FX_OVERRIDE;
 protected:
     FX_BOOL		m_bSeparateNeutral;
     FX_INT32	m_iCurStart;

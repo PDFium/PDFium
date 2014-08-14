@@ -12,14 +12,14 @@ class CSysFontInfo_Ext FX_FINAL : public IFX_SystemFontInfo
 public:
 	FPDF_SYSFONTINFO*	m_pInfo;
 
-	virtual void		Release()
+	virtual void		Release() FX_OVERRIDE
 	{
 		if (m_pInfo->Release)
 			m_pInfo->Release(m_pInfo);
 		delete this;
 	}
 
-	virtual	FX_BOOL		EnumFontList(CFX_FontMapper* pMapper)
+	virtual	FX_BOOL		EnumFontList(CFX_FontMapper* pMapper) FX_OVERRIDE
 	{
 		if (m_pInfo->EnumFonts) {
 			m_pInfo->EnumFonts(m_pInfo, pMapper);
@@ -28,28 +28,28 @@ public:
 		return FALSE;
 	}
 
-	virtual void*		MapFont(int weight, FX_BOOL bItalic, int charset, int pitch_family, FX_LPCSTR family, FX_BOOL& bExact)
+	virtual void*		MapFont(int weight, FX_BOOL bItalic, int charset, int pitch_family, FX_LPCSTR family, FX_BOOL& bExact)  FX_OVERRIDE
 	{
 		if (m_pInfo->MapFont)
 			return m_pInfo->MapFont(m_pInfo, weight, bItalic, charset, pitch_family, family, &bExact);
 		return NULL;
 	}
 
-	virtual void*		GetFont(FX_LPCSTR family)
+	virtual void*		GetFont(FX_LPCSTR family)  FX_OVERRIDE
 	{
 		if (m_pInfo->GetFont)
 			return m_pInfo->GetFont(m_pInfo, family);
 		return NULL;
 	}
 
-	virtual FX_DWORD	GetFontData(void* hFont, FX_DWORD table, FX_LPBYTE buffer, FX_DWORD size)
+	virtual FX_DWORD	GetFontData(void* hFont, FX_DWORD table, FX_LPBYTE buffer, FX_DWORD size)  FX_OVERRIDE
 	{
 		if (m_pInfo->GetFontData)
 			return m_pInfo->GetFontData(m_pInfo, hFont, table, buffer, size);
 		return 0;
 	}
 
-	virtual FX_BOOL		GetFaceName(void* hFont, CFX_ByteString& name)
+	virtual FX_BOOL		GetFaceName(void* hFont, CFX_ByteString& name)  FX_OVERRIDE
 	{
 		if (m_pInfo->GetFaceName == NULL) return FALSE;
 		FX_DWORD size = m_pInfo->GetFaceName(m_pInfo, hFont, NULL, 0);
@@ -61,7 +61,7 @@ public:
 		return TRUE;
 	}
 
-	virtual FX_BOOL		GetFontCharset(void* hFont, int& charset)
+	virtual FX_BOOL		GetFontCharset(void* hFont, int& charset)  FX_OVERRIDE
 	{
 		if (m_pInfo->GetFontCharset) {
 			charset = m_pInfo->GetFontCharset(m_pInfo, hFont);
@@ -70,7 +70,7 @@ public:
 		return FALSE;
 	}
 
-	virtual void		DeleteFont(void* hFont)
+	virtual void		DeleteFont(void* hFont)  FX_OVERRIDE
 	{
 		if (m_pInfo->DeleteFont)
 			m_pInfo->DeleteFont(m_pInfo, hFont);
