@@ -324,7 +324,9 @@ CFX_WideString CPDF_FormField::GetValue(FX_BOOL bDefault)
             return pValue->GetUnicodeText();
         case PDFOBJ_ARRAY:
             pValue = ((CPDF_Array*)pValue)->GetElementValue(0);
-            return pValue->GetUnicodeText();
+            if (pValue) {
+                return pValue->GetUnicodeText();
+            }
             break;
     }
     return CFX_WideString();
