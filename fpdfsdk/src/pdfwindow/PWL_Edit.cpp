@@ -411,8 +411,11 @@ void CPWL_Edit::DrawThisAppearance(CFX_RenderDevice* pDevice, CPDF_Matrix* pUser
 	CFX_ByteTextBuf sLine;
 
 	FX_INT32 nCharArray = m_pEdit->GetCharArray();
+	FX_SAFE_INT32 nCharArraySafe = nCharArray;
+	nCharArraySafe -= 1;
+	nCharArraySafe *= 2;
 
-	if (nCharArray > 0)
+	if (nCharArray > 0 && nCharArraySafe.IsValid())
 	{
 		switch (GetBorderStyle())
 		{
@@ -422,7 +425,9 @@ void CPWL_Edit::DrawThisAppearance(CFX_RenderDevice* pDevice, CPDF_Matrix* pUser
 				gsd.m_LineWidth = (FX_FLOAT)GetBorderWidth();
 
 				CFX_PathData path;
-				path.SetPointCount((nCharArray-1)*2);
+				if (!path.SetPointCount(nCharArraySafe.ValueOrDie())) {
+					return;
+				}
 				
 				for (FX_INT32 i=0; i<nCharArray-1; i++)
 				{					
@@ -447,7 +452,9 @@ void CPWL_Edit::DrawThisAppearance(CFX_RenderDevice* pDevice, CPDF_Matrix* pUser
 				gsd.m_DashPhase = (FX_FLOAT)GetBorderDash().nPhase;
 
 				CFX_PathData path;
-				path.SetPointCount((nCharArray-1)*2);
+				if (!path.SetPointCount(nCharArraySafe.ValueOrDie())) {
+					return;
+				}
 				
 				for (FX_INT32 i=0; i<nCharArray-1; i++)
 				{					
