@@ -1088,7 +1088,11 @@ CPDF_ColorSpace* CPDF_ColorSpace::Load(CPDF_Document* pDoc, CPDF_Object* pObj)
     if (pArray->GetCount() == 0) {
         return NULL;
     }
-    CFX_ByteString familyname = pArray->GetElementValue(0)->GetString();
+    CPDF_Object *pFamilyObj = pArray->GetElementValue(0);
+    if (!pFamilyObj) {
+        return NULL;
+    }
+    CFX_ByteString familyname = pFamilyObj->GetString();
     if (pArray->GetCount() == 1) {
         return _CSFromName(familyname);
     }
