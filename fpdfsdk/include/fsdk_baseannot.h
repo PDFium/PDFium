@@ -53,7 +53,7 @@ public:
 		FX_BYTE		hour;
 		FX_BYTE		minute;
 		FX_BYTE		second;
-		FX_CHAR		tzHour;
+		FX_INT8 	tzHour;
 		FX_BYTE		tzMinute;
 	}dt;
 };
