@@ -198,7 +198,8 @@ bool ParseCommandLine(int argc, const char* argv[], OutputFormat* output_format,
     if (strcmp(argv[cur_arg], "--bmp") == 0)
       *output_format = OUTPUT_BMP;
 #endif
-    cur_arg++;
+    if (*output_format != OUTPUT_NONE)
+      cur_arg++;
   }
 
   if (cur_arg >= argc)
