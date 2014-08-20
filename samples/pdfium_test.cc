@@ -189,20 +189,23 @@ bool ParseCommandLine(int argc, const char* argv[], OutputFormat* output_format,
   files->clear();
 
   int cur_arg = 1;
-  if (cur_arg < argc) {
+  for (; cur_arg < argc; ++cur_arg) {
     if (strcmp(argv[cur_arg], "--ppm") == 0)
       *output_format = OUTPUT_PPM;
 #ifdef _WIN32
-    if (strcmp(argv[cur_arg], "--emf") == 0)
+    else if (strcmp(argv[cur_arg], "--emf") == 0)
       *output_format = OUTPUT_EMF;
-    if (strcmp(argv[cur_arg], "--bmp") == 0)
+    else if (strcmp(argv[cur_arg], "--bmp") == 0)
       *output_format = OUTPUT_BMP;
 #endif
-    if (*output_format != OUTPUT_NONE)
-      cur_arg++;
+    else
+      break;
   }
 
-  if (cur_arg >= argc)
+  if (cur_arg > 2)  // Multiple options.
+    return false;
+
+  if (cur_arg >= argc)  // No input files.
     return false;
 
   for (int i = cur_arg; i < argc; i++)
@@ -356,7 +359,7 @@ int main(int argc, const char* argv[]) {
   OutputFormat format = OUTPUT_NONE;
   std::list<const char*> files;
   if (!ParseCommandLine(argc, argv, &format, &files)) {
-    printf("Usage: pdfium_test [OPTIONS] [FILE]\n");
+    printf("Usage: pdfium_test [OPTION] [FILE]...\n");
     printf("--ppm    write page images <pdf-name>.<page-number>.ppm\n");
 #ifdef _WIN32
     printf("--bmp    write page images <pdf-name>.<page-number>.bmp\n");
