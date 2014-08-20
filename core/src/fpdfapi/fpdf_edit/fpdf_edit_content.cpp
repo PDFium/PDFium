@@ -1,7 +1,7 @@
 // Copyright 2014 PDFium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
- 
+
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #include "../../../include/fpdfapi/fpdf_page.h"
@@ -20,15 +20,13 @@ CPDF_PageContentGenerate::CPDF_PageContentGenerate(CPDF_Page* pPage) : m_pPage(p
     if (m_pPage) {
         m_pDocument = m_pPage->m_pDocument;
     }
+    FX_POSITION pos = pPage->GetFirstObjectPosition();
+    while (pos) {
+        InsertPageObject(pPage->GetNextObject(pos));
+    }
 }
 CPDF_PageContentGenerate::~CPDF_PageContentGenerate()
 {
-    for (int i = 0; i < m_pageObjects.GetSize(); ++i) {
-        CPDF_PageObject* pPageObj = (CPDF_PageObject*)m_pageObjects[i];
-        if (pPageObj) {
-            pPageObj->Release();
-        }
-    }
 }
 FX_BOOL CPDF_PageContentGenerate::InsertPageObject(CPDF_PageObject* pPageObject)
 {
