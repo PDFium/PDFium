@@ -585,7 +585,7 @@ FX_BOOL CPDF_ICCBasedCS::v_Load(CPDF_Document* pDoc, CPDF_Array* pArray)
     }
     CPDF_Dictionary* pDict = pStream->GetDict();
     m_nComponents = pDict ? pDict->GetInteger(FX_BSTRC("N")) : 0;
-    if (m_nComponents <= 0 || m_nComponents > (1 << 16)) {
+    if (m_nComponents != 1 && m_nComponents != 3 && m_nComponents != 4) {
         return FALSE;
     }
     CPDF_Array* pRanges = pDict->GetArray(FX_BSTRC("Range"));
